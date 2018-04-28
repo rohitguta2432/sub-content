@@ -1,0 +1,478 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Vedanta</title>
+<object th:include="fragments/header :: head" th:remove="tag"></object>
+<!-- Favicon -->
+<link rel="shortcut icon" type="image/icon"
+	th:href="@{/resources/images/favicon.ico}" />
+<script type="text/javascript"
+	th:src="@{/resources/js/bootstrap-multiselect.js}"></script>
+<script type="text/javascript" th:src="@{/resources/js/survey.js}"></script>
+</head>
+<style>
+#load{
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    position:fixed;
+    z-index:9999;
+    background: rgba(0,0,0,0.25)
+}
+#load img {
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    transform: translate(-50%,-50%);
+}
+
+</style>
+<script>
+const isPlantAdmin=[[${isPlantAdmin}]];
+
+function validation() {
+	  let bussinessId=$('#businessUnitId').val();
+	  let plantId=$('#plantId').val();
+	  let vendorId=$('#vendorId').val();
+	  let contractId=$('#contractId').val();
+	  let surveyId=$('#formId').val();
+	  let users=$('#scorecard-users').val();
+	  
+	 // console.log(isPlantAdmin);
+	  
+	  if(parseInt(bussinessId) === 0){
+		  $('#bumsg').text('required field');
+		  return false;
+	  }
+	  
+	  if(!isPlantAdmin){
+		if (parseInt(plantId) === 0){
+			  $('#plantmsg').text('required field');
+			  return false;
+	  }
+	} else {
+		
+		if (parseInt(plantId) === 0){
+		  $('#plantmsg').text('required field');
+			return false;  
+	  		}
+	}
+	 
+	  if (parseInt(vendorId) === 0){
+		  $('#vendormsg').text('required field');
+		  return false;
+	  }
+	  if (parseInt(contractId) === 0){
+		  $('#contractmsg').text('required field');
+		  return false;
+	  }
+	  if (parseInt(surveyId) === 0){
+		  $('#surveymsg').text('required field');
+		  return false;
+	  }
+	  if (users.length === 0){
+		  $('#usermsg').text('required field');
+		  return false;
+	  }
+	  
+	   
+	  $('#load').show();
+	  
+	  
+}
+</script>
+
+<body>
+<div id="load">
+	<img th:src="@{/resources/images/loading.gif}">
+</div>
+
+	<div id="wrapper" th:with="surveyActive=${'active'}">
+		<i th:replace="/fragments/component :: sidebar"></i>
+
+		<div class="white-bg page-wrapper header-wrapper">
+			<!-- top header -->
+			<div th:replace="/fragments/component :: topheader"></div>
+			<!-- Body Part -->
+			<div class="wrapper wrapper-content">
+			
+			<div class="alert alert-success" id="success-alert"  th:if="${success}">
+		    <button type="button" class="close" data-dismiss="alert" >x</button>
+		    <strong> <span th:text="${success}"></span></strong>
+		    </div>
+
+				<div class="container-fluid">
+					<div class="row btm-brd">
+						<div class="col-sm-12">
+							<div class="page-title">
+								<h3>Survey Reminder</h3>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-sm-10">
+							<div class="setting-content">
+								<form class="client-form" 
+									th:action="@{/email/emailtemplate/save}" onsubmit="return validation(this);"
+									th:object="${emailLog}" method="POST">
+
+									<!--    <div class="row form-group">
+	                                <div class="col-sm-4 col-md-3 col-md-offset-1">
+	                                	<label class="mtb5px pull-right">Survey Type :</label>
+	                                </div>
+	                                <div class="col-sm-8 col-md-6">
+	                                	 <select class="form-control " id="formId"
+                                                name="survetypeId" required="required">
+                                            <option value="">Select Survey</option>
+                                            <option th:each="form: ${forms}"
+                                                    th:value="${form.id}">
+                                                <span th:text="${form.description}"></span>
+                                            </option>
+                                        </select>
+	                                </div>
+	                            </div> -->
+
+									<div class="row form-group">
+										<div class="col-sm-4 col-md-3 col-md-offset-1">
+											<label class="mtb5px pull-right">BusinessUnit :</label>
+										</div>
+										<div class="col-sm-8 col-md-6">
+											<select class="form-control " id="businessUnitId"
+												name="businessUnitId">
+												<!-- <option value="0">Select bussinessId</option> -->
+												<option th:if="${bussinessId!= null }"
+													th:each="buId : ${bussinessId}" th:value="${buId.id}">
+													<span th:text="${buId.unitName}"></span>
+												</option>
+											</select> <span class='errormsg text-left' style="display: none;"
+												id="buSpan">Select anyone business unit</span>
+										</div>
+										<span class="errormsg" style="color:red;" th:id='bumsg'></span>
+									</div>
+									
+									
+
+									<div class="row form-group" id="plant">
+										<div class="col-sm-4 col-md-3 col-md-offset-1">
+											<label class="mtb5px pull-right">Plants:</label>
+										</div>
+										<div class="col-sm-8 col-md-6">
+											<select class="form-control selectize" id="plantId"
+												name="surveyplant_id">
+											</select>
+										</div>
+										<span class="errormsg" style="color:red;" th:id='plantmsg'></span>
+									</div>
+									
+									
+								<div class="row form-group" id="plantAdmin">
+										<div class="col-sm-4 col-md-3 col-md-offset-1">
+											<label class="mtb5px pull-right">Plants:</label>
+										</div>
+										<div class="col-sm-8 col-md-6">
+											<select class="form-control selectize" id="plantAdminId"
+												name="surveyplant_id">
+													<!-- <option value="0">Select bussinessId</option> -->
+												<option th:if="${plantAdmin!= null }"
+													th:each="plantId : ${plantAdmin}" th:value="${plantId.id}">
+													<span th:text="${plantId.name}"></span>
+												
+											</select>
+										</div>
+										<span class="errormsg" style="color:red;" th:id='plantmsg'></span>
+									</div>
+
+									<div class="row form-group">
+										<div class="col-sm-4 col-md-3 col-md-offset-1">
+											<label class="mtb5px pull-right">Vendors:</label>
+										</div>
+										<div class="col-sm-8 col-md-6">
+											<select class="form-control selectize" id="vendorId"
+												name="surveyvendorId">
+												<!-- <option value="">Select vendor</option>
+												<option th:each="vendor: ${allVendors}" th:value="${vendor.id}">
+													<span th:text="${vformIdendor.name}"></span>
+												</option> -->
+											</select>
+										</div>
+										<span class="errormsg" style="color:red;" th:id='vendormsg'></span>
+									</div>
+
+									<div class="row form-group">
+										<div class="col-sm-4 col-md-3 col-md-offset-1">
+											<label class="mtb5px pull-right">Contracts:</label>
+										</div>
+										<div class="col-sm-8 col-md-6">
+											<select class="form-control selectize" id="contractId"
+												name="surveycontractId">
+												<!-- <option value="">Select contract</option>
+												<option th:each="contract: ${allContracts}" th:value="${contract.id}">
+													<span th:text="${contract.name}"></span>
+												</option> -->
+											</select>
+										</div>
+										<span class="errormsg" style="color:red;" th:id='contractmsg'></span>
+									</div>
+
+									<div class="row form-group">
+										<div class="col-sm-4 col-md-3 col-md-offset-1">
+											<label class="mtb5px pull-right">Survey Type :</label>
+										</div>
+										<div class="col-sm-8 col-md-6">
+											<select class="form-control selectize" id="formId"
+												name="survetypeId">
+												<!--  <option value="">Select Survey</option>
+                                            <option th:each="form: ${forms}"
+                                                    th:value="${form.id}">
+                                                <span th:text="${form.description}"></span>
+                                            </option> -->
+											</select>
+										</div>
+										<span class="errormsg" style="color:red;" th:id='surveymsg'></span>
+									</div>
+
+
+									<div class="row form-group">
+										<div class="col-sm-4 col-md-3 col-md-offset-1">
+											<label class="mtb5px pull-right">Select User:</label>
+										</div>
+										<div class="col-sm-8 col-md-6">
+
+											<select id="scorecard-users" name="scorecard_users"
+												class="form-control selectize" multiple data-actions-box="true" >
+												<!-- <option th:each="user: ${allUsers}" th:value="${user.id}">
+													<span th:text="${user.name}"></span>
+												</option> -->
+											</select>
+										</div>
+										<span class="errormsg" style="color:red;" th:id='usermsg'></span>
+									</div>
+
+									<div class="row form-group">
+										<div class="col-sm-4 col-md-3 col-md-offset-1">
+											<label class="mtb5px pull-right">Comment :</label>
+										</div>
+										<div class="col-sm-8 col-md-6 ">
+											<textarea class="form-control hei_auto" rows="5"
+												name="userMessage" placeholder="Comments"></textarea>
+										</div>
+									</div>
+
+									<br/> <br/>
+
+
+
+									<div class="row">
+										<div class="col-sm-12 col-md-10 text-right">
+										<!-- 	<span
+												style="margin-right: 30px; font-size: 16px; color: #085009; font-family: sam inherit;"
+												th:text="${success}"></span> -->
+											<button class="btn btn-success" id="submitbtn" type="submit">Send
+												Email</button>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- / page wrapper -->
+	</div>
+	<!-- /wrapper -->
+
+	<script>
+
+$(document).ready(function(){
+	
+	$('#load').hide();
+	
+	/* CDATA */
+	const flag=[[${flag}]];
+	const isPlantAdmin=[[${isPlantAdmin}]];
+	
+	
+	if(isPlantAdmin){
+		
+		$('#plantAdmin').show();
+		$('#plant').hide();
+		
+		$("#plantAdminId").prop("disabled", true);
+		 
+		const plantId=$('#plantAdminId').val();
+		$.ajax({
+			url : "/vedanta-web/email/getVendorDetails/" + plantId,
+			type : "GET",
+			success : function(data) {
+				showVendorData(data);
+			},
+			error : function(xhr, status, error) {
+
+			}
+		});
+		
+		function showVendorData(data) {
+			$('#vendorId').html("");
+			$('#vendorId').append(
+					"<option value='0'>Select vendor </option>");
+			for (var i = 0; i < data.length; i++) {
+				$('#vendorId').append(
+						"<option value=\"" + data[i].id + "\">"
+								+ data[i].name + "</option>");
+			}
+			$('#vendorId').selectpicker({
+				liveSearch : true,
+				maxOptions : 1
+			});
+			$('#vendorId').selectpicker('render');
+			$("#vendorId").val('').selectpicker('refresh');
+		}
+		
+	
+		
+		
+	}else{
+		$('#plantAdmin').hide();
+		$('#plant').show();
+	}
+	
+
+	if(!flag){
+		  $("#businessUnitId").prop("disabled", true);
+	}
+	
+	$('#businessUnitId').selectpicker({
+ 		liveSearch: true
+
+    });   
+
+  	$('#scorecard-users').selectpicker({
+ 		liveSearch: true
+
+    });   
+
+   $('#plantId').selectpicker({
+	      liveSearch: true,
+	      maxOptions: 1
+	    });
+   
+   $('#vendorId').selectpicker({
+	      liveSearch: true,
+	      maxOptions: 1
+	    });
+   
+   $('#formId').selectpicker({
+	      liveSearch: true,
+	      maxOptions: 1
+	    });
+   $('#contractId').selectpicker({
+	      liveSearch: true,
+	      maxOptions: 1
+	    });
+   
+   const buId=$('#businessUnitId').val();
+   
+   if(typeof buId!=='undefine' && buId !== null){
+	   
+	   $.ajax({
+           url : "/vedanta-web/plantHead/business-unit-id/"+buId,
+           type : "GET",
+           success : function(data) {
+           	showCategories(data);
+           },
+           error : function(xhr, status, error) {
+               
+             //  console.log("token has been expired."+xhr.responseText);
+           }
+       });
+	   
+	   $.ajax({
+           url : "/vedanta-web/email/getUserByBuId/"+buId,
+           type : "GET",
+           success : function(data) {
+           	showUserDetails(data);
+           },
+           error : function(xhr, status, error) {
+               
+             //  console.log("token has been expired."+xhr.responseText);
+           }
+       });
+       
+   }
+   
+   
+	$('#businessUnitId').on('change', function() {
+            var value = this.value;
+            
+            if(value>0){
+            	$('#bumsg').hide();
+            }
+            
+            $.ajax({
+                url : "/vedanta-web/plantHead/business-unit-id/"+value,
+                type : "GET",
+                success : function(data) {
+                	showCategories(data);
+                },
+                error : function(xhr, status, error) {
+                    
+                  //  console.log("token has been expired."+xhr.responseText);
+                }
+            });
+            
+            $.ajax({
+                url : "/vedanta-web/email/getUserByBuId/"+value,
+                type : "GET",
+                success : function(data) {
+                	showUserDetails(data);
+                },
+                error : function(xhr, status, error) {
+                    
+                  //  console.log("token has been expired."+xhr.responseText);
+                }
+            });
+        });
+
+
+	});
+
+ function showCategories(data) {
+	$('#plantId').html("");
+	$('#plantId').append("<option value='0'>Select Plant </option>");
+	for ( var i = 0, len = data.length; i < len; ++i) {
+	    var plant = data[i];
+	    $('#plantId').append("<option value=\"" + plant.id + "\">" + plant.name+ "</option>");
+	}
+	 $('#plantId').selectpicker({
+		      liveSearch: true,
+		      maxOptions: 1
+		    });
+	 $('#plantId').selectpicker('render');
+	 $("#plantId").val('').selectpicker('refresh');
+} 
+
+function showUserDetails(data) {
+	$('#scorecard-users').html("");
+	for ( var i = 0, len = data.length; i < len; ++i) {
+	    var user = data[i];
+	    $('#scorecard-users').append("<option value=\"" + user.id + "\">" + user.name+ "</option>");
+	}
+
+	 $('#scorecard-users').selectpicker('render');
+	 $("#scorecard-users").val('').selectpicker('refresh'); 
+}
+
+	 $("#success-alert").fadeTo(5000, 500).slideUp(500, function(){
+   	 $("#success-alert").slideUp(500);
+     });
+
+</script>
+</body>
+</html>

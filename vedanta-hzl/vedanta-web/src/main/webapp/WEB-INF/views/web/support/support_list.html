@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vedanta</title>
+<object th:include="fragments/header :: head" th:remove="tag"></object>
+<!-- Favicon -->
+<link rel="shortcut icon" type="image/icon"
+	th:href="@{/resources/images/favicon.ico}" />
+</head>
+<body>
+	<div id="wrapper"
+		th:with="supportListActive=${'active'},settingActive=${'active'}">
+		<i th:replace="/fragments/component :: sidebar"></i>
+		<div class="white-bg page-wrapper header-wrapper">
+			<!-- top header -->
+			<div th:replace="/fragments/component :: topheader"></div>
+			<!-- Body Part -->
+			<div class="wrapper wrapper-content">
+
+				<div class="container-fluid">
+					<div class="row btm-brd">
+						<div class="col-sm-6">
+							<div class="page-title">
+								<h3>Support List</h3>
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-sm-12">
+							<form class="client-form">
+								<div class="add-client">
+
+									<div class="setting-content">
+										<div class="socio-table table-responsive">
+											<table id="data-table"
+												class="table table-striped table-bordered table-hover settings">
+												<thead>
+													<th class="small-width text-center">S.No<i
+														class="fa fa-exchange fa-rotate-90 pull-right"
+														aria-hidden="true"></i></th>
+
+													<th class="sm-width">Token No<i
+														class="fa fa-exchange fa-rotate-90 pull-right"
+														aria-hidden="true"></i></th>
+
+													<th>Business Unit Name<i
+														class="fa fa-exchange fa-rotate-90 pull-right"
+														aria-hidden="true"></i></th>
+
+													<th class="sm-width">Title<i
+														class="fa fa-exchange fa-rotate-90 pull-right"
+														aria-hidden="true"></i></th>
+													<th>Employee Id<i
+														class="fa fa-exchange fa-rotate-90 pull-right"
+														aria-hidden="true"></i></th>
+													<th class="sm-width">Email<i
+														class="fa fa-exchange fa-rotate-90 pull-right"
+														aria-hidden="true"></i></th>
+
+													<th class="sm-width">Status<i
+														class="fa fa-exchange fa-rotate-90 pull-right"
+														aria-hidden="true"></i></th>
+													<th class="sm-width">Action</th>
+												</thead>
+												<tbody>
+													<tr th:if="${supports != null }"
+														th:each="support,iterator : ${supports}">
+
+														<td><label class="text-center"
+															th:text="${iterator.index + 1}"></label></td>
+
+														<td><span th:if="${support.tokenNo != null }"
+															th:text="${support.tokenNo}"></span></td>
+
+														<td th:if="${support.businessUnitId != null }"><span
+															th:if="${support.businessUnitId == 0}" th:text="Admin"></span>
+															<span th:each="businessUnit : ${businessUnits}"> <span
+																th:if="${support.businessUnitId == businessUnit.id}"
+																th:text="${businessUnit.unitName}"> </span>
+														</span></td>
+
+														<td><span th:if="${support.title != null }"
+															th:text="${support.title}"></span></td>
+
+
+														<td><span th:if="${support.employeeId != null }"
+															th:text="${support.employeeId}"></span></td>
+
+
+														<td><span th:if="${support.emailId != null }"
+															th:text="${support.emailId}"></span></td>
+
+														<td class="td-status"><span
+															th:if="${support.status != null }"
+															th:text="${support.status == 8 ? 'Open' : (support.status == 9 ? 'In progress' : 'Closed')}"></span></td>
+
+
+														<td>
+															<ul class="action-listing">
+																<li><a
+																	th:class="${support.status == 9  || support.status == 10} ? 'fade-out fa-disabled' : 'updateSupport' "
+																	th:attr="supportid=${support.id}, inProgressId=inProgress+${support.id}"
+																	id="btn-inprogress" title="inprogress"><i
+																		class="fa fa-tasks"></i></a></li>
+																<li><a
+																	th:class="${ support.status == 10} ? 'fade-out fa-disabled' : 'updateSupport' "
+																	th:attr="supportid=${support.id}, closeId=close+${support.id}"
+																	id="btn-close" title="close"><i
+																		class="fa fa-check-circle-o"></i></a></li>
+															</ul>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- modal -->
+		<div class="delete-modal popupmodal vedanta">
+			<div class="modal fade bs-example-modal-sm" id="delete" tabindex="-1"
+				role="dialog">
+				vendor
+				<div class="modal-dialog modal-sm" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">X</button>
+							<h4 class="modal-title">Update Support Request</h4>
+						</div>
+						<div class="modal-body">
+							<h4 class="warning" id="modal-msg">Are you sure, you want to
+								change the status of support request?</h4>
+							<input type="hidden" id="hiddenId" /> <input type="hidden"
+								id="hiddenTitle" /> <input type="hidden" id="hiddenClickedId" />
+
+						</div>
+						<div class="modal-footer">
+
+							<div class="col-sm-12 dis-block">
+								<button type="button" class="btn btn-compose btn-updateSupport"
+									id="updateSupportModalOk">OK</button>
+								<button type="button" data-dismiss="modal"
+									class="btn btn-cancel">Cancel</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- footer -->
+		<div th:include="fragments/component :: footer"></div>
+	</div>
+	<!-- / page wrapper -->
+
+	</div>
+	<!-- /wrapper -->
+	<script type="text/javascript" charset="utf8"
+		src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+	<script>
+	$(function() {
+	  $("#data-table").dataTable({
+	    "order": [],
+	    "stateSave": true,
+	    "columnDefs": [{
+	      "targets": 3,
+	      "orderable": false,
+	    }]
+	  });
+	
+	
+	  $(document).on('click', '.updateSupport', function() {
+	    var supportId = $(this).attr("supportid");
+	    $('#hiddenId').val(supportId);
+	    $('#hiddenTitle').val($(this).attr('title'));
+	    $("#delete").modal('show');
+	  });
+	
+	
+	
+	  //update support status
+	  $(document).on('click', '.btn-updateSupport', function() {
+	
+	    var status = 9;
+	    var url = "/vedanta-web/support/update";
+	    // var currentObjectClicked = this;
+	    var supportId = $('#hiddenId').val();
+	    var title = $('#hiddenTitle').val();
+	
+	
+	    //close button clicked
+	    if (title == 'close') {
+	      var currentObjectClicked = $('*[closeid="close' + supportId + '"]');
+	
+	      status = 10;
+	      //disable close button
+	      currentObjectClicked.removeClass("updateSupport").addClass('fade-out fa-disabled');
+	      currentObjectClicked.parents('td').find('#btn-inprogress').removeClass("updateSupport").addClass('fade-out fa-disabled');
+	      currentObjectClicked.parents('td').siblings('.td-status').children().html('Closed');
+	    }
+	
+	    //In progress button clicked
+	    else {
+	      var currentObjectClicked = $('*[inprogressid="inProgress' + supportId + '"]');
+	
+	      //disable In progress button
+	      currentObjectClicked.removeClass("updateSupport").addClass('fade-out fa-disabled');
+	      currentObjectClicked.parents('td').siblings('.td-status').children().html('In progress');
+	    }
+	
+	    //ajax to update status
+	    $.ajax({
+	      url: url,
+	      type: "PUT",
+	      dataType: "json",
+	      data: '{"status":' + status + ',"id":' + supportId + ' }',
+	      contentType: "application/json; charset=utf-8",
+	      success: function(data) {},
+	      error: function(xhr, status, error) {
+	        console.log("token has been expired." + xhr.responseText);
+	      }
+	    });
+	    $('#delete').modal('toggle');
+	  });
+	
+	})
+	</script>
+</body>
+</html>

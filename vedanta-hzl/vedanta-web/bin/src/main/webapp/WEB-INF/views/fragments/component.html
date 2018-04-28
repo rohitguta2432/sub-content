@@ -1,0 +1,301 @@
+<!DOCTYPE  html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+ 
+<body >
+<!-- <header class="header" th:fragment="header">
+    <div class="header-block header-block-collapse">
+
+        <button class="collapse-btn" id="sidebar-collapse-btn">
+            <i class="fa fa-bars"></i>
+        </button>
+    </div>
+    <div class="header-block header-block-nav">
+        <ul class="nav-profile">
+            <li class="logout">
+            	<a class="" th:href="@{/logout}">
+            		<i class="fa fa-power-off"></i>
+            	</a>
+            	</li>
+        </ul>
+    </div>
+</header> -->
+
+<aside th:fragment="sidebar">
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="sidebar-collapse">
+            <ul class="nav metismenu" id="side-menu">
+                <li sec:authorize="hasAnyRole('ROLE_ADMIN,ROLE_PLANT_HEAD,ROLE_BUSINESS_UNIT_HEAD')" class="brand">
+                	<a th:href="@{/web/dashboard/get}"><img th:src="@{/resources/assets/logo_vedanta.png}"
+                        class="img-responsive center-block big-logo"/></a>                    
+                </li>
+                <li sec:authorize="hasAnyRole('ROLE_ADMIN,ROLE_PLANT_HEAD,ROLE_BUSINESS_UNIT_HEAD')" th:class="${dashboardActive != null ? 'active' : 'inactive'}">
+                    <a th:href="@{/web/dashboard/get}"><i class="fa fa-tachometer"></i> <span class="nav-label">Dashboard</span></a>                    
+                </li>
+                <li sec:authorize="hasAnyRole('ROLE_DATA_UPLOAD,ROLE_CONTRACT_MANAGER')" class="brand">
+                	<a th:href="@{/web/dashboard}"><img th:src="@{/resources/assets/logo_vedanta.png}"
+                        class="img-responsive center-block big-logo"/></a>                    
+                </li>
+                <li sec:authorize="hasAnyRole('ROLE_DATA_UPLOAD,ROLE_CONTRACT_MANAGER')"  th:class="${dashboardActive != null ? 'active' : 'inactive'}">
+                    <a th:href="@{/web/dashboard}"><i class="fa fa-tachometer"></i> <span class="nav-label">Dashboard</span></a>                    
+                </li>
+                <li th:class="${formSaveActive != null ? 'active' : 'inactive'}">
+                    <a th:href="@{/form-save}"><i class="fa fa-book"></i> <span class="nav-label">Forms</span></a>
+                    
+                </li>
+                <li sec:authorize="hasAnyRole('ROLE_ADMIN,CONTRACT_MANAGER,ROLE_PLANT_HEAD,ROLE_BUSINESS_UNIT_HEAD')" th:class="${scorecardListActive != null ? 'active' : 'inactive'}">
+                    <a th:href="@{/scorecard}"><i class="fa fa-file-excel-o"></i> <span class="nav-label">Score Card</span></a>
+                    
+                </li>
+               <!--  <li th:class="${formSaveActive != null ? 'active' : 'inactive'}">
+                    <a href="#"><i class="fa fa-book"></i> <span class="nav-label" >Forms</span><span
+                            class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse ">
+                        <li th:class="${formSaveListActive != null ? 'active' : 'inactive'}">
+                        	<a th:href="@{/form-save}"> Form Save</a>
+                        </li>
+						<li th:class="${formDataListUserActive != null and formDataListUserActive == 1 ? 'active' : 'inactive'}">
+							<a th:href="@{/form/formdata/list-form-data/formId/1}"> Bus Transport Survey</a>
+						</li>
+                        <li th:class="${formDataListUserActive != null and formDataListUserActive == 2 ? 'active' : 'inactive'}">
+                        	<a th:href="@{/form/formdata/list-form-data/formId/2}"> User feedback score</a>
+                        </li>
+                        <li th:class="${formDataListUserActive != null and formDataListUserActive == 3 ? 'active' : 'inactive'}">
+                        	<a th:href="@{/form/formdata/list-form-data/formId/3}"> Travel Desk Survey</a>
+                        </li>
+                        <li th:class="${formDataListUserActive != null and formDataListUserActive == 4 ? 'active' : 'inactive'}">
+                        	<a th:href="@{/form/formdata/list-form-data/formId/4}"> Security Survey</a>
+                        </li>
+                        <li th:class="${formDataListUserActive != null and formDataListUserActive == 5 ? 'active' : 'inactive'}">
+                        	<a th:href="@{/form/formdata/list-form-data/formId/5}"> Facilities survey</a>
+                        </li>
+                        <li th:class="${formDataListUserActive != null and formDataListUserActive == 6 ? 'active' : 'inactive'}">
+                        	<a th:href="@{/form/formdata/list-form-data/formId/6}"> Canteen survey</a>
+                        </li>
+                        <li th:class="${formDataListUserActive != null and formDataListUserActive == 10 ? 'active' : 'inactive'}">
+                       		<a th:href="@{/form/formdata/list-form-data/formId/10}"> Performance Score Card</a>
+                       	</li>
+                    </ul>
+                </li> -->
+               <!--   <li sec:authorize="hasAnyRole('ROLE_ADMIN')" th:class="${userListActive != null ? 'active' : 'inactive'}">
+                    <a th:href="@{/user/get}"><i class="fa fa-users"></i> <span class="nav-label">Users</span></a>
+                    
+                </li> -->
+                <!-- <li sec:authorize="hasAnyRole('ROLE_ADMIN')" th:class="${userActive != null ? 'active' : 'inactive'}">
+                    <a href="#"><i class="fa fa-users"></i> <span class="nav-label">Users</span><span
+                            class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li th:class="${userListActive != null ? 'active' : 'inactive'}">
+                        	<a th:href="@{/user/get}">Users</a>
+                        </li>
+                        <li th:class="${userCreateActive != null ? 'active' : 'inactive'}">
+                        	<a th:href="@{/user/newUser}">Add New User</a>
+                        </li>
+                    </ul>
+                </li> -->
+                <li sec:authorize="hasAnyRole('ROLE_ADMIN')" th:class="${vendorListActive != null ? 'active' : 'inactive'}">
+                	<a th:href="@{/vendor/get}"><i
+                        class="fa fa-male" aria-hidden="true"></i> <span
+                        class="nav-label">Vendors</span> </a> <!-- <ul class="nav nav-second-level collapse">
+								<li><a th:href="@{/vendor}"> Create</a></li>								
+								<li><a th:href="@{/vendor/get}"> View</a></li>
+								<li><a href="#"> Update</a></li>
+								<li><a href="#"> Delete</a></li>
+							</ul> -->
+                </li>
+           <!--      <li sec:authorize="hasAnyRole('ROLE_ADMIN')" th:class="${contractListActive != null ? 'active' : 'inactive'}">
+                    <a th:href="@{/contract}"><i class="fa fa-file-word-o"></i> <span class="nav-label">Contract</span></a>
+                    
+                </li> -->
+                <li sec:authorize="hasAnyRole('ROLE_ADMIN')" th:class="${templateActive != null ? 'active' : 'inactive' }">
+                    <a href="#"><i class="fa fa-cubes"></i> <span class="nav-label">Templates</span><span
+                            class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li th:class="${templateListActive != null ? 'active' : 'inactive'}">
+                        	<a th:href="@{/admin/template}">Templates</a>
+                        </li>
+                        <li th:class="${templateFieldActive != null ? 'active' : 'inactive'}">
+                        	<a th:href="@{/admin/template/field}">Fields</a>
+                        </li>
+                        <li th:class="${templateGroupActive != null ? 'active' : 'inactive'}">
+                        	<a th:href="@{/admin/template/group}">Groups</a>
+                        </li>
+                        <li th:class="${templateGroupFieldActive != null ? 'active' : 'inactive'}">
+                        	<a  th:href="@{/admin/template/group/fields}">Group Fields</a>
+                        </li>
+                        <li th:class="${templateGroupsActive != null ? 'active' : 'inactive'}">
+                        	<a th:href="@{/admin/template/groups}">Template Groups</a>
+                        </li>
+                        <!-- <li th:class="${templateTargetActive != null ? 'active' : 'inactive'}">
+                        	<a th:href="@{/admin/template/scorecard/target-value/list}"> Target Value</a>
+                        </li> -->
+                    </ul>
+                </li>
+
+				<li sec:authorize="hasAnyRole('ROLE_ADMIN')"
+					th:class="${adminFormActive != null ? 'active' : 'inactive'}">
+					<a href="#"><i class="fa fa-files-o"></i> <span
+						class="nav-label">Forms Admin</span><span class="fa arrow"></span></a>
+					<ul class="nav nav-second-level collapse">
+						<li
+							th:class="${adminFormListActive != null ? 'active' : 'inactive'}">
+							<a th:href="@{/admin/form}">Forms</a>
+						</li>
+						<li
+							th:class="${adminFormGroupListActive != null ? 'active' : 'inactive'}">
+							<a th:href="@{/admin/form/groups}">Form Group</a>
+						</li>
+						<li
+							th:class="${adminFormFormFieldActive != null ? 'active' : 'inactive'}">
+							<a th:href="@{/admin/form/field}">Form Fields</a>
+						</li>
+							<li
+							th:class="${adminFormGroupFieldListActive != null ? 'active' : 'inactive'}">
+							<a th:href="@{/admin/form/group/fields}">Form Group Field</a>
+						</li>
+						<li
+							th:class="${adminFormFormGroupDetailActive != null ? 'active' : 'inactive'}">
+							<a th:href="@{/admin/form/group}">Form Group Detail</a>
+						</li>
+					
+					</ul>
+				</li>
+
+				<!-- <li sec:authorize="hasAnyRole('ROLE_ADMIN')" 
+					th:class="${emailTemplateActive != null ? 'active' : 'inactive'}">
+                 	<a th:href=@{/email/admin/template}><i class="fa fa-envelope"></i> <span class="nav-label">Email Template</span></a>
+                </li> --> 
+                	<li sec:authorize="hasAnyRole('ROLE_ADMIN')" 
+					th:class="${surveyActive != null ? 'active' : 'inactive'}">
+                 	<a th:href=@{/email/survey/reminder}><i class="fa fa-file"></i> <span class="nav-label">Survey</span></a>
+                </li> 
+                
+                
+                <!-- 	<li sec:authorize="hasAnyRole('ROLE_ADMIN')" 
+					th:class="${plantHeadActive != null ? 'active' : 'inactive'}">
+                 	<a th:href=@{/plantHead}><i class="fa fa-file"></i> <span class="nav-label">Plant Head</span></a>
+               		 </li> -->
+				
+
+				<li sec:authorize="hasAnyRole('ROLE_ADMIN')" th:class="${settingActive != null ? 'active' : 'inactive' }">
+                    <a href="#"><i class="fa fa-cog"></i> <span class="nav-label">Settings</span><span
+                            class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                    
+                    	  <li  th:class="${userListActive != null ? 'active' : 'inactive'}">
+                 		   <a th:href="@{/user/get}"><i class="fa fa-users"></i> <span class="nav-label">Users</span></a>
+                    
+               			 </li>
+               			 
+               			 <li  
+							th:class="${emailTemplateActive != null ? 'active' : 'inactive'}">
+                 				<a th:href=@{/email/admin/template}><i class="fa fa-envelope"></i> <span class="nav-label">Email Template</span></a>
+                		</li>
+                    
+	                     <li 
+						th:class="${plantHeadActive != null ? 'active' : 'inactive'}">
+	                 	<a th:href=@{/plantHead}><i class="fa fa-male"></i> <span class="nav-label">Plant Head</span></a>
+	               		 </li>
+               		 
+               		 
+                    </ul>
+                </li>
+				
+
+
+
+
+				<!-- <li sec:authorize="hasAnyRole('ROLE_ADMIN')"
+
+					th:class="${adminFormActive != null ? 'active' : 'inactive'}">
+					<a href="#"><i class="fa fa-envelope"></i> <span
+						class="nav-label">Email</span><span class="fa arrow"></span></a>
+                   	<ul class="nav nav-second-level collapse">
+                        <li
+								th:class="${adminFormListActive != null ? 'active' : 'inactive'}">
+                        	<a th:href=@{/email/admin/template}>Template</a>
+                        </li>                      
+                    </ul>
+				</li> 
+				
+					<li sec:authorize="hasAnyRole('ROLE_ADMIN')"
+
+					th:class="${adminFormActive != null ? 'active' : 'inactive'}">
+					<a href="#"><i class="fa fa-file"></i> <span
+						class="nav-label">Survey</span><span class="fa arrow"></span></a>
+                   	<ul class="nav nav-second-level collapse">
+                        <li
+								th:class="${adminFormListActive != null ? 'active' : 'inactive'}">
+                        	<a th:href=@{/email/survey/remainder}>Survey Remainder</a>
+                        </li>                      
+                    </ul>
+<<<<<<< HEAD
+				</li> 
+=======
+				</li>  -->
+
+			</ul>
+
+        </div>
+    </nav>
+</aside>
+
+<!-- Top Header -->
+<div class="row" th:fragment="topheader">
+	<nav class="navbar navbar-fixed-top white-bg " role="navigation">
+		<div class="navbar-header ">
+			<a class="navbar-minimalize visible-xs-inline-block" href="#"><i class="fa fa-bars fa-3x "></i> </a>
+			<a href="javascript:void(0)" class="hindlogo hidden-xs">
+				<img th:src="@{/resources/assets/hindustan.jpg}"
+				class="img-responsive center-block" />
+			</a>
+		</div>
+
+		<div class="col-sm-4 pull-right">
+			<ul class="nav navbar mb0px list-inline navbar-right">
+				<li sec:authorize="!hasAnyRole('ROLE_ADMIN')" class="dropdown notifiybell">
+					<a id="alert" class="dropdown-toggle " data-toggle="dropdown" href="#"> 
+						<i class="fa fa-bell-o fa-lg" ></i> 
+						<span class="notification-icon hidden" id="countNotification"></span>
+					</a>
+					<div
+						class="dropdown-menu dropdown-messages dropdown-arrow notification-list">
+						<div class="panel">
+							<div class="panel-heading">
+								<h3 class="panel-title">Notifications</h3>
+							</div>
+							<div class="panel-body p0px">
+
+								<ul class="pl0px noti-liNotifications
+								st" id="ulNotify">
+								</ul>
+							</div>
+							<div class="panel-footer">
+								 <a href="/vedanta-web/notification/getAllnotification">View All</a> 
+							</div>
+						</div>
+						<script type="text/javascript" th:src="@{/resources/js/notification.js}"></script>
+					</div>
+				</li>
+				<li>
+					<div class="logout">
+						<a class="" th:href="@{/logout}"><i class="fa fa-power-off"></i>
+							<span>Logout</span>
+						</a>
+					</div>
+				</li>
+			</ul>
+		</div>
+
+	</nav>
+</div>
+			
+<!-- Top Header -->
+
+<footer class="footer" th:fragment="footer">
+    <div id="footer">
+        <p class="copyright">&copy; Vedanta Group</p>
+    </div>
+</footer>
+</body>
+</html>

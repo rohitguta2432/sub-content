@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>Error page</title>
+		<meta charset="utf-8" />
+		<object th:include="fragments/header :: head" th:remove="tag" />
+		<link rel="shortcut icon" type="image/icon" th:href="@{/resources/images/favicon.ico}"/>	
+
+	</head>
+	<body>
+		<div id="wrapper" th:with="userActive=${'active'},userListActive=${'active'}">
+			<!-- <i th:replace="/fragments/component :: sidebar"></i> -->
+			<div class="container">
+				<!-- top header -->
+				<!-- <div th:replace="/fragments/component :: topheader" ></div> -->
+			
+				<!-- Body Part -->
+				<div class="wrapper wrapper-content">
+					<div class="internalerror ">
+						<div class="row dis-flex">
+							<div  class="col-sm-7">
+								<h3>400 Error</h3>
+								<h4>Bad Request </h4>
+								<p>Your browser sent a request that this e.</p>
+								<!--    <a class="btn">Back to Home Page</a> -->
+							</div>
+							<div class="col-sm-5">
+								<img th:src="@{/resources/images/500.gif}" 
+	                        	class="img-responsive center-block" alt="Bad Request" />
+	                        </div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,15 @@
+@charset "ISO-8859-1";
+.socio-table select{border:1px solid #aaa}
+.client-form select.form-control{padding:0 0 0 5px !important;height:28px;background:#fff;display:inline-block;content:'X'}
+.templates ul.field-listing.dis-flex li{float:left}
+.dashboard .table label{word-break:break-all;white-space:normal!important;-ms-word-break:break-all}
+.scoredetail label.col-sm-8{margin:10px 0}
+.scorecard .justify-center.dis-flex{min-height:inherit}
+.all li.new.dis-flex{display:table}
+.all li .flex-ch1,.all li .flex-ch2{display:table-cell!important}
+.all li .flex-ch2{padding-left:10px;margin-left:10px;width:100%!important}
+.notification-list .panel-footer,.notification-list .panel-heading{background-color:#f5f5f5}
+td.notgenerated,.months td{width:100px!important}
+@media all and (min-width: 768px) {
+.templates .col-sm-2{width:15%}
+}

@@ -1,0 +1,466 @@
+
+<meta http-equiv="Context-Type" content="text/html; charset=UTF-8">
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Vedanta</title>
+<object th:include="fragments/header :: head" th:remove="tag"></object>
+<!-- Favicon -->
+<link rel="shortcut icon" type="image/icon"
+	th:href="@{/resources/images/favicon.ico}" />
+
+
+
+</head>
+<body>
+	<div id="wrapper" th:with="adminFormActive=${'active'},adminFormFormFieldActive=${'active'}">
+		<i th:replace="/fragments/component :: sidebar"></i>
+
+		<div class="white-bg page-wrapper header-wrapper">
+			<!-- top header -->
+			<div th:replace="/fragments/component :: topheader" ></div>
+			<!-- Body Part -->
+			<div class="wrapper wrapper-content">
+
+				<div class="container-fluid">
+					<div class="row btm-brd">
+						<div class="col-sm-6">
+							<div class="page-title">
+								<h3>Add/Update Field information</h3>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="setting-content">
+								<form class="client-form" action="#"
+									th:action="@{/admin/form/field/save}" th:object="${field}"
+									method="POST">
+									<div class="row ">
+										<div class="col-sm-3 mb10px">
+											<label class="mtb5px ">Name :</label>										
+											<input type="hidden" name="id" th:value="${field.id}" /> 
+											<input class="form-control" th:value="${field.name}" type="text"
+												id="name" name="name"  onkeyup="checkField();"/>
+												 <span class='errormsg' style="display:none;" id="fieldSpan">Please enter field name</span>
+										</div>									
+										<div class=" col-sm-3 mb10px">
+											<label class="mtb5px ">Label Name :</label>										
+											<input class="form-control" type="text" id="label_name"
+												name="labelName" th:value="${field.labelName}" />
+										</div>									
+										<div class="col-sm-3 mb10px">
+											<label class="mtb5px ">Description :</label>										
+											<input class="form-control" type="text" id="description"
+												name="description" th:value="${field.description}" />
+										</div>									
+										<div class=" col-sm-3 mb10px">
+											<label class="mtb5px ">Data Unit :</label>										
+											<select class="form-control" name="dataUnitId" id="dataUnit" onchange="checkDataUnit();">
+												<option value="0">Select Data Unit</option>
+												<option th:each="dataUnit: ${dataUnits}"
+													th:selected="${field.dataUnitId}==${dataUnit.id}"
+													th:value="${dataUnit.id}"><span
+														th:text="${dataUnit.symbol} +',' + ${dataUnit.name}"></span>
+												</option>
+											</select>
+											<span class='errormsg' style="display:none;" id="dataUnitSpan">Select anyone data unit</span>
+										</div>									
+										<div class="col-sm-3">
+											<label class="mtb5px ">Weight :</label>										
+											<input class="form-control" type="text"
+												id="weight" name="weight"
+												th:value="${field.weight}" onkeyup="checkWeight();"/>
+												<span class='errormsg' style="display:none;" id="weightSpan">Weight not be greater than 100</span>
+												<span class='errormsg' style="display:none;" id="weightNumberSpan">Please enter valid number</span>
+										</div>
+										
+										
+										<div class=" col-sm-3">
+											<label class="mtb5px ">Type :</label>
+											<select class="form-control" name="type" id="mySelect" onchange="checkType();">
+												<option value="NA">Select Type</option>
+												<option value="text" th:selected="${field.type} == text">Text</option>
+												<option value="checkbox" th:selected="${field.type} == checkbox">CheckBox</option>
+												<option value="radio" th:selected="${field.type} == radio">Radio</option>
+												<option value="select" th:selected="${field.type} == select">Select</option>
+											</select>
+											<span class='errormsg' style="display:none;" id="typeSpan">Select anyone type</span>
+
+										</div>
+									</div>
+									<div class="scoringgroup"
+										th:if="${field.formFieldOptions!= null and field.formFieldOptions.size() > 0}">
+										<div id="" class="row"
+											th:if="${field.formFieldOptions != null  and field.formFieldOptions.size() > 0}"
+											th:each="abcd,iterator : ${field.formFieldOptions}">
+											<input type='hidden'
+												th:name="'abcd['+${iterator.index}+'].fieldId'"
+												th:value="${field.formFieldOptions[ iterator.index ].formFieldId}" />
+											<input type="hidden" name="formFieldOptions[0].formFieldId"
+												th:value="${field.id}" />
+											<div class="col-sm-3 mb10px">
+												<label class="mtb5px ">Name :</label>
+												<input class="form-control" type="text" id="optionName"
+													th:name="'formFieldOptions['+${iterator.index}+'].optionName'"
+													th:value="${field.formFieldOptions != null  and field.formFieldOptions.size() > 0} ? ${field.formFieldOptions[ iterator.index ].optionName} : ''" />
+											
+											</div>
+											<div class="col-sm-3 mb10px">
+												<label class="mtb5px ">value :</label>
+												<input class="form-control" type="text" id="optionValue"
+												 th:name="'formFieldOptions['+${iterator.index}+'].optionValue'"
+													th:value="${field.formFieldOptions != null  and field.formFieldOptions.size() > 0} ? ${field.formFieldOptions[iterator.index].optionValue } : ''" onkeypress = "return checkForComma(event);"/>
+											</div>
+											<div class=''>
+												<div class='col-sm-1 text-right text-right'>
+												<label class="mtb5px">&nbsp;</label>
+													<input title='Remove' type='button' id=''
+														onclick='remove()' value='X' class='btn remove'>
+												</div>
+											</div>
+											</div> 
+								</div>
+
+									<div class="row ">
+										
+										<div class="col-sm-12">
+											<p id="demo" class="m0px"></p>
+										</div>
+										<div class="col-sm-12 text-right">
+												<input type="button" class='btn add' value='Add'  id="myClick" style="display:none;" />
+										</div>
+									</div>
+
+									<!-- VALIDATION -->
+									<div class="row ">
+										<div class=" col-sm-12 formpanels">
+											<hr />
+											<h4 class="">Validation</h4>
+										</div>
+									</div>
+									<div class="row ">
+										<div class="col-sm-3">
+											<label class="mtb5px ">Data Type :</label>										
+											<!-- <input class="form-control" type="text"  id="data_type"
+    										name="dataType" th:value="${field.dataType}" /> -->
+											<select class="form-control" name="formValidations[0].dataType">
+												<option value="NA">Select Data Type</option>
+												<option value="INTEGER"
+													th:selected="${field.formValidations !=null and field.formValidations.size() > 0 and field.formValidations[0].dataType == 'INTEGER'}">Integer
+												</option>
+												<option value="LONG"
+													th:selected="${field.formValidations !=null and field.formValidations.size() > 0 and field.formValidations[0].dataType == 'LONG'}">Long
+											</option>
+												<option value="DOUBLE"
+													th:selected="${field.formValidations !=null and field.formValidations.size() > 0 and field.formValidations[0].dataType == 'DOUBLE'}">Double
+												</option>
+												<option value="FLOAT"
+													th:selected="${field.formValidations !=null and field.formValidations.size() > 0 and field.formValidations[0].dataType == 'FLOAT'}">Float
+												</option>
+												<option value="STRING"
+													th:selected="${field.formValidations !=null and field.formValidations.size() > 0 and field.formValidations[0].dataType == 'STRING'}">String
+												</option>
+											</select>
+										</div>
+										<div class="col-sm-3 ">
+											<label class="mtb5px ">Min Value :</label>
+											<input class="form-control" type="text" id="minValue"
+												name="formValidations[0].minValue"
+												th:value="${field.formValidations != null and field.formValidations.size() > 0} ? ${field.formValidations[0].minValue} : ''" onkeyup="checkMinValue()"/>
+										<span class='errormsg' style="display:none;" id="minSpan">Minimum value not be greater than 100</span>
+										<span class='errormsg' style="display:none;" id="minNumberSpan">Please enter only numeric value</span>
+										</div>
+										<div class="col-sm-3 ">
+											<label class="mtb5px ">Max Value :</label>
+											<input class="form-control" type="text" id="maxValue"
+												name="formValidations[0].maxValue"
+												th:value="${field.formValidations != null and field.formValidations.size() > 0} ? ${field.formValidations[0].maxValue} : ''" onkeyup="checkMaxValue()"/>
+										<span class='errormsg' style="display:none;" id="maxSpan">Maximum value not be greater than 100</span>
+										<span class='errormsg' style="display:none;" id="maxNumberSpan">Please enter only numeric value</span>
+										</div>
+									</div>
+									
+									<!-- Target Value -->
+
+									<div class="row ">
+										<div class=" col-sm-12 formpanels">
+											<hr />
+											<h4 class="">Target Value</h4>
+										</div>
+									</div>
+
+
+									<div class="row scoringgroup">
+										<input type="hidden" name="formTargetValue[0].formFieldId"
+											th:value="${field.id}" />
+										
+											<div class="col-sm-3 ">
+												<label class="mtb5px ">Value :</label>
+											
+												<input class="form-control" type="text" id="value"
+													name="formTargetValue[0].value" maxlength="3"
+													th:value="${field.formTargetValue != null and field.formTargetValue.size() > 0} ? ${field.formTargetValue[0].value} : 'NA'" />
+											<span class='errormsg' style="display:none;" id="targetSpan">Please enter only alphanumeric value</span>
+												<span class='errormsg' style="display:none;" id="targetNumberSpan">Target value not be greater than 100</span>	
+											</div>
+										</div>
+									
+
+									<div class="row">
+										<div class="col-sm-12 text-right mt10px">
+											<button class="btn btn-success" type="submit">Save</button>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- footer -->
+		<div th:include="fragments/component :: footer"></div>
+		<!-- / page wrapper -->
+	</div>
+	<!-- /wrapper -->
+	<script th:inline="javascript">
+		var count = 0;
+		var scorecount = 0;
+		$(document).ready(function() {
+			//console.log("ready!");
+		var field = [[${field}]];
+		//console.log(field);
+		
+		if(field.formFieldOptions != void(0)){
+			  var valCount = field.formFieldOptions;
+			  var valField = valCount.length;
+			  count = valField - 1;
+		}
+		
+		if(field.type != void(0)){
+			  var typeVal = field.type;
+				if (typeVal == "checkbox"	| typeVal == "radio" | typeVal == "select") {
+					$('#myClick').show();
+				}else{
+					$('#myClick').hide();
+					document.getElementById('myClick').style.display = 'none';
+				}
+		}
+		 
+		
+			
+			$('#mySelect').on('change',function() {
+				var value = this.value;
+				if (value == "checkbox"	| value == "radio" | value == "select") {
+					$("#demo").html("");
+					$("#demo").append(
+						"<div class='row mt20px'><div class='col-sm-3'><label> Name:</label></div><div class='col-sm-3'><label> Value:</label></div></div><div class='row mb20px' id='count" + count++ + "'><div class='col-sm-3'><input type='text' class='form-control' name='formFieldOptions[" + count + "].optionName'  ></div><div class='col-sm-3'><input type='text' class='form-control' name=formFieldOptions["
+						+ count
+						+ "].optionValue onkeypress = 'return checkForComma(event);' }) ></div><div class='col-sm-6 text-right'>"
+						+ "</div></div>"
+					);
+					$('#myClick').show();
+				} else if (value == "text") {
+					$("#demo").html("");
+				}
+			});		
+
+			
+			$(document).on('click', '#myClick', function(){
+				//$("#myClick").val("X");
+    			//$("#myClick").attr("id", "removeField").addClass('remove');
+    	
+    			
+				$("#demo").append(
+					"<div class='row mb20px' id='count" + count++ + "'><div class='col-sm-3'> <input class='form-control' type='text' name='formFieldOptions[" + count + "].optionName'  ></div><div class='col-sm-3'> <input class='form-control' type='text'"
+					+ " name='formFieldOptions[" + count + "].optionValue' onkeypress = 'return checkForComma(event);' }) ></div><div class='col-sm-6 text-right'>"
+					+ "<input type='button' id='removeField' class='btn add remove' value='X' /></div> </div>"
+				);
+			});
+			$(document).on('click', '.remove', function(){
+				$(this).closest('.row').remove();
+			});
+			$(document).on('click', '.removefield', function(){
+				$(this).closest('.scoringgroup').remove();				
+			});
+		});
+		/* function remove() {
+			var ele = --count;
+			document.getElementById('count' + ele).remove();
+		} */
+
+		function checkForComma(event) {
+			if (event.charCode == 44) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+		/* function myFunction3() {
+			$("#demo1").append(
+				"<div class='row scoringgroup' id='count" + count++ + "'><input type='hidden' name='scoringCriteria[" + count + "].fieldId'th:value='${field.id}' />"
+				+ "<div class='form-group'><div class='col-sm-3 col-sm-offset-1'><label class='mtb5px pull-right'>Condition :</label></div><div class='col-sm-6' ><select class='form-control'name='scoringCriteria[" + count + "].operator' id='operator'><option value='0'>Select Condition</option><option value='EQUALS'> Equal </option><option value='GREATER_THAN'> Greater Than </option><option value='GREATER_THAN_EQUAL'> Greater Than Equal </option><option value='LESS_THAN'> Less Than</option><option value='LESS_THAN_EQUAL'> Less Than Equal </option><option value='NOT_EQUAL'>Not Equal</option><option value='BOOLEAN'>Boolean</option><option value='ASSING'>Assign</option></option></select></div></div>"
+				+ "<div class='clearfix'></div><div class='form-group'><div class='col-sm-3 col-sm-offset-1'><label class='mtb5px pull-right'>Compare with :</label></div><div class='col-sm-6'><input class='form-control' type='text' id='rightoperand'name='scoringCriteria[" + count + "].rightOperand' /></div></div>"
+				+ "<div class='form-group'><div class='col-sm-3 col-sm-offset-1'><label class='mtb5px pull-right'>Data Type :</label></div><div class='col-sm-6'><select class='form-control'name='scoringCriteria[" + count + "].rightOperandType'id='rightOperandType'><option value='0'>Select Data Type</option><option value='INTEGER'>Integer</option><option value='LONG'>Long</option><option value='DOUBLE'>Double</option><option value='FLOAT'>Float</option><option value='STRING'>String</option><option value='TARGET'>Target</option></option></select></div></div>"
+				+ "<div class='form-group'><div class='col-sm-3 col-sm-offset-1'><label class='mtb5px pull-right'>Out Score :</label></div><div class='col-sm-6'><input class='form-control' type='text'id='rightOperandType' name='scoringCriteria[" + count + "].outScore'/></div></div>"
+				+ "<div class='form-group'><div class='col-sm-10 text-right'><input title='Remove' type='button'id='myClick' onclick='remove()' value='X' class='btn remove'></div></div></div>"\
+			);
+		} */
+		
+		
+		 $('form').submit(function () {	
+
+	         dataUnit = $("#dataUnit").val();
+	         checked = $("#mySelect").val();
+	         weight = $("#weight").val();
+	         value = $("#value").val();
+	         minValue = $("#minValue").val();
+	         maxValue = $("#maxValue").val();
+	         
+	         var name = jQuery.trim($("#name").val());
+	         var alphanumeric = new RegExp("^[a-zA-Z0-9]+$");
+	         var regexForNumberAndDecimal = new RegExp("(?=[^\0])(?=^([0-9]+){0,1}(\.[0-9]{1,2}){0,1}$)");
+	         var numberOnly = new RegExp("^[0-9]+$");
+
+	          if (name.length == 0)
+	          {
+	        	     $( "#fieldSpan" ).show();
+	        	     return false;
+	          }
+	         
+
+	          if(dataUnit == 0) {
+	        	  $("#dataUnitSpan").show();
+	            return false;
+	          }
+	          
+	           if(weight > 100){
+	        	  $("#weightSpan").show();
+		            return false;
+	          } 
+
+	          if (!regexForNumberAndDecimal.test(weight)) {
+	        	  $("#weightNumberSpan").show();
+		            return false;	
+	          }
+	           
+	          
+	          if(checked == 0 || checked == 'NA') {
+	        	  $("#typeSpan").show();
+		            return false;
+		          }
+	          
+
+	     
+	          if(minValue > 100){
+	        	  $("#minSpan").show();
+		            return false;
+	          } 
+	        
+	          if (!numberOnly.test(minValue)) {
+	        	  $("#minNumberSpan").show();
+		            return false;	
+	          }
+	          
+	          if(maxValue > 100){
+	        	  $("#maxSpan").show();
+		            return false;
+	          } 
+	        
+	          if (!numberOnly.test(maxValue)) {
+	        	  $("#maxNumberSpan").show();
+		            return false;	
+	          }
+	          
+	          
+	          if(value > 100){
+	        	  $("#targetNumberSpan").show();
+		            return false;
+	          } 
+	  
+	          if (!alphanumeric.test(value)) {
+	        	  $("#targetSpan").show();
+		            return false;	
+	          }
+	          
+	          
+
+	        });
+		
+		
+		 function checkField(){
+			 var name = jQuery.trim($("#name").val());
+
+	          if (name.length > 0 )
+	          {
+	        	     $( "#fieldSpan" ).hide();
+	          }
+			 
+			 
+		 }
+		 
+		 function checkDataUnit(){
+			 dataUnit = $("#dataUnit").val();
+
+		          if (dataUnit > 0)
+		          {
+		        	     $( "#dataUnitSpan" ).hide();
+		          }
+			 
+		 }
+		 
+		 
+		 function checkType(){
+			 checked = $("#mySelect").val();
+			 
+			 if (checked > 0 || checked != 'NA')
+	          {
+	        	     $( "#typeSpan" ).hide();
+	          }
+			 
+		 }
+		 
+		 function checkWeight(){
+			 var weight = $("#weight").val();
+
+	          if (weight.length > 0 )
+	          {
+	        	     $( "#weightSpan").hide();
+	        	     $( "#weightNumberSpan").hide();
+	          }
+			 
+		 }
+		 function checkMinValue(){
+			 var minValue = $("#minValue").val();
+
+	          if (minValue.length > 0 )
+	          {
+	        	     $( "#minSpan" ).hide();
+	        	     $( "#minNumberSpan").hide();
+	          }
+		 }
+		 
+		 
+		 function checkMaxValue(){
+			 var maxValue = $("#maxValue").val();
+
+	          if (maxValue.length > 0 )
+	          {
+	        	     $( "#maxSpan" ).hide();
+	        	     $( "#maxNumberSpan").hide();
+	          }
+		 }
+		 
+		
+		
+		
+	</script>
+</body>
+</html>

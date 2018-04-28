@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>Vedanta</title>
+<object th:include="/fragments/header :: head" th:remove="tag" />
+<link href="../../../resources/css/jquery.multiselect.css"
+	rel="stylesheet" media="screen"
+	th:href="@{/resources/css/jquery.multiselect.css}" />
+
+<link href="../../../resources/css/bootstrap.min.css" rel="stylesheet"
+	media="screen" th:href="@{/resources/css/bootstrap.min.css}" />
+
+<link href="../../../resources/css/bootstrap-multiselect.css"
+	rel="stylesheet" media="screen"
+	th:href="@{/resources/css/bootstrap-multiselect.css}" />
+<!-- Favicon -->
+<link rel="shortcut icon" type="image/icon"
+	th:href="@{/resources/images/favicon.ico}" />
+
+<script type="text/javascript" th:inline="javascript">
+
+function fillData(){
+	var select ;
+	var user = [[${user}]];
+	
+
+	if(user.id!=null)
+	$("#id").val(user.id);
+
+	if(user.name!=null)
+	$("#name").val(user.name);
+
+    if(user.username!=null)
+    $("#loginId").val(user.username);
+
+    if(user.parentId!=null)
+		$("#parentId").val(user.parentId);
+
+	if(user.employeeId!=null)
+		$("#employeeId").val(user.employeeId);
+		
+	if(user.email!=null)
+		$("#emailaddress").val(user.email);	
+	/* if(user.password!=""){
+	var passwordval=$('#password').val(user.password)
+	}else{
+		var passwordval="";
+	} */
+	$('#status').val(user.status);
+	
+ 	if(user.isWithoutAdAllowed == 1){
+ 		$("#valueTargetCheck").val(1);
+ 		$("#valueTargetCheck").prop( "checked", true );	
+ 	}else{
+ 		$("#valueTargetCheck").prop( "checked", false);
+ 		$("#valueTargetCheck").val(0);
+ 	}	
+	if (valueTargetCheck.checked) {
+      var passdfiled = 	'<div class="form-group" id="' + valueTargetCheck.name + '">'+
+      					'<div class="row">'+
+      					'<div class="col-sm-4 col-md-3 col-md-offset-1">'+
+      					'<label class="pt10px pull-right">Password</label>'+
+      					'</div><div class="col-sm-8 col-md-6"><input class="form-control" type="password" '+
+      					'id="pwd" name="password"/></div></div></div>';
+      document.getElementById("insertinputs").innerHTML = passdfiled;
+    } else {
+    	document.getElementById("insertinputs").innerHTML = "";
+    }
+
+	if(user.authorities!=null){
+   	
+   	var array = (user.authorities).split(',');	
+   	 
+   	    for (var i = 0; i < array.length; ++i) {
+			if(array[i]=="ROLE_PLANT_HEAD"){
+				$( "#ROLE_PLANT_HEAD" ).prop( "checked", true );
+			}
+			if(array[i]=="ROLE_BUSINESS_UNIT_HEAD"){
+				$( "#ROLE_BUSINESS_UNIT_HEAD" ).prop( "checked", true );
+			}
+			
+			if(array[i]=="ROLE_CONTRACT_MANAGER"){
+				$( "#ROLE_CONTRACT_MANAGER" ).prop( "checked", true );
+			}
+			if(array[i]=="ROLE_HR"){
+				$( "#ROLE_HR" ).prop( "checked", true );
+			}
+		}
+   	}
+
+    var fieldName = [[${fieldName}]];
+	if(fieldName=="Login Id"){
+		alert("LoginId accept only alphanumeric vlaue ");
+	}
+	
+	if(fieldName=="User Name"){
+		alert("User Name accept only alphanumeric, space ,underscore and hyphen");
+	}
+	if(fieldName=="User Employee Id"){
+		alert("User Employee Id accept only number")
+	}
+	
+	if(fieldName=="User Parent Id"){
+		alert("User Parent Id accept only alphanumeric")
+	}
+    
+}
+
+window.onload = function () { 
+	fillData();
+	}
+
+function validation() {
+
+    var flag = 0;
+    var loginId = $("#loginId").val();
+    var nameName = $("#name").val();
+    var employeeId = $("#employeeId").val();
+    var parentId = $("#parentId").val();
+
+
+    var alphanumeric = new RegExp("^[a-zA-Z0-9]+$");
+    var alphanumericWithSpace = new RegExp("^[a-zA-Z0-9 _-]+$");
+    var numberOnly = new RegExp("^[0-9]+$");
+    var alphanumericWithUnderscoreAndDot = new RegExp("^[a-zA-Z0-9._]+$")
+
+
+    if (loginId == null || loginId == "") {
+        alert("Please Enter the Login Id")
+        document.getElementById("loginId").focus();
+        return false;
+    }
+    if (!alphanumericWithUnderscoreAndDot.test(loginId)) {
+        $("#loginAlphanumericAndUnderscoreAndDotSpan").show(); 
+        document.getElementById("loginId").focus();
+        return false;
+    }
+
+    if (nameName == null || nameName == "") {
+        alert("Please Enter the User Name")
+        document.getElementById("name").focus();
+        return false;
+    }
+    if (!alphanumericWithSpace.test(nameName)) {
+        alert("Please Enter alphanumeric, space ,underscore and only ")
+        document.getElementById("name").focus();
+        return false;
+    }
+
+
+    if (employeeId == null || employeeId == "") {
+        alert("Please Enter the Employee Id")
+        document.getElementById("employeeId").focus();
+        return false;
+    }
+
+    if (!alphanumeric.test(employeeId)) {
+        alert("Employee Id can only be numeric");
+        document.getElementById("employeeId").focus();
+        return false;
+    }
+
+
+    if ($('#ROLE_CONTRACT_MANAGER').is(':checked')) {
+        /* if (!alphanumeric.test(parentId)) {
+            alert("Parent Id can only be alphanumeric");
+            document.getElementById("parentId").focus();
+            return false;
+        } */
+    }
+
+    if ($('#ROLE_PLANT_HEAD').is(':checked')) {
+        /* if (!alphnumeric.test(parentId)) {
+            alert("Parent Id can only be alphanumeric");
+            document.getElementById("parentId").focus();
+            return false;
+        } */
+    }
+    var roleData = "";
+    var flag = 0;
+    if ($('#ROLE_CONTRACT_MANAGER').is(':checked')) {
+        roleData += "ROLE_CONTRACT_MANAGER,";
+        flag = 1;
+    }
+
+    if ($('#ROLE_PLANT_HEAD').is(':checked')) {
+        roleData += "ROLE_PLANT_HEAD,";
+        flag = 1;
+    }
+
+    if ($('#ROLE_BUSINESS_UNIT_HEAD').is(':checked')) {
+        roleData += "ROLE_BUSINESS_UNIT_HEAD,";
+        flag = 1;
+    }
+
+    if ($('#ROLE_HR').is(':checked')) {
+        roleData += "ROLE_HR,";
+        flag = 1;
+    }
+
+    if (flag == 0) {
+        alert("Please select Role")
+        return false;
+    }
+    else {
+        roleData = roleData.substring(0, roleData.length - 1);
+        $("#authorities").val(roleData);
+    }  
+    
+    return true;
+}
+
+function checkValidation(element) {
+	
+	   
+	   if (element == "ROLE_PLANT_HEAD") {
+           if ($('#ROLE_PLANT_HEAD').is(':checked')) {
+       
+               $("#ROLE_BUSINESS_UNIT_HEAD").prop('checked', false); 
+               $("#ROLE_CONTRACT_MANAGER").prop('checked', false); 
+               $("#ROLE_HR").prop('checked', false);
+
+           } 
+       }
+
+       if (element == "ROLE_BUSINESS_UNIT_HEAD") {
+           if ($('#ROLE_BUSINESS_UNIT_HEAD').is(':checked')) {
+                 $("#ROLE_PLANT_HEAD").prop('checked', false); 
+                 $("#ROLE_CONTRACT_MANAGER").prop('checked', false);
+                 $("#ROLE_HR").prop('checked', false);
+
+           } 
+       }
+       
+       if (element == "ROLE_CONTRACT_MANAGER") {
+           if ($('#ROLE_CONTRACT_MANAGER').is(':checked')) {
+                 $("#ROLE_PLANT_HEAD").prop('checked', false); 
+                 $("#ROLE_BUSINESS_UNIT_HEAD").prop('checked', false);
+                 $("#ROLE_HR").prop('checked', false); 
+
+           } 
+       }
+       
+       if (element == "ROLE_HR") {
+           if ($('#ROLE_HR').is(':checked')) {
+                 $("#ROLE_PLANT_HEAD").prop('checked', false); 
+                 $("#ROLE_BUSINESS_UNIT_HEAD").prop('checked', false);
+                 $("#ROLE_CONTRACT_MANAGER").prop('checked', false); 
+
+           } 
+       }
+
+}
+
+  function dynInput(cbox) {
+	
+	if (cbox.checked) {
+		$('#'+valueTargetCheck.id).val(1);
+		var passwordval=$('#pwd').val();
+		$("#valueTargetCheck").prop( "checked", true );
+		/* $('#'+valueTargetCheck.id).val(1); */
+		/* var vtc= $('#'+valueTargetCheck.id).val(); */
+ 	var passdfiled = 	'<div class="form-group" id="' + cbox.name + '">'+
+      					'<div class="row">'+
+      					'<div class="col-sm-4 col-md-3 col-md-offset-1">'+
+      					'<label class="pt10px pull-right">Password</label>'+
+      					'</div><div class="col-sm-8 col-md-6"><input class="form-control" type="password" '+
+      					'id="pwd" name="password"/></div></div></div>';
+      document.getElementById("insertinputs").innerHTML = passdfiled;
+    } else {
+    	$('#'+valueTargetCheck.id).val(0);
+       document.getElementById("insertinputs").innerHTML = "";
+	     //valueTargetCheck.value ='0';
+	     $("#valueTargetCheck").prop( "checked", false );
+	}
+  }  
+</script>
+</head>
+<body>
+	<div id="wrapper"
+		th:with="userListActive=${'active'},settingActive=${'active'}">
+		<i th:replace="/fragments/component :: sidebar"></i>
+		<div class="white-bg page-wrapper header-wrapper">
+			<!-- top header -->
+			<div th:replace="/fragments/component :: topheader"></div>
+			<div class="wrapper wrapper-content">
+
+				<div class="container-fluid">
+					<div class="row btm-brd">
+						<div class="col-sm-12">
+							<div class="page-title">
+								<h3>Update User Details</h3>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-sm-10 mtb20px">
+							<div class="row">
+								<form class="client-form" method="POST" id="uploadForm"
+									th:action="@{/user/update}" onsubmit="return validation()"
+									th:object="${updateUser}" enctype="multipart/form-data">
+									<input type="hidden" name="id" id="id" th:field="*{id}" /> <input
+										type="hidden" id="role_sup" />
+									<div class="col-sm-12">
+										<div class="form-group ">
+											<div class="row">
+												<div class="col-sm-4 col-md-3 col-md-offset-1">
+													<label class="pt10px pull-right">Login Id</label>
+												</div>
+												<div class="col-sm-8 col-md-6">
+													<input class="form-control" type="text" id="loginId"
+														th:field="*{loginId}" readonly="readonly" />
+												</div>
+												<span class='errormsg' style="display: none;" id="loginSpan">LoginId Required</span> 
+												<span class='errormsg' style="display: none;" id="loginAlphanumericSpan">Please Enter only alphanumeric value only</span>
+												<span class='errormsg' style="display:none;" id="loginAlphanumericAndUnderscoreAndDotSpan">Please Enter alphanumeric, underscore and dot value only</span>
+											</div>
+										</div>
+										<div class="form-group">
+											<div class="row">
+												<div class="col-sm-4 col-md-3 col-md-offset-1">
+													<label class="pt10px pull-right">User Name</label>
+												</div>
+												<div class="col-sm-8 col-md-6">
+													<div class="row">
+														<div class="col-sm-12">
+															<input class="form-control" type="text" id="name"
+																th:field="*{name}" />
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<div class="row">
+												<div class="col-sm-4 col-md-3 col-md-offset-1">
+													<label class="pt10px pull-right">User Role</label>
+												</div>
+
+
+												<div class="col-sm-8 col-md-8 check-box">
+<!-- support-list -->
+													<label for="ROLE_CONTRACT_MANAGER"
+														class="smalabel vote-check"> <input
+														type="checkbox" id="ROLE_CONTRACT_MANAGER"
+														value="ROLE_CONTRACT_MANAGER" name="ROLE_CONTRACT_MANAGER"
+														onclick="checkValidation(this.id)"> <span>Contract
+															Manager</span>
+													</label>
+													
+													 <label for="ROLE_PLANT_HEAD" class="smalabel vote-check">
+														<input type="checkbox" id="ROLE_PLANT_HEAD"
+														value="ROLE_PLANT_HEAD" name="ROLE_PLANT_HEAD"
+														onclick="checkValidation(this.id)"> <span>Plant
+															Head</span>
+													</label> 
+													
+													<label for="ROLE_BUSINESS_UNIT_HEAD"
+														class="smalabel vote-check"> <input
+														type="checkbox" id="ROLE_BUSINESS_UNIT_HEAD"
+														value="ROLE_BUSINESS_UNIT_HEAD"
+														name="ROLE_BUSINESS_UNIT_HEAD"
+														onclick="checkValidation(this.id)"> <span>Business
+															Unit Head</span>
+													</label>
+													
+													<label for="ROLE_HR"
+														class="smalabel vote-check"> <input
+														type="checkbox" id="ROLE_HR"
+														value="ROLE_HR"
+														name="ROLE_HR"
+														onclick="checkValidation(this.id)"> <span>HR</span>
+													</label>
+
+													<!-- <label for="ROLE_DATA_UPLOAD" class="smalabel vote-check">
+			                                            <input type="checkbox" id="ROLE_DATA_UPLOAD" value="ROLE_DATA_UPLOAD"
+			                                                   name="ROLE_DATA_UPLOAD">
+			                                            <span>Data Upload</span>
+			                                        </label> -->
+
+													<input type="hidden" id="authorities"
+														th:field="*{authorities}" /> <input id="businessUnitId"
+														type="hidden" name="businessUnitId"
+														th:value="${user.businessUnitId}" /> <input
+														id="plantCode" type="hidden" name="plantCode"
+														th:value="${user.plantCode}" /> <input id="plantId"
+														type="hidden" name="plantId" th:value="${user.plantId}" />
+													<input id="plantName" type="hidden" name="plantName"
+														th:value="${user.plantName}" />
+												</div>
+
+											</div>
+										</div>
+
+										<div class="form-group">
+											<div class="row">
+												<div class="col-sm-4 col-md-3 col-md-offset-1">
+													<!-- <label class="pt10px pull-right">User Parent Id</label> -->
+												</div>
+												<div class="col-sm-8 col-md-6">
+													<div class="row">
+														<div class="col-sm-12">
+															<input class="form-control" type="hidden" id="parentId"
+																th:field="*{parentId}" />
+
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="form-group">
+												<div class="row">
+													<div class="col-sm-4 col-md-3 col-md-offset-1">
+														<label class="pt10px pull-right">User Employee Id</label>
+													</div>
+													<div class="col-sm-8 col-md-6">
+														<div class="row">
+															<div class="col-sm-12">
+																<input class="form-control" type="text" id="employeeId"
+																	th:field="*{employeeId}" readonly="readonly" />
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+
+											<div class="form-group">
+												<div class="row">
+													<div class="col-sm-4 col-md-3 col-md-offset-1">
+														<label class="pt10px pull-right">Department Name</label>
+													</div>
+													<div class="col-sm-8 col-md-6">
+														<input readonly="readonly"  th:field="${user.departmentName}"
+														type="text" class="form-control" id="departmentName" name="departmentName" />
+														<span class='errormsg text-left' style="display: none;"
+															id="userDepartmentSpan">Select anyone user
+															department</span>
+															</div>
+													</div>
+												</div>
+											</div>
+
+											<div class="form-group">
+												<div class="row">
+													<div class="col-sm-4 col-md-3 col-md-offset-1">
+														<label class="pt10px pull-right">Office Name</label>
+													</div>
+													<div class="col-sm-8 col-md-6">
+														
+														<input readonly="readonly" th:field="${user.office}" 
+														type="text" class="form-control" id="office" name="office" />
+														
+														<span class='errormsg text-left' style="display: none;"
+															id="userOfficeSpan">Select anyone user Office</span>
+													</div>
+												</div>
+											</div>
+
+
+
+											<div class="form-group">
+
+												<div class="row">
+													<div class="col-sm-4 col-md-3 col-md-offset-1">
+														<label class="pt10px pull-right">Status</label>
+													</div>
+
+													<div class="col-sm-8 col-md-6">
+														<!-- <input class="form-control" type="checkBox" id="check"  value="off"  onClick="getStatus();"/> -->
+														<!-- <input class="form-control" type="hidden" id="status" th:field="*{status}"  value="0" /> -->
+
+														<select th:field="*{status}" id="status"
+															class="form-control form-control-sm">
+															<option value="1">Active</option>
+															<option value="0">Inactive</option>
+
+														</select>
+
+													</div>
+
+												</div>
+											</div>
+											<div class="form-group">
+												<div class="row">
+													<div class="col-sm-4 col-md-3 col-md-offset-1">
+														<label class="pt10px pull-right">User Email</label>
+													</div>
+													<div class="col-sm-8 col-md-6">
+														<div class="row">
+															<div class="col-sm-12">
+																<input class="form-control" type="text"
+																	id="emailaddress" th:field="*{email}" />
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="form-group">
+												<div class="row">
+													<div class="col-sm-4 col-md-3 col-md-offset-1">
+														<label class="pt10px pull-right">Login Without
+															Active Directory</label>
+													</div>
+													<div class="col-sm-8 col-md-6 check-box">
+														<label class="vote-check mt5px"> <!--<input
+													 	type="checkbox" id="name" name="isWithoutAdAllowed"
+														value="1" onclick="dynInput(this);"> --> <!--  <input type="hidden"  id="pwd" th:value="${user.password}" name="password"/> -->
+
+															<input type="checkbox" id="valueTargetCheck"
+															name="isWithoutAdAllowed"
+															onclick="dynInput(this);" /><span>Without AD</span>
+														</label>
+
+													</div>
+												</div>
+											</div>
+
+											<!-- <span><input type="hidden" id="ad"
+												th:value="${user.isWithoutAdAllowed}"
+												name="isWithoutAdAllowed" /></span> -->
+
+											<!--  <span><input type="hidden" id="auth" th:value="${user.authorities}" name="authorities"/></span>  -->
+											<div id="insertinputs"></div>
+											<div class="mt20px">
+												<div class="row">
+													<div class="col-sm-12 col-md-10 text-right">
+														<button class="btn btn-success" type="submit">Update</button>
+													</div>
+												</div>
+											</div>
+										</div>
+								</form>
+							</div>
+						</div>
+					</div>
+
+
+				</div>
+
+			</div>
+		</div>
+		<!-- footer -->
+		<div th:include="fragments/component :: footer"></div>
+	</div>
+	<!-- 	<div th:replace="/fragments/component :: footer" />
+	 -->
+	<script type="text/javascript" src="../../js/bootstrap-multiselect.js"
+		th:src="@{/resources/js/bootstrap-multiselect.js}"></script>
+	<!-- 	<script>
+			$(document).ready(function(){
+			    
+				/* $('#langOpt').multiselect({
+			        includeSelectAllOption: true
+			    }); */
+				
+				$( document ).on( 'change', '#langOpt', function(event) {
+					var selected = $("#langOpt option:selected");
+			        var message = "";
+			        selected.each(function () {
+			            /*message += $(this).text() + "," + $(this).val() + "\n";*/
+			        	message += $(this).text() + ",";
+			        });
+			        message = message.substring(0,message.length - 1)
+			        $("#dataText").val(message);
+			        
+					});
+			});
+			
+		</script> -->
+
+
+
+</body>
+</html>

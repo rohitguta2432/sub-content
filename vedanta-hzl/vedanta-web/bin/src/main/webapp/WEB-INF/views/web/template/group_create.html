@@ -1,0 +1,138 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Vedanta</title>
+    <object th:include="fragments/header :: head" th:remove="tag"></object>
+    <!-- Favicon -->
+<link rel="shortcut icon" type="image/icon" th:href="@{/resources/images/favicon.ico}"/>
+</head>
+<body>
+<div id="wrapper" th:with="templateActive=${'active'},templateGroupActive=${'active'}">
+    <i th:replace="/fragments/component :: sidebar"></i>
+
+    <div class="white-bg page-wrapper header-wrapper">
+        <!-- top header -->
+			<div th:replace="/fragments/component :: topheader" ></div>
+        <!-- Body Part -->
+        <div class="wrapper wrapper-content">
+
+            <div class="container-fluid">
+                <div class="row btm-brd">
+                    <div class="col-sm-12">
+                        <div class="page-title">
+                            <h3>Add/Update Group information</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-10">
+                    	<div class="setting-content">
+                    		<form class="client-form" action="#" th:action="@{/admin/template/group/save}"
+                                  th:object="${group}" method="POST">
+	                            <div class="row form-group">
+	                                <div class="col-sm-4 col-md-3 col-md-offset-1">
+	                                	<label class="mtb5px pull-right">Group Name :</label>
+	                                </div>
+	                                <div class="col-sm-8 col-md-6">
+	                                	<input type="hidden" name="id" th:value="${group.id}">
+	                                    <input 
+	                                    	class="form-control" 
+	                                    	type="text" id="name" name="name"
+	                                    	th:value="${group.name}" onkeypress="checkName();"/>
+	                                    <span class='errormsg text-left' style="display:none;" id="groupSpan">Please enter group name</span>
+	                                </div>	                                 
+	                            </div>
+	                            <div class="row form-group">
+	                            	<div class="col-sm-4 col-md-3 col-md-offset-1">
+	                            		<label class="mtb5px pull-right">Description :</label>
+	                            	</div>
+	                                <div class="col-sm-8 col-md-6">
+	                                	<input class="form-control" type="text" id="description"
+	                                    	name="description" th:value="${group.description}" onkeypress="checkDescription();"/>
+	                                    <span class='errormsg text-left' style="display:none;" id="descriptionSpan">Please enter group description</span>	                                   
+	                                </div>	                                
+	                            </div>
+	                            <div class="row form-group">
+	                            	<div class="col-sm-4 col-md-3 col-md-offset-1">
+	                            		<label class="mtb5px pull-right">Label :</label>
+	                                </div>
+	                                <div class="col-sm-8 col-md-6">
+	                                	<input class="form-control" type="text" id="label"
+	                                		name="labelName" th:value="${group.labelName}" onkeypress="checkLabel();"/>
+	                                	<span class='errormsg text-left' style="display:none;" id="labelSpan">Please enter group label</span>  
+	                                </div>	                                  
+	                            </div>
+	                            <br/><br/>
+	                            <div class="row">
+	                            	<div class="col-sm-12 col-md-10 text-right">
+	                            		<button class="btn btn-success" type="submit">Save</button>
+	                            	</div>
+	                            </div>
+	                        </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- / page wrapper -->
+</div>
+<!-- /wrapper -->
+</body>
+<script type="text/javascript">
+
+$('form').submit(function () {	
+
+	var name = jQuery.trim($("#name").val());
+	var description = jQuery.trim($("#description").val());
+	var label = jQuery.trim($("#label").val());
+
+    if (name.length == 0){
+    	$( "#groupSpan" ).show();
+    	$("#name").focus();
+  	    return false;
+    }    
+    if (description.length == 0){
+		$( "#descriptionSpan" ).show();
+		return false;
+	}	
+	if (label.length == 0){
+		$( "#labelSpan" ).show();
+		return false;
+	}
+}); 
+   
+	
+function checkName(){
+    var name = jQuery.trim($("#name").val());
+    if (name.length > 0){
+    	$("#groupSpan").hide();
+    } 
+}
+
+function checkDescription(){
+    var description = jQuery.trim($("#description").val());
+    if (description.length > 0){
+   	     $("#descriptionSpan").hide();
+    }
+}
+
+
+function checkLabel(){
+    var label = jQuery.trim($("#label").val());
+    if (label.length > 0){
+	    $( "#labelSpan" ).hide();
+    }
+}
+	
+ 
+
+
+</script>
+
+</html>

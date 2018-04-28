@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Vedanta</title>
+    <object th:include="fragments/header :: head" th:remove="tag"></object>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/icon" th:href="@{/resources/images/favicon.ico}"/>
+    <style>
+		a.hyperlink label{
+		    text-decoration: underline;
+		    color: #2b5e92;
+		}
+		
+		a:visited {
+		    text-decoration: none;
+		}
+		
+		a:hover {
+		    text-decoration: underline;
+		    color: red;
+		}
+		
+		a:active {
+		    text-decoration: underline;
+		}
+		
+		.box
+		{
+		  border: 1px solid green;
+		  position:absolute;
+		  color: white;
+		  top: 19px;
+		  left: 30px;
+		  background-color: black;
+		}
+				
+</style>
+    <script th:inline="javascript">
+    
+    
+    /*<![CDATA[*/
+	var scoreCardDetailsData = [[${scoreCardDetail}]];
+	var templateDetailsData = [[${template}]];
+	var templateGroups = [[${templateGroups}]];
+	var templateForms = [[${templateForms}]]
+/*]]>*/ 
+    
+    
+        $(document).ready(function () {
+            console.log("ready!");
+            $('#changeusername').selectpicker({
+			      liveSearch: true,
+			      maxOptions: 1
+			    });
+            
+            getTotalScore();
+
+/*<![CDATA[*/
+	var templateGroups = [[${templateGroups}]];
+/*]]>*/            
+          
+			/* if(scoreCardDetailsData.isEnable == true){
+				$("#submitBTN").prop("disabled",false);
+			}else{
+				 $("#submitBTN").prop("disabled",true);
+			} */
+            
+
+            $("input[type='radio']").change(function() {
+            	
+            	var fieldId;
+            	
+            	var fieldId;
+            	if((this.id).indexOf('radio') != -1){
+					fieldId = (this.id).substr(5);        		
+            	}
+            	elementValue = $(this).val();
+            	getScoringCriteriaRadio(this,fieldId,templateGroups,elementValue);
+            	
+            	getTotalScore();
+            	
+            	$('.radioerror').css('display','none');
+            	
+            });
+            
+           	$(".mod").click(function() {
+           		
+           		//for email notification
+       			$('#message').hide();
+       			
+       			$('#changeusername').change(function(){
+       				$('#message').show();
+       				});
+       			
+               	$("#changeUser").modal('show');
+               	var groupId;
+               	if((this.id).indexOf('scorecardId') != -1){
+               		$("#groupIdData").val('');
+            	}
+				if((this.id).indexOf('groupId') != -1){
+					groupId = (this.id).substr((this.id).indexOf('_')+1);
+					$("#groupIdData").val(groupId);
+            	}
+				
+				$('#changeusername').html("");
+				
+				$.ajax({
+           			url: "/vedanta-web/scorecard/getAllUserNotAdminByLimit/"+scoreCardDetailsData.businessUnitId,
+                    type: "GET",
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                  
+                    	 $('#changeusername').append("<option value='0'>Select User </option>");
+                 		 for ( var i = 0; i< data.length; ++i) {
+                 			 if(data[i].office == 'undefined' || data[i].office == null){
+                 				 data[i].office = "";
+                 			 }
+                 			 if(data[i].departmentName == 'undefined' || data[i].departmentName == null){
+                 				 data[i].departmentName = "";
+                 			 }
+                 			 
+                 			
+                 			 
+			 			   $('#changeusername').append("<option value=\"" + data[i].employeeId + "\">" + data[i].name+"  "+data[i].office +"  "+data[i].departmentName+ "</option>");
+						}  
+                 		  $('#changeusername').selectpicker({
+       				      liveSearch: false,
+       				      maxOptions: 1
+       				    }); 
+      					 $('#changeusername').selectpicker('render');
+      					 $("#changeusername").val('').selectpicker('refresh');
+                  
+                    },
+                    error: function (xhr, status, error) {
+                        
+                        console.log("token has been expired." + xhr.responseText);
+                    }
+                });
+               	
+				
+				
+				
+				
+               });
+           	
+           	$(".assignedUser").click(function() {
+         
+           		scoreCardGroupUser = {};
+           		
+           		scoreCardGroupUser["contractId"]        = $("#contract_id").val();
+           		scoreCardGroupUser["contractNumber"]    = $("#contract_number").val();
+           		scoreCardGroupUser["contractManagerId"] = $("#contract_manager_id").val();
+           		scoreCardGroupUser["vendorId"]          = $("#vendor_id").val();
+           		scoreCardGroupUser["vendorCode"]        = $("#vendor_code").val();
+           		scoreCardGroupUser["categoryId"]        = $("#category_id").val();
+           		scoreCardGroupUser["categoryName"]      = $("#category_name").val();
+           		scoreCardGroupUser["subCategoryId"]     = $("#sub_category_id").val();
+           		scoreCardGroupUser["subCategoryName"]   = $("#sub_category_name").val();
+           		scoreCardGroupUser["departmentId"]      = $("#department_id").val();
+           		scoreCardGroupUser["departmentCode"]    = $("#department_code").val();
+           		scoreCardGroupUser["userId"]            = $("#changeusername").val();
+           		scoreCardGroupUser["employeeId"]        = $("#changeusername").val();
+           		scoreCardGroupUser["templateId"]        = $("#template_id").val();
+           		scoreCardGroupUser["templateName"]      = $("#template_name").val();
+           		scoreCardGroupUser["groupId"]           = $("#groupIdData").val();
+           		scoreCardGroupUser["poItem"]            = $("#po_item").val();
+           		scoreCardGroupUser["poItemDescription"] = $("#po_item_description").val();
+           		scoreCardGroupUser["plantId"]           = $("#plant_id").val();
+           		scoreCardGroupUser["plantCode"]         = $("#plant_code").val();
+           		scoreCardGroupUser["totalScore"]        = $("#total_score_value").val();
+           		scoreCardGroupUser["weight"]            = $("#weight_value").val();
+           		scoreCardGroupUser["scorecardId"]            = $("#score_card_id").val();
+           		scoreCardGroupUser["businessUnitId"]            = $("#business_unit_id").val();
+           		scoreCardGroupUser["emailMessage"]      = $("#message").val();
+           		
+           		var jsonObj = JSON.stringify(scoreCardGroupUser);
+           		
+           		console.log("scoreCardGroupUser"+jsonObj);
+           		
+               	$.ajax({
+           			url: "/vedanta-web/scorecard/assign",
+                    type: "POST",
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    data: jsonObj,
+                    success: function (data) {
+                    	console.log("success."+data);
+                    	window.location.href = '/vedanta-web/scorecard';
+                    },
+                    error: function (xhr, status, error) {
+                        
+                        console.log("token has been expired." + xhr.responseText);
+                    }
+                });
+
+               	
+               	$("#changeUser").modal('hide');
+               });
+            
+            $("input[type='text']").focusout(function() {
+            	
+            	var fieldId;
+            	
+            	if((this.id).indexOf('target') != -1){
+            		fieldId = (this.id).substr(6);
+            	}
+            	
+				if((this.id).indexOf('value') != -1){
+					fieldId = (this.id).substr(5);        		
+            	}
+				
+				getValidation(this,fieldId,templateGroups);
+				
+				getScoringCriteria(this,fieldId,templateGroups);
+				
+				getTotalScore();
+            });
+            
+            $("input[type='text']").on('change', function(){
+            	$(this).removeClass('errorborder')
+            	$(".errormsg").text("");
+            	
+            });
+            
+            $("input[type='text']").focus(function() {
+            	
+				var fieldId;
+				$(this).removeClass('errorborder');
+            	if((this.id).indexOf('target') != -1){
+            		fieldId = (this.id).substr(6);
+            		$("#error_target"+fieldId).text("");            		
+            	}
+            	
+				if((this.id).indexOf('value') != -1){
+					fieldId = (this.id).substr(5);
+					$("#error_value"+fieldId).text("");
+            	}
+            });
+			
+
+            $('#vendorId').selectpicker({
+                liveSearch: true,
+                maxOptions: 1
+            });
+
+            $('#vendorId').on('change', function () {
+                var value = this.value;
+
+                $.ajax({
+                    url: "/vedanta-web/contract/" + value,
+                    type: "GET",
+                    success: function (data) {
+                        showContracts(data);
+                    },
+                    error: function (xhr, status, error) {
+                        //alert(xhr.responseText);
+                        console.log("token has been expired." + xhr.responseText);
+
+                    }
+                });
+            });
+            
+   
+            $('#submitBTN').click(function(){
+            	
+            /* Validation For required */	
+            var flag = 0;
+          	  
+          	  $.each(templateGroups, function( index, templateGroup ) {
+          		  
+          		  $.each(templateGroup.group.fields, function( key, field ) {
+          			  if(field.type == 'text' || field.type == 'textbox'){
+          				  if($('#value'+field.id).val() == ''){
+          					 $('#value'+field.id).focus().addClass('errorborder');
+          					 $('#error_value'+field.id).text('required field');
+          					 flag = 1;
+              				 return false;
+              			  }  
+          			  }
+          			  if(field.type == 'radio'|| field.type == 'checkbox'){          				  
+          				  var elementName;          				  
+          				  $('.radio_validation'+field.id).each(function(i, obj) {
+          					    elementName = obj.name;
+          				  });          				  
+          				  if(!$("input:radio[name='"+elementName+"']").is(":checked")){ 
+          						
+              				 $('#radio_error'+field.id).css('display','block');
+              				 flag = 1;
+              				 return false;
+              			  }
+          			  }
+              		});
+          		  
+          		  if(flag == 1)
+                	  	return false;  
+          		  
+          		});
+          		
+          	   if(flag == 1)
+          	  	return false; 
+            
+          	 /* Validation For required */ 
+          	 
+          
+          	  /* Allow for submit or Not */
+          
+ 				 $.each(templateForms, function( index, templateForm ) {
+            		if(!templateForm.isFormSaved){
+              				flag = 1;
+            				return false;
+            		}	 
+            	 });
+            	 
+            	 if(flag == 1){          		 	
+            		 //alert("Fill Complaince Forms.");
+            		 $("#complainceModal").modal('show');
+            		 return false;
+            	 }
+            	 
+            	 /* Allow for submit or Not */
+            	
+          	  form=$('#saveFormData');
+          	  form.attr('action','/vedanta-web/scorecard/save').trigger('submit');
+          	});
+          
+          $('#submitApproveBTN').click(function(){
+          	
+        	  
+        	  /* Validation For required */	
+              var flag = 0;
+            	  
+            	  $.each(templateGroups, function( index, templateGroup ) {
+            		  
+            		  $.each(templateGroup.group.fields, function( key, field ) {
+            			  if(field.type == 'text' || field.type == 'textbox'){
+            				  if($('#value'+field.id).val() == ''){
+            					 $('#value'+field.id).addClass('errorborder');
+            					 $('#error_value'+field.id).text('required field');
+            					 flag = 1;
+                				 return false;
+                			  }  
+            			  }
+            			  if(field.type == 'radio'|| field.type == 'checkbox'){
+            				  
+            				  var elementName;
+            				  
+            				  $('.radio_validation'+field.id).each(function(i, obj) {
+            					    elementName = obj.name;
+            				  });
+            				  
+            				  if(!$("input:radio[name='"+elementName+"']").is(":checked")){ 
+            						
+                				 $('#radio_error'+field.id).css('display','block');
+                				 flag = 1;
+                				 return false;
+                			  }
+            			 	}
+                		});
+            		  
+            		  if(flag == 1)
+                  	  	return false;  
+            		  
+            		});
+            	   if(flag == 1)
+            	  	return false; 
+              
+            	 /* Validation For required */
+            	 
+            	 
+            	 /* Allow for submit or Not */
+            	 $.each(templateForms, function( index, templateForm ) {
+            		if(!templateForm.isFormSaved){
+            			flag = 1;
+            			return false;
+            		}	 
+            	 });
+            	 
+            	 if(flag == 1){
+            		 //alert("Fill Compliance Forms.");
+            		 $("#complainceModal").modal('show');
+            		 return false;
+            	 }
+             	  	
+            	 
+            	 /* Allow for submit or Not */
+        	  
+          	  form=$('#saveFormData')
+          	  form.attr('action','/vedanta-web/scorecard/save-approve').trigger('submit');
+          	});
+
+            $('#approveBTN').click(function(){
+
+
+                /* Validation For required */
+                var flag = 0;
+
+                $.each(templateGroups, function( index, templateGroup ) {
+
+                    $.each(templateGroup.group.fields, function( key, field ) {
+                        if(field.type == 'text' || field.type == 'textbox'){
+                            if($('#value'+field.id).val() == ''){
+                                $('#value'+field.id).addClass('errorborder');
+                                $('#error_value'+field.id).text('required field');
+                                flag = 1;
+                                return false;
+                            }
+                        }
+                        if(field.type == 'radio'|| field.type == 'checkbox'){
+
+                            var elementName;
+
+                            $('.radio_validation'+field.id).each(function(i, obj) {
+                                elementName = obj.name;
+                            });
+
+                            if(!$("input:radio[name='"+elementName+"']").is(":checked")){
+
+                                $('#radio_error'+field.id).css('display','block');
+                                flag = 1;
+                                return false;
+                            }
+                        }
+                    });
+
+                    if(flag == 1)
+                        return false;
+
+                });
+                if(flag == 1)
+                    return false;
+
+                /* Validation For required */
+
+
+                /* Allow for submit or Not */
+                $.each(templateForms, function( index, templateForm ) {
+                    if(!templateForm.isFormSaved){
+                        flag = 1;
+                        return false;
+                    }
+                });
+
+                if(flag == 1){
+                    //alert("Fill Compliance Forms.");
+                    $("#complainceModal").modal('show');
+                    return false;
+                }
+
+
+                /* Allow for submit or Not */
+
+                form=$('#saveFormData')
+                form.attr('action','/vedanta-web/scorecard/save-approve').trigger('submit');
+            });
+          
+          $('#submitDraftBTN').click(function(){
+          	  
+         	  form=$('#saveFormData');
+         	  console.log(JSON.stringify(form));
+         	  form.attr('action','/vedanta-web/scorecard/save-draft').trigger('submit');
+         	});
+          
+			$('#submitRejectBTN').click(function(){
+          	  
+         	  form=$('#saveFormData');
+         	  console.log(JSON.stringify(form));
+         	  form.attr('action','/vedanta-web/scorecard/save-reject').trigger('submit');
+         	});
+          
+		$('#submitGroupAsgnBTN').click(function(){
+          	
+         	  form=$('#saveFormData')
+         	  form.attr('action','/vedanta-web/scorecard/save-group-assign').trigger('submit');
+         	});
+            
+        });
+
+
+        function getTotalScore(){
+        	
+			var totalScore = 0;
+			
+		    $(".scoreCardWeightage").each(function(){
+		    	
+		    	totalScore += +$(this).val();
+		    });
+		    $(".totalScore").val(totalScore);
+        }
+        
+        function getValidation(elementId,fieldId,templateData){
+        	
+        	$.each( templateData, function( templateGroupKey, templateGroup ) {
+        		  $.each( templateGroup.group.fields, function( fieldKey, field ) {
+            		  if(fieldId == field.id){  
+            			  $.each( field.validations, function( validationKey, validation ) {
+            				  
+            				var min = parseInt(validation.minValue) || -1;
+            				var max = parseInt(validation.maxValue) || -1;
+							
+            				var isnum = /^\d+$/.test(elementId.value);
+            				
+            				/* integer data validator */
+            				if(validation.dataType == "INTEGER"){
+            					  
+            					  if($.isNumeric(elementId.value)){
+            						  if(min != -1 && max != -1){
+            							  
+                    					  if(((elementId.value <= min) || (elementId.value >= max))){
+	                   						  if ((elementId.id).indexOf("target") <= 0){
+	                   							$('#error_'+elementId.id).text("value should be < "+max+" and > "+min);
+	                    						 $("#"+elementId.id).val('').addClass("errorborder");	  
+	                   						  }
+                    						 
+                    					  }
+                    				  }else if(min != -1){
+                    					  if((elementId.value <= min)){
+
+
+                    						  if ((elementId.id).indexOf("target") <= 0){
+                    							  $('#error_'+elementId.id).text("value should be >= "+min);
+                        						  $("#"+elementId.id).val('').addClass("errorborder");  
+                    						  }
+
+                    					  }
+                    				  }else if(max != -1){
+                    					  if((elementId.value >= max+0.1)){
+                    						  if ((elementId.id).indexOf("target") < 0){
+                    							  $('#error_'+elementId.id).text("value should be <= "+max);
+                        						  $("#"+elementId.id).val('').addClass("errorborder");  
+                    						  }
+                    					  }
+                    				  }
+            					  }else{
+            						  if ((elementId.id).indexOf("target") < 0){
+            							  $('#error_'+elementId.id).text("please enter number");  
+                						  $("#"+elementId.id).val('').addClass("errorborder");  
+            						  }
+            						  
+            					  }  
+            				}
+            				/* string data validator */
+            				if(validation.dataType == "string"){
+            					  if(isnum){
+            						  $('#error_'+elementId.id).text("please enter text");  
+            					  }  
+            				}
+            				  
+            			  });
+            		  }
+            	});
+        	});
+        }
+        
+        
+		function getScoringCriteria(elementId,fieldId,templateData){
+			
+				$.each( templateData, function( templateGroupKey, templateGroup ) {
+					
+	      		  $.each( templateGroup.group.fields, function( fieldKey, field ) {
+	          		  if(fieldId == field.id){
+	          			  $.each( field.validations, function( validationKey, validation ) {  
+	          				var min = parseInt(validation.minValue);
+	          				var max = parseInt(validation.maxValue);
+	
+	          				var isnum = /^\d+$/.test(elementId.value);
+	          				
+	          				/* integer data validator */
+	          				if(validation.dataType == "INTEGER"){
+	          					  
+	          					  if($.isNumeric(elementId.value)){
+	          						$.each( field.validations, function( validationKey, validation ) {
+	          							
+	          							/* sort scoring criteria */
+	          							var scores = field.scoringCriteria;
+	          							console.log(scores.sort(comparator));
+	          							 
+	          							var scoreValue = 0;
+	          							var checkOccurance = 0;
+	          							
+	          							for(var p = 0 ; p < scores.length ; p++ ){
+	          								var rightOperand = parseInt(scores[p].rightOperand);
+	          								var rightOperandType = scores[p].rightOperandType;
+	          								var elementValue = $('#value'+fieldId).val();
+	          								
+	          								if(rightOperandType == "TARGET"){
+	          									elementValue = $('#target'+fieldId).val();
+	          									if(!(elementValue.length > 0)){
+	          										return false;
+	          									}	
+	          								}else{
+	          									
+	          									if(!(elementValue.length > 0)){
+	          										return false;
+	          									}
+	          								} 
+	          								
+	          								
+											if(scores[p].operator == "ASSIGN"){
+       											scoreValue = elementValue;
+       											break;
+	          								}
+	          								
+	          								if(scores[p].operator == "LESS_THAN"){
+	          									
+	          									if(elementValue < rightOperand){
+       												scoreValue = scores[p].outScore;
+       												checkOccurance = 1;	
+          										}else{
+          											if(checkOccurance == 1){
+          												break;
+          											}
+          										}
+	          								}
+	          								
+											if(scores[p].operator == "GREATER_THAN"){
+												
+												if(elementValue > rightOperand){
+       												scoreValue = scores[p].outScore;
+       												checkOccurance = 1;	
+          										}
+	          								}
+											
+											if(scores[p].operator == "LESS_THAN_EQUAL"){
+												
+												if(elementValue <= rightOperand){
+       												scoreValue = scores[p].outScore;
+       												checkOccurance = 1;	
+          										}else{
+          											if(checkOccurance == 1){
+          												break;
+          											}
+          										}
+	          								}
+											
+											if(scores[p].operator == "GREATER_THAN_EQUAL"){
+												
+												if(elementValue >= rightOperand){
+       												scoreValue = scores[p].outScore;
+       												checkOccurance = 1;	
+          										}
+	          								}
+											
+											if(scores[p].operator == "EQUALS"){
+												
+												if(elementValue == rightOperand){
+       												scoreValue = scores[p].outScore;
+       												checkOccurance = 1;	
+          										}else{
+          											if(checkOccurance == 1){
+          												break;
+          											}
+          										}
+	          								}
+											
+											if(scores[p].operator == "NOT_EQUAL"){
+												
+												if(elementValue != rightOperand){
+     												scoreValue = scores[p].outScore;
+     												checkOccurance = 1;	
+        										}else{
+        											if(checkOccurance == 1){
+          												break;
+          											}
+        										}
+	          								}
+	          							}
+
+	          							$("#score"+fieldId).val(scoreValue);
+	          							var weightage = $("#weightage"+fieldId).val();
+	          							var wt = weightage/5;
+	          							if(weightage == 0){
+	          								$("#scoreWeight"+fieldId).val(0);
+	          							}else{
+	          								 $("#scoreWeight"+fieldId).val(Math.round(scoreValue*(wt)* 100)/100); 
+	          							}
+	          						});
+	          					  }else{
+	          						$("#score"+fieldId).val('');
+	          						$("#scoreWeight"+fieldId).val('');
+	          					  }  
+	          				}
+	          				
+	          				/* string data validator */
+								
+	          				if(validation.dataType == "string"){
+	          					  if(isnum){
+	          						  $('#error_'+elementId.id).text("data type should be : string");  
+	          					  }  
+	          				}
+	          				  
+	          			  });
+	          		  }
+	          	});
+	      	});
+        } 
+		
+		/* Compare scoringCriteria */
+		function comparator(a, b) {
+		    return parseInt(b.rightOperand) - parseInt(a.rightOperand);
+		}
+        
+		/* scoringcriteria calulate for radio element */
+		function getScoringCriteriaRadio(elementId,fieldId,templateData,elementValue){
+			
+			$.each( templateData, function( templateGroupKey, templateGroup ) {
+				
+      		  $.each( templateGroup.group.fields, function( fieldKey, field ) {
+          		  if(fieldId == field.id){
+          			  $.each( field.validations, function( validationKey, validation ) {  
+          				var min = parseInt(validation.minValue);
+          				var max = parseInt(validation.maxValue);
+
+          				var isnum = /^\d+$/.test(elementId.value);
+          				
+          				/* integer data validator */
+          				
+          				if(validation.dataType == "INTEGER"){
+          					  
+          					  if($.isNumeric(elementId.value)){
+          						$.each( field.validations, function( validationKey, validation ) {
+          							
+          							/* sort scoring criteria */
+          							var scores = field.scoringCriteria;
+          							console.log(scores.sort(comparator));
+          							 
+          							var scoreValue = 0;
+          							
+          							for(var p = 0 ; p < scores.length ; p++ ){
+          								var rightOperand = parseInt(scores[p].rightOperand);
+          								
+										if(scores[p].operator == "EQUALS"){
+											
+											if(elementValue == rightOperand){
+   												scoreValue = scores[p].outScore;
+   												break;	
+      										}
+          								}
+          							}
+
+          							$("#score"+fieldId).val(scoreValue);
+          							var weightage = $("#weightage"+fieldId).val();
+          							var wt = weightage/5;
+          							if(weightage == 0){
+          								$("#scoreWeight"+fieldId).val(0);
+          							}else{
+          								$("#scoreWeight"+fieldId).val(Math.round(scoreValue*(wt)* 100)/100);
+          							}
+          							
+          						});
+          					  }else{
+          						$("#score"+fieldId).val('');
+          						$("#scoreWeight"+fieldId).val('');
+          					  }  
+          				}
+          				
+          				/* string data validator */
+							
+          				if(validation.dataType == "string"){
+          					  if(isnum){
+          						  $('#error_'+elementId.id).text("data type should be : string");  
+          					  }  
+          				}
+          				  
+          			  });
+          		  }
+          	});
+      	});
+    }
+		
+		
+        function showContracts(data) {
+            $('#contractors').html("");
+            /* $('#contractors').append("<option value='-1'>Select Contrator </option>"); */
+            for (var i = 0, len = data.length; i < len; ++i) {
+                var contractor = data[i];
+                $('#contractors').append("<option value=\"" + contractor.id + "\">" + contractor.name + "</option>");
+            }
+            $('#contractors').selectpicker({
+                liveSearch: true,
+                maxOptions: 1
+            });
+            $('#contractors').selectpicker('render');
+            $("#contractors").val('').selectpicker('refresh');
+        }
+        
+              
+    </script>
+</head>
+<body>
+<div id="wrapper" th:with="scorecardListActive=${'active'}">
+    <i th:replace="/fragments/component :: sidebar"></i>
+
+    <div class="white-bg page-wrapper header-wrapper">
+        <!-- top header -->
+		<div th:replace="/fragments/component :: topheader" ></div>
+        <!-- Body Part -->
+        <div th:if="${contract != null }" class="wrapper wrapper-content">
+
+            <div class="container-fluid">
+                <div class="row btm-brd">
+                    <div class="col-sm-6">
+                        <div class="page-title">
+                            <h3 th:if="${contract.vendorName != null }" th:text="${contract.vendorName}">
+                            </h3>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 text-right assigned" th:if="${scoreCardDetail.status != 7}">                    	
+                    	<label><b>Assigned User:</b> <span th:text="${template.userName != null ? template.userName : ''}">Username</span> <a class="mod" th:if="${scoreCardDetail.status ne 5 and scoreCardDetail.status ne 7 and template.isAllGroupAccess }" th:id="'scorecardId_'+${scoreCardDetail.id}"  ><i class="fa fa-pencil"></i></a></label>                    	
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-fluid" th:if="${contract != null }">
+                <!-- <form class="client-form" action="#" th:action="@{/scorecard/save}"
+                      th:object="${scoreCard}" method="POST"> -->
+                <form class="client-form" id="saveFormData"
+                      th:object="${scoreCard}" method="POST">      
+                      
+                    <input id="score_card_id" name="id" type="hidden" th:value="${scoreCardDetail.id}">  
+                    <input id="contract_id" type="hidden" name="contractId" th:value="${contract.id}"/>
+                    <input id="vendor_code" type="hidden" name="vendorCode" th:value="${contract.vendorCode}" />
+                    <input id="vendor_id" type="hidden" name="vendorId" th:value="${contract.vendorId}" />
+                    <input id="contract_number" type="hidden" name="contractNumber" th:value="${contract.number}" />
+                    <input id="category_id" type="hidden" name="categoryId" th:value="${contract.categoryId}" />
+                    <input id="category_name" type="hidden" name="categoryName" th:value="${contract.categoryName}" />
+                    <input id="sub_category_id" type="hidden" name="subCategoryId" th:value="${contract.subCategoryId}" />
+                    <input id="sub_category_name" type="hidden" name="subCategoryName" th:value="${contract.subCategoryName}" />
+                    <input id="template_id" type="hidden" name="templateId" th:value="${template.id}" />
+                    <input id="template_name" type="hidden" name="templateName" th:value="${template.name}" />
+                    <input id="contract_manager_id" type="hidden" name="contractManagerId" th:value="${scoreCardDetail.contractManagerId}" />
+                    <input id="year_id" type="hidden" name="yearId" th:value="${scoreCardDetail.yearId}" />
+                    <input id="month_id" type="hidden" name="monthId" th:value="${scoreCardDetail.monthId}" />
+                    <input id="contract_manager_name" type="hidden" name="contractManagerName" th:value="${scoreCardDetail.contractManagerName}" />
+					<input id="po_item" type="hidden" name="poItem" th:value="${scoreCardDetail[poItem]}" />
+					<input id="po_item_description" type="hidden" name="poItemDescription" th:value="${scoreCardDetail[poItemDescription]}" />
+					<input id="plant_id" type="hidden" name="plantId" th:value="${scoreCardDetail.plantId}" />
+					<input id="plant_code" type="hidden" name="plantCode" th:value="${scoreCardDetail.plantCode}" />
+					<input id="total_score_value" type="hidden" name="totalScore" th:value="${scoreCardDetail.totalScore}" />
+                    <input id="weight_value" type="hidden" name="weight" th:value="${scoreCardDetail.weight}" />
+                    <input id="business_unit_id" type="hidden" name="businessUnitId" th:value="${scoreCardDetail.businessUnitId}" />
+
+                    <div class="row scorecard scoredetail dis-flex">
+                    	<div class="col-sm-6">
+                    		<div class="row justify-center">
+	                    		<h4 class="col-sm-4"> Vendor </h4>
+	                    		 <label class="col-sm-8">
+	                            	<span th:text="${contract.vendorName} "></span>  
+	                            	 (<span th:text="(${contract.vendorCode})"></span>)                         	
+	                            </label>
+	                        </div>
+                    	</div>                    	
+                    	<div class="col-sm-6  ">
+                    		<div class="row justify-center">
+	                    		<h4 class=" col-sm-4"> Score Card  </h4>
+	                    		<label class="col-sm-8" > 
+	                    			<span th:text="${parserUtils.getMonthString(scoreCardDetail.monthId)}"></span>,&nbsp;
+	                    			<span th:text="${scoreCardDetail.yearId}"></span>
+	                    		</label>
+	                    	</div>
+                    	</div>
+                    	<!-- <div class="col-sm-6 justify-center">
+                    		<h4 class=" col-sm-4"> Contract Name </h4>
+                    		<label class="col-sm-8" th:text="${contract.name}"></label>
+                    	</div> -->
+                    	<div class="col-sm-6  ">
+                    		<div class="row justify-center">
+	                    		<h4 class=" col-sm-4"> Contract Manager </h4>
+	                    		<label class="col-sm-8">
+		                            <span th:text="${scoreCardDetail.contractManagerName} "></span>  
+		                            (<span th:text="(${scoreCardDetail.contractManagerId})"></span>)
+	                            </label>
+	                         </div>
+                    	</div>
+                    	<div class="col-sm-6">
+                    		<div class="row justify-center">
+	                    		<h4 class=" col-sm-4"> Frequency </h4>
+	                    		<label class="col-sm-8" th:text="${template.frequency}"></label>
+	                    	</div>
+                    	</div>
+                    	<div class="col-sm-6">
+                    		<div class="row justify-center">
+	                    		<h4 class=" col-sm-4"> Category Name </h4>
+	                    		<label class="col-sm-8" th:text="${scoreCardDetail.categoryName}"></label>
+	                    	</div>
+                    	</div>
+                    	<div class="col-sm-6  ">
+                    		<div class="row justify-center">
+	                    		<h4 class=" col-sm-4"> SubCategory Name </h4>
+	                    		<label class="col-sm-8" th:text="${scoreCardDetail.subCategoryName}"></label>
+	                    	</div>
+                    	</div>
+                    	<div class="col-sm-6 ">
+                    		<div class="row justify-center">
+	                    		<h4 class=" col-sm-4"> Purchase Order</h4>
+	                    		<label class="col-sm-8" th:text="${scoreCardDetail.contractNumber}"></label>
+	                    	</div>
+                    	</div>
+                    	<div class="col-sm-6" >
+                    		<div class="row justify-center">
+	                    		<h4 class="col-sm-4"> PO Item Detail</h4>
+	                    		<label class="col-sm-8">
+		                            <span th:text="${scoreCardDetail[poItemDescription]}"></span>  
+		                            (<span th:text="(${scoreCardDetail[poItem]})"></span>)
+	                            </label>
+	                        </div>
+                    	</div>
+                    </div>
+                    
+                   <!-- <div class="row scorecard">
+                        <div class="col-sm-3 ml4per">
+                            <h4 class="mt10px">
+                                Vendor :
+                            </h4>
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="form-control no-border" >
+                            	<span th:text="${contract.vendorName} "></span>  
+                            	(<span th:text="(${contract.vendorCode})"></span>)                         	
+                            </label>                            
+                        </div>
+                    </div>
+                    <div class="row scorecard" >
+                        <div class="col-sm-3 ml4per">
+                            <h4 class="mt10px">
+                                Contract Name :
+                            </h4>
+                        </div>
+                        <div class="col-sm-3">
+                           	<label class="form-control no-border" th:text="${contract.name}"></label>
+                        </div>
+                    </div>
+                    <div class="row scorecard">
+                        <div class="col-sm-3 ml4per">
+                            <h4 class="mt10px">
+                                Contract Number :
+                            </h4>
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="form-control no-border" th:text="${contract.number}"></label>
+                        </div>
+                    </div>
+                    <div class="row scorecard">changeusername
+                        <div class="col-sm-3 ml4per">
+                            <h4 class="mt10px">
+                                Contract Manager :
+                            </h4>
+                        </div>
+                        <div class="col-sm-3">
+                        	<label class="form-control no-border" >
+	                            <span th:text="${scoreCardDetail.contractManagerName} "></span>  
+	                            (<span th:text="(${scoreCardDetail.contractManagerId})"></span>)
+                            </label>
+                        </div> 
+                    </div>
+                    <div class="row scorecard">
+                        <div class="col-sm-3 ml4per">
+                            <h4 class="mt10px">
+                                Frequency :
+                            </h4>
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="form-control no-border" th:text="${template.frequency}"></label>
+                        </div>                      
+                    </div>
+                    <div class="row scorecard">
+                        <div class="col-sm-3 ml4per">
+                            <h4 class="mt10px">
+                                Category Name :
+                            </h4>
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="form-control no-border" th:text="${scoreCardDetail.categoryName}"></label>
+                        </div>                      
+                    </div>
+                    <div class="row scorecard">
+                        <div class="col-sm-3 ml4per">
+                            <h4 class="mt10px">
+                                SubCategory Name :
+                            </h4>
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="form-control no-border" th:text="${scoreCardDetail.subCategoryName}"></label>
+                        </div>                      
+                    </div>-->
+                    
+                    <div  class="row templates" th:each="templateGroup,iter : ${templateGroups}">
+                        <div class="col-sm-12">
+                            <div class="generate">
+                                <h3 class="form-title" th:if="${templateGroup.group != null and scoreCardDetail.status != 7 }">
+                                	<span th:text="${templateGroup.group.labelName }"></span>
+                                	<label class="pull-right"><b>Assigned User:</b> <span th:text="${ templateGroup.group.userName}">Username</span> <a th:if="${scoreCardDetail.status ne 5 and scoreCardDetail.status ne 7  }"  class="mod" th:id="'groupId_'+${templateGroup.group.id }"  ><i class="fa fa-pencil"></i></a></label>    
+                                </h3>
+                                <!--<input type="hidden"-->
+                                       <!--th:attr="name='formGroupDataMapper[' + ${iter.index} + '].formGroupDetail.id'"-->
+                                       <!--th:value="${formDetails.formGroupDetail.id }">-->      
+                                <div class="dynamic-field">
+									<div class="col-sm-12 mtb10px">
+										<div class="row dis-flex formview">									
+											<div class="col-sm-3 ml4per">
+												<label class=""><strong>Dimensions</strong></label>
+											</div>
+											<div class="col-sm-2">
+	                                        	<label class="text-center"><strong>Target Value</strong></label>
+	                                        </div>
+	                                        <div class="col-sm-2">
+	                                        	<label class="text-center"><strong>Actual Value</strong></label>
+	                                        </div>
+	                                        <div class="col-sm-2">
+	                                        	<label class="text-center"><strong>Score</strong></label>
+	                                        </div>
+	                                        <div class="col-sm-1 p0px">
+	                                        	<label class="text-center"><strong>Weighted Score</strong></label>
+	                                        </div>
+	                                        <div class="col-sm-2 mr2per">
+	                                        	<label><strong>Remarks (Optional)</strong></label>
+	                                        </div>
+										</div>									
+									</div>
+	                                <div class="" th:each="formField,iter2 : ${templateGroup.group.fields}">
+	                                    <input type="hidden"
+	                                           th:name="'scoreParamList['+${iter.index}+']['+ ${iter2.index} +'].groupId'"
+	                                           th:value="${templateGroup.group.id }" />
+	                                    <input	type="hidden" 
+	                                    		th:name="'scoreParamList['+${iter.index}+']['+ ${iter2.index} +'].fieldId'"
+	                                    		th:value="${formField.id }" />         
+	                                    <div class="col-sm-12 setting-content">
+	                                        <div class="row dis-flex formview">
+	                                            <div class="col-sm-3 ml4per" >
+	                                                <label>
+	                                                	<span class="name" th:text="${formField.labelName}"></span>
+	                                                	<span class="note" th:text="${formField.description}"></span>
+	                                                	<span class="note" th:text="${formField.dataUnitId != 0 ? 'Unit : '+formField.dataUnit.name  : 'Unit : NA'}"></span>
+	                                                </label>	                                                
+	                                            </div>
+	                                            <div th:each="scoreCardDataObject : ${scoreCardDetail.scoreCardData}"
+		                                            	th:if="${scoreCardDataObject.groupId == templateGroup.group.id and scoreCardDataObject.fieldId == formField.id }" >
+		                                            	<input  required
+		                                            		th:name="'scoreParamList['+${iter.index}+']['+ ${iter2.index} +'].id'" 
+		                                            		type="hidden" 
+		                                            		th:value="${scoreCardDataObject.id}" 
+		                                            		class="form-control sm-control" />
+		                                       </div>
+	                                            <div class="col-sm-2 ">
+		                                            <div th:each="scoreCardDataObject : ${scoreCardDetail.scoreCardData}"
+		                                            	th:if="${scoreCardDataObject.groupId == templateGroup.group.id and scoreCardDataObject.fieldId == formField.id }"
+		                                            >
+		                                            	<input  
+		                                            		th:name="'scoreParamList['+${iter.index}+']['+ ${iter2.index} +'].target'" 
+		                                            		th:id="'target' + ${formField.id}" 
+		                                            		type="text" 
+		                                            		readonly
+		                                            		th:value="${formField.targetValue != null and formField.targetValue.size() > 0 ? formField.targetValue[0].value : 'NA'}" 
+		                                            		class="form-control sm-control uppercase" />	
+		                                            </div>
+		                                            <div th:if="${scoreCardDetail == null || scoreCardDetail.scoreCardData.size() < 1}">
+				                                       	<input  
+		                                            		th:name="'scoreParamList['+${iter.index}+']['+ ${iter2.index} +'].target'" 
+		                                            		th:id="'target' + ${formField.id}" 
+		                                            		type="text" 
+		                                            		readonly
+		                                            		th:value="${ formField.targetValue != null and formField.targetValue.size() > 0 ?  formField.targetValue[0].value  : 'NA' }"
+		                                            		class="form-control sm-control uppercase" />
+				                                    </div>
+	                                            	<span class="errormsg" style="color:red;" th:id="'error_target' + ${formField.id}"></span>
+	                                            </div>
+	                                            <div class="col-sm-2" th:if="${formField.type == 'text'}">
+	                                            	<div th:each="scoreCardDataObject : ${scoreCardDetail.scoreCardData}"
+		                                            	th:if="${scoreCardDataObject.groupId == templateGroup.group.id and scoreCardDataObject.fieldId == formField.id }"
+		                                            >
+		                                            	<input required
+		                                            	
+		                                            		th:if="${scoreCardDataObject.isAutoPopulated eq 0}"
+	                                                		th:id="'value' + ${formField.id}" 
+	                                                		th:name="'scoreParamList['+${iter.index}+']['+ ${iter2.index} +'].value'" 
+	                                                		th:type="${formField.type}" 
+	                                                		th:value="${scoreCardDataObject.value}"
+	                                                		class="form-control sm-control"/>
+	                                                		
+	                                                	<input required
+		                                            	
+		                                            		th:if="${scoreCardDataObject.isAutoPopulated ne 0}"
+		                                            		readonly
+	                                                		th:id="'value' + ${formField.id}" 
+	                                                		th:name="'scoreParamList['+${iter.index}+']['+ ${iter2.index} +'].value'" 
+	                                                		th:type="${formField.type}" 
+	                                                		th:value="${scoreCardDataObject.value}"
+	                                                		class="form-control sm-control"/>	
+
+	                                                </div>
+	                                                <div th:if="${scoreCardDetail == null || scoreCardDetail.scoreCardData.size() < 1}">
+				                                       	<input required
+	                                                		th:id="'value' + ${formField.id}" 
+	                                                		th:name="'scoreParamList['+${iter.index}+']['+ ${iter2.index} +'].value'" 
+	                                                		th:type="${formField.type}"
+	                                                		th:placeholder="${ formField.validations != null and formField.validations.size() > 0 ?  'Enter value'  : 'NA' }"
+	                                                		class="form-control sm-control"/>
+				                                       </div>
+	                                                <span class="errormsg" style="color:red;" th:id="'error_value' + ${formField.id}"></span>
+	                                            </div>
+	                                            <div class="col-sm-2" th:if="${formField.type == 'select'}">
+	                                                <select th.name="scoreParamList['+${iter.index}+']['+ ${iter2.index} +'].value'" class="form-control sm-control">
+	                                                    <option th:each="formFieldOption : ${formField.fieldOptions}"
+	                                                            th:if="${formField.id == formFieldOption.fieldId}"
+	                                                            th:value="${formFieldOption.optionValue}">
+                                                        <span th:text="${formFieldOption.optionName}"></span>
+                                                    </option>
+	                                                </select>
+	                                            </div>
+	                                            <div class="col-sm-2" th:if="${formField.type == 'textbox'}">
+	                                                <input required type="text" th:name="'scoreParamList['+${iter.index}+']['+ ${iter2.index} +'].value'" class="form-control sm-control">
+	                                            </div>
+	                                            <div class="col-sm-2" th:if="${formField.type == 'checkbox'}">
+	                                                <ul class="dis-flex field-listing">
+	                                                    <li class=" check-box"
+	                                                        th:each="formFieldOption : ${formField.fieldOptions}"
+	                                                        th:if="${formField.id == formFieldOption.fieldId}">
+	                                                        <label class="vote-check "
+	                                                        	th:each="scoreCardDataObject : ${scoreCardDetail.scoreCardData}"
+					                                            	th:if="${scoreCardDataObject.groupId == templateGroup.group.id and scoreCardDataObject.fieldId == formField.id }"
+	                                                        >
+	                                                            <input type="checkbox" required
+	                                                                   th:name="'scoreParamList['+${iter.index}+']['+ ${iter2.index} +'].value'"
+	                                                                   th:value="${formFieldOption.optionValue}"
+	                                                                   checked="${scoreCardDataObject.value != formFieldOption.optionValue ? 'true' : 'false' }"
+	                                                                   />
+	                                                            <span th:text="${formFieldOption.optionName}"></span>
+	                                                        </label>
+	                                                    </li>
+	                                                </ul>
+	                                            </div>
+	                                            <div class="col-sm-2" th:if="${formField.type == 'radio'}">
+	                                                <ul class="dis-flex field-listing">
+	                       								<li class=" radio-options"
+	                                                        th:each="formFieldOption : ${formField.fieldOptions}"
+	                                                        th:if="${formField.id == formFieldOption.fieldId}">
+	                                                        <label class="vote-radio" 
+	                                                        	th:each="scoreCardDataObject : ${scoreCardDetail.scoreCardData}"
+					                                            	th:if="${scoreCardDataObject.groupId == templateGroup.group.id and scoreCardDataObject.fieldId == formField.id }">
+	                                                            <input type="radio" required
+	                                                            	   th:id="'radio' + ${formField.id}"
+	                                                            	   th:class ="'radio_validation'+ ${formField.id}"
+	                                                                   th:name="'scoreParamList['+${iter.index}+']['+ ${iter2.index} +'].value'"
+	                                                                   th:value="${formFieldOption.optionValue}"
+	                                                                   th:checked="${scoreCardDataObject.value == formFieldOption.optionValue ? 1 : 0 }" 
+	                                                                   />          
+	                                                            <span th:text="${formFieldOption.optionName}"></span>
+	                                                        </label>
+	                                                        <label class="vote-radio" th:if="${scoreCardDetail == null || scoreCardDetail.scoreCardData.size() < 1}">
+						                                       	<input type="radio" required
+	                                                            	   th:id="'radio' + ${formField.id}"
+	                                                                   th:class ="'radio_validation'+ ${formField.id}"
+	                                                                   th:name="'scoreParamList['+${iter.index}+']['+ ${iter2.index} +'].value'"
+	                                                                   th:value="${formFieldOption.optionValue}" 
+	                                                                   />          
+	                                                            <span th:text="${formFieldOption.optionName}"></span>
+						                                    </label>
+	                                                    </li>
+	                                                </ul>
+	                                                <span class="radioerror" th:id="'radio_error'+${formField.id}">Required field</span>
+	                                            </div>
+	                                        	<div class="col-sm-2" 
+	                                        	 	th:each="scoreCardDataObject : ${scoreCardDetail.scoreCardData}"
+		                                            	th:if="${scoreCardDataObject.groupId == templateGroup.group.id and scoreCardDataObject.fieldId == formField.id }"
+	                                        	 	>
+	                                        	 	<input  required
+	                                        	 		th:name="'scoreParamList['+${iter.index}+']['+ ${iter2.index} +'].score'" 
+	                                        	 		type="text" 
+	                                        	 		readonly 
+	                                        	 		th:id="'score' + ${formField.id}"
+	                                        	 		th:value="${scoreCardDataObject.score}"  
+	                                        	 		class="form-control sm-control scoreCard" />
+	                                        	 	<div class="pos-ab hint">
+	                                        	 		<i  th:if="${formField.scoringDescription != 'NA'}" class="fa fa-info-circle fa-lg"></i>
+		                                        	</div>
+		                                        	<span th:if="${formField.scoringDescription != 'NA'}" class="tool-tips tool-tips-arrow">[[${formField.scoringDescription}]]</span>
+	                                        	 </div>
+	                                        	 <input 
+	                                        	 		type="hidden"
+	                                        	 		th:id="'weightage' + ${formField.id}"
+	                                        	 		th:value="${formField.weight}"  
+	                                        	 		class="form-control sm-control scoreCard" />
+	                                        	 <div class="col-sm-2" 
+	                                        	 	th:if="${scoreCardDetail == null || scoreCardDetail.scoreCardData.size() < 1}"
+	                                        	 	>
+	                                        	 	<input  required
+	                                        	 		th:name="'scoreParamList['+${iter.index}+']['+ ${iter2.index} +'].score'" 
+	                                        	 		type="text" 
+	                                        	 		readonly 
+	                                        	 		th:id="'score' + ${formField.id}" 
+	                                        	 		class="form-control sm-control scoreCard">
+	                                        	 	
+	                                        	 	<div class="pos-ab hint">
+	                                        	 		<i  th:if="${formField.scoringDescription != 'NA'}" class="fa fa-info-circle fa-lg"></i>
+		                                        	</div>
+		                                        	<span th:if="${formField.scoringDescription != 'NA'}" class="tool-tips tool-tips-arrow">[[${formField.scoringDescription}]]</span>
+	                                        	 </div>
+	                                        	<div class="col-sm-1 p0px" 
+	                                        	th:each="scoreCardDataObject : ${scoreCardDetail.scoreCardData}"
+		                                            	th:if="${scoreCardDataObject.groupId == templateGroup.group.id and scoreCardDataObject.fieldId == formField.id }">
+	                                        		<input required
+	                                        	 		th:name="'scoreParamList['+${iter.index}+']['+ ${iter2.index} +'].scoreWeight'"
+	                                        	 		type="text" 
+	                                        	 		th:placeholder="${ formField.weight != null ?  formField.weight+'%'  : 'NA' }"
+	                                        	 		readonly 
+	                                        	 		th:id="'scoreWeight' + ${formField.id}"
+	                                        	 		th:value="${scoreCardDataObject.weightScore}"  
+	                                        	 		class="form-control sm-control scoreCardWeightage" />
+	                                        	</div>
+	                                        	<div class="col-sm-1 p0px" 
+	                                        		th:if="${scoreCardDetail == null || scoreCardDetail.scoreCardData.size() < 1}"
+	                                        	>
+	                                        		<input  required
+	                                        	 		th:name="'scoreParamList['+${iter.index}+']['+ ${iter2.index} +'].scoreWeight'"
+	                                        	 		type="text"
+	                                        	 		th:placeholder="${ formField.weight != null ?  formField.weight+'%'  : 'NA' }" 
+	                                        	 		readonly 
+	                                        	 		th:id="'scoreWeight' + ${formField.id}"  
+	                                        	 		class="form-control sm-control scoreCardWeightage" />
+	                                        	</div>
+	                                        	 
+	                                        	<div class="col-sm-2 mr2per" th:each="scoreCardDataObject : ${scoreCardDetail.scoreCardData}"
+		                                            	th:if="${scoreCardDataObject.groupId == templateGroup.group.id and scoreCardDataObject.fieldId == formField.id }">
+		                                        	<textarea required
+		                                        		class="form-control" 
+		                                        		th:name="'scoreParamList['+${iter.index}+']['+ ${iter2.index} +'].remark'" 
+		                                        		th:text="${scoreCardDataObject.remarks}"
+		                                        		placeholder="Remarks"></textarea>
+		                                        </div>
+		                                        <div class="col-sm-2 mr2per" 
+		                                        th:if="${scoreCardDetail == null || scoreCardDetail.scoreCardData.size() < 1}">
+		                                        	<textarea  required
+		                                        		class="form-control" 
+		                                        		th:name="'scoreParamList['+${iter.index}+']['+ ${iter2.index} +'].remark'"
+		                                        		placeholder="Remarks"></textarea>
+		                                        </div>
+	                                        </div>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                        </div>
+                        </div>
+                    </div>
+                    <div class="generate formulate" th:if="${template.isAllGroupAccess}">
+                    	<h3 class="form-title">Statutory compliances</h3>
+                    	<div class="dynamic-field ">
+                    		<div class="row" th:each="templateForm,iter : ${templateForms}" >
+                    			<div class="col-sm-12 setting-content ">
+	                    			<div class="col-sm-5 check-box ml4per">
+	                  					<label class="vote-check col-sm-1 ml10px">
+											<input type="checkbox" name="" id=""
+												th:if="${templateForm.isFormSaved}" checked disabled
+												th:value="${templateForm.formId}" />												
+											<input type="checkbox"  name="" id="" disabled
+												th:unless="${templateForm.isFormSaved}" 
+												th:value="${templateForm.formId}" />												
+											<span></span>
+										</label>
+										<a  data-toggle="tooltip" title="Click here to fill compliance form" th:if="${templateForm.formSavedId &gt 0}" th:href="@{/form-save/user/complaince/}+${templateForm.formSavedId + '/scorecard/' + scoreCardDetail.id}" class="hyperlink">
+												
+											<label th:text="${templateForm.formName}">Label Text</label>
+										    
+										</a>
+										<label th:unless="${templateForm.formSavedId &gt 0}" th:text="${templateForm.formName}">Label Text</label>
+										
+	                    			</div>							
+								</div>
+                    		</div>
+                    	</div>
+                    </div>
+                    
+                    <div class="templates">
+                    	<div class="col-sm-12 setting-content">
+                    		<div th:if="${template.isAllGroupAccess}" class="row dis-flex formview">								
+								<div class="col-sm-3 ml4per">
+									
+								</div>
+								<div class="col-sm-2"></div>
+                                <div class="col-sm-2"><label style="color:#000;text-align:right">Total Score</label></div>
+                            	<div class="col-sm-2 ">
+                            		<input name="actualScore" type="text" readonly 
+                        				class="form-control sm-control totalScore"
+                        				th:value="${scoreCardDetail.actualScore}" />
+                                </div>                                
+	                    	</div>                    	
+	                    	<div class="row mtb10px">
+	                    		<div class="col-sm-12 mr2per text-right pl0px">    
+				            		<div class="scorecardbtn" th:if="${ templateGroups != null and templateGroups.size() > 0 AND scoreCardDetail.status != 5 AND scoreCardDetail.status != 7 }">
+				                      	<button id="submitDraftBTN" type="button" class="btn btn-success"  
+				                      	th:text="${scoreCardDetail.isEnable == true }? 'save as draft' : 'save'"
+				                      	></button>
+				                    </div>
+				                    <div class="scorecardbtn" th:if="${ templateGroups != null and templateGroups.size() > 0 AND scoreCardDetail.status != 5 AND scoreCardDetail.status != 7 }">
+				                    	<div class="inline-block" th:if="${!scoreCardDetail.isApprover}">
+				                        	<button id="submitBTN" type="button" 
+				                        	th:class="${scoreCardDetail.isEnable == true }? 'btn btn-success' : 'btn btn-success hide'"
+				                        	>submit</button>
+				                        </div>
+				                    </div>
+
+                                    <div class="scorecardbtn " th:if="${ templateGroups != null and templateGroups.size() > 0 AND scoreCardDetail.status != 7 }" >
+                                        <div class="inline-block" th:if="${scoreCardDetail.isApprover}">
+                                            <button id="approveBTN" type="button" class="btn btn-success">Approve</button>
+                                        </div>
+                                        <div class="inline-block" th:if="${scoreCardDetail.isApprover}">
+				                        	<button id="submitRejectBTN" type="button" class="btn btn-success">reject</button>
+				                        </div>
+                                    </div>
+				               </div>
+	                    	</div>	                    	
+	                    </div>
+                    </div>                    
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- / page wrapper -->
+</div>
+<div class="vedanta popupmodal">
+	<div class="modal fade" id="changeUser" tabindex="-1" role="dialog" >
+		<div class="modal-dialog"  role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">X</button>
+					<h4 class="modal-title" >Change User</h4>
+				</div>
+				<form class="client-form">
+					<div class="modal-body">
+						<div class="setting-content">
+							<label class="col-sm-5 mt5px">Change Assigned User</label>
+							<div class="col-sm-7">
+								<select id="changeusername" class="form-control" name="">
+								<!--  	<option value="0">Select User</option>
+									<option th:each="userDetail : ${userDetails}"
+                                             th:value="${userDetail.employeeId}">
+                                        <span th:text="${parserUtils.scorecardAssigneUserName(userDetail.name, userDetail[office], userDetail[departmentName])}"></span>
+                                    </option>-->   
+								</select>
+							</div>
+							<div>
+								<input type="hidden" id="groupIdData" /> 
+							</div>
+							
+							<div  class="col-sm-12 mtb20px">
+								<textarea class="form-control hei_auto" rows="6" id="message" placeholder="Comments" ></textarea>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<div class="col-sm-12 dis-block">
+							<button type="button" class="btn btn-compose assignedUser" >OK</button>
+							<button type="button" data-dismiss="modal" class="btn btn-cancel">Cancel</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- /wrapper -->
+
+<!-- Complaince modal  -->
+
+<div class="vedanta popupmodal">
+	<div class="modal fade" id="complainceModal" tabindex="-1" role="dialog" data-backdrop="static">
+		<div class="modal-dialog"  role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					
+					<h4 class="modal-title" >Compliance Form</h4>
+				</div>
+				<form class="client-form">
+					<div class="modal-body">
+						<div class="setting-content">
+								<div class="modal-body">
+									<h4 class="warning">Fill Compliance Forms First And Get It Approve By HOD</h4>
+									<input type="hidden" id="hiddenId" />
+								</div>
+							
+						</div>
+					</div>
+					<div class="modal-footer">
+						<div class="col-sm-12 dis-block">
+						  
+							<button type="button" data-dismiss="modal" class="btn btn-cancel">OK</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- Complaince modal  end -->
+
+
+
+
+</body>
+<script>
+			var tempData;
+		   $(document).ready(function () {
+	
+        
+        //	 $('.bs-searchbox input').css('border','1px solid #f00');
+
+          	$( ".bs-searchbox input" ).keypress(function() {
+        
+          		var str = $('.bs-searchbox input').val().trim();
+          		
+          			var name = str.replace(/\s/g,''); 	
+          			tempData = name;
+      
+          		if(name.length > 1){
+          			var url ="/vedanta-web/scorecard/getAllUserByName/"+name+"/bu-id/"+scoreCardDetailsData.businessUnitId;
+          		}else{
+          			var url ="/vedanta-web/scorecard/getAllUserNotAdminByLimit/"+scoreCardDetailsData.businessUnitId;
+          		}
+          			
+          	     	$.ajax({
+                 			url: url,	
+                          type: "GET",
+                          dataType: "json",
+                          contentType: "application/json; charset=utf-8",
+                          success: function (data) {
+  								$('#changeusername').find('option').remove();
+  								
+  								if(data.length > 0){
+  									 for ( var i = 0; i< data.length; ++i) {
+  		                       			 if(data[i].office == 'undefined' || data[i].office == null){
+  		                       				 data[i].office = "";
+  		                       			 }
+  		                       			 if(data[i].departmentName == 'undefined' || data[i].departmentName == null){
+  		                       				 data[i].departmentName = "";
+  		                       			 }
+  		      			 			   $('#changeusername').append("<option value=\"" + data[i].employeeId + "\">" + data[i].name+"  "+data[i].office +"  "+data[i].departmentName+ "</option>");
+  		      						}
+  		            				$('#changeusername').selectpicker('render');
+  		            				$("#changeusername").val('').selectpicker('refresh');
+  								}
+
+                          },
+                          error: function (xhr, status, error) {
+                              
+                              console.log("token has been expired." + xhr.responseText);
+                          }
+                      });
+          		
+          		 
+          		});
+          	
+		   });
+		   
+		   $('#changeusername').on('shown.bs.select', function (e) {
+			   $( ".bs-searchbox input" ).val(tempData);
+			 });
+		   
+		 
+		   
+
+		   
+</script>
+
+</html>

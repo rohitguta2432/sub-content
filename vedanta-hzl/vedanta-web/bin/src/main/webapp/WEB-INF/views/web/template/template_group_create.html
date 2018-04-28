@@ -1,0 +1,178 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Vedanta</title>
+<object th:include="fragments/header :: head" th:remove="tag"></object>
+<!-- Favicon -->
+<link rel="shortcut icon" type="image/icon" th:href="@{/resources/images/favicon.ico}"/>
+</head>
+<body>
+	<div id="wrapper" th:with="templateActive=${'active'},templateGroupsActive=${'active'}">
+		<i th:replace="/fragments/component :: sidebar"></i>
+		<div class="white-bg page-wrapper header-wrapper">
+			<!-- top header -->
+			<div th:replace="/fragments/component :: topheader" ></div>
+			<!-- Body Part -->
+			<div class="wrapper wrapper-content">
+
+				<div class="container-fluid">
+					<div class="row btm-brd">
+						<div class="col-sm-12">
+							<div class="page-title">
+								<h3>Template Group Create</h3>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-sm-10">
+							<div class="setting-content">
+								<form class="client-form" action="#" th:action="@{/admin/template/groups/save}"
+								th:object="${templateGroupMappers}" method="POST">
+									<div class="row form-group">
+										<div class="col-sm-3 col-md-3 col-md-offset-1 ">
+											<label class=" pull-right">Template :</label>
+										</div>
+										<div class="col-sm-9 col-md-6">
+											<select class="form-control" name="templateId" id="templateId" onchange="checkTemplate();">
+												<option value="0">Select Template</option>
+												<option 
+													th:if="${templates != null }" 
+													th:each="template : ${templates}"
+													th:selected="${templateGroupMappers != null and templateGroupMappers.templateId != template.id ? selected : ''}" 
+													th:value="${template.id}">
+													<span th:text="${template.name}"></span>
+												</option>
+											</select>
+											<span class='errormsg text-left' style="display:none;" id="templateSpan">Please enter template name</span>
+										</div>
+										 
+									</div>
+									<div class="create" >
+										<div class=" form-group row">
+											<div class="col-sm-3 col-md-3 col-md-offset-1">
+												<label class=" pull-right">Groups :</label>
+											</div>
+											<div class="col-sm-9 col-md-6" >
+												<div class="row mb10px dis-flex">
+													<div class="col-sm-12" >
+														<input type="search" class="form-control" placeholder="search group" id="searchField"  onkeyup="myFunction()" />															
+													</div>
+												</div>
+												<ul id="myUl" class=" inner-scroll">
+													<li class="row mb10px dis-flex search-result check-box" th:if="${groups != null }" th:each="group,iter : ${groups}">
+														<div class="col-sm-1">
+															<label class="vote-check">
+													    		<input type="checkbox"  th:attr="name='templateGroups[' + ${iter.index} + '].groupId'"
+																th:checked = "${templateGroupMappers.containsGroupId(group.id)}"
+																th:value="${group.id}" onclick="checkGroup();"/>
+																<span id="mySpan" class="items-name font0" th:text="${group.name}"></span>
+															</label>
+														</div>
+														<div class="col-sm-9 p0px"><span id="mySpan" class="items-name" th:text="${group.name}"></span></div>
+														<div class="col-sm-2">
+															<input type="text" class="form-control" placeholder="sortOrder"
+															th:attr="name='templateGroups[' + ${iter.index} + '].sortOrder'" th:value="${iter.index}">
+														</div>
+													</li>
+												  </ul>
+												  <span class='errormsg text-left' style="display:none;" id="groupSpan">You must check at least one checkbox</span>
+											</div>
+											
+										</div>
+									</div>
+									<br/>
+									<div class="row">
+										<div class="col-sm-12 col-md-10 text-right">											
+											<button class="btn btn-success" type="submit" >Save</button>
+										</div>												
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- / page wrapper -->
+	</div>
+	<!-- /wrapper -->
+</body>
+<script type="text/javascript">
+$(document).ready(function(){
+	
+	$('#templateId').selectpicker({
+	      liveSearch: true,
+	      maxOptions: 1
+	    });
+});
+
+$('form').submit(function () {	
+
+    groupCheck = $("#templateId").val();
+
+     if(groupCheck == 0 || groupCheck == 'NA') {
+    	 $("#templateSpan").show();
+           return false;
+         }
+     
+     checked = $("input[type=checkbox]:checked").length;
+
+     if(!checked) {
+    	 $("#groupSpan").show();
+       return false;
+     } 
+     
+
+   });
+   
+   
+function myFunction() {
+ 
+    var input, filter, ul, li, a, i;
+    input = document.getElementById('searchField');
+    filter = input.value.toUpperCase();
+    ul = document.getElementById("myUl");
+    li = ul.getElementsByTagName('li');
+    span = document.getElementById("mySpan");
+
+    // Loop through all list items, 
+    for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName("span")[0];
+        if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+            li[i].style.display = "";
+        } else {
+            li[i].style.display = "none";
+        }
+    }
+}
+
+function checkTemplate(){
+	 checked = $("#templateId").val();
+
+    if (checked > 0)
+    {
+  	     $( "#templateSpan" ).hide();
+    }
+	
+}
+
+
+function checkGroup(){
+	 checked = $("input[type=checkbox]:checked").length;
+	 
+	 if(checked) {
+  	  $("#groupSpan").hide();
+      return false;
+    } 
+	
+}
+
+</script>
+
+</html>

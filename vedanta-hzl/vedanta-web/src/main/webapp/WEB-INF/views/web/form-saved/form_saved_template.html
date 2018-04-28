@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Vedanta</title>
+    <object th:include="fragments/header :: head" th:remove="tag"></object>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/icon" th:href="@{/resources/images/favicon.ico}"/>
+    <script th:inline="javascript">
+    
+    /*<![CDATA[*/
+	var formGroups = [[${formGroups}]];
+	var formSavedDetail = [[${formSavedDetail}]];	
+	var scorecardId = [[${scorecardId}]];
+	
+	var pathname = window.location.pathname; 
+	var url = pathname.split("/");
+  	var targetUrl = url[url.length - 2]
+  	
+
+    
+        $(document).ready(function () {
+
+            $('#changeusername').selectpicker({
+			      liveSearch: true,
+			      maxOptions: 1
+			    });
+			
+            if(scorecardId == null){
+            	$("#backToScorecard").hide();
+            }
+
+/*]]>*/            
+            // show when compliance form filled
+             if(formSavedDetail.categoryId === 6 & formSavedDetail.subCategoryId === 36){
+            	 
+            	  if(formSavedDetail.status == 5){
+                  	$("#complianceDiv").show();
+                  	$("#complianceMsg").html("<strong> Statutory compliances form already filled ! </strong> Pending for HOD approval.")
+                  }
+                  if(formSavedDetail.status == 7){
+                  	$("#complianceDiv").show();
+                  	$("#complianceMsg").html("<strong> Statutory compliances form already filled and approved ! </strong>")
+                  }
+                  
+                  if(formSavedDetail.status == 3){
+                    	$("#complianceDiv").show();
+                    	$("#complianceMsg").html("<strong> Statutory compliances form saved as a draft! </strong>")
+                    }
+                  
+                  if(formSavedDetail.status == 6){
+                  	$("#complianceDiv").show();
+                  	$("#complianceMsg").html("<strong> Statutory compliances form rejected, Please fill again ! </strong>")
+                  }
+            	  
+              }
+              
+          
+            
+            $("#backToScorecard").click(function (){
+            	var url = "/vedanta-web/scorecard/user/"+scorecardId;
+            	window.location = url;
+            	
+            })
+            
+            
+            
+            $("input[type='radio']").change(function() {
+            	
+            	var fieldId;
+            	
+            	
+            	var fieldId;
+            	if((this.id).indexOf('radio') != -1){
+					fieldId = (this.id).substr(5);        		
+            	}
+            	elementValue = $(this).val();         
+ 
+            	$('.radioerror').css('display','none');
+            });
+            
+           	$(".mod").click(function() {
+       
+               	$("#changeUser").modal('show');
+               	var groupId;
+               	if((this.id).indexOf('formsaveId') != -1){
+               		$("#groupIdData").val('');
+            	}
+				if((this.id).indexOf('groupId') != -1){
+					groupId = (this.id).substr((this.id).indexOf('_')+1);
+					$("#groupIdData").val(groupId);
+            	}
+				
+		          $('#changeusername').html("");
+		          var url;
+		          if(formSavedDetail.isCompliance == true){
+		        	  url = "/vedanta-web/form-save/getAllHrUserByLimit/"+formSavedDetail.businessUnitId;
+		          }else{
+		        	  url = "/vedanta-web/form-save/getAllUserNotAdminAndHrByLimit/"+formSavedDetail.businessUnitId;
+		          }		          
+				
+				$.ajax({
+           			url: url,
+                    type: "GET",
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                    	
+                    	 $('#changeusername').append("<option value='0'>Select User </option>");
+                 		 for ( var i = 0; i< data.length; ++i) {
+                 			 if(data[i].office == 'undefined' || data[i].office == null){
+                 				 data[i].office = "";
+                 			 }
+                 			 if(data[i].departmentName == 'undefined' || data[i].departmentName == null){
+                 				 data[i].departmentName = "";
+                 			 }
+                 			                 			
+                 			 
+			 			   $('#changeusername').append("<option value=\"" + data[i].employeeId + "\">" + data[i].name+"  "+data[i].office +"  "+data[i].departmentName+ "</option>");
+						}  
+                 		  $('#changeusername').selectpicker({
+       				      liveSearch: false,
+       				      maxOptions: 1
+       				    }); 
+      					 $('#changeusername').selectpicker('render');
+      					 $("#changeusername").val('').selectpicker('refresh');
+                  
+                    },
+                    error: function (xhr, status, error) {
+                        
+                        //console.log("token has been expired." + xhr.responseText);
+                    }
+                });
+               	
+				
+				
+               });
+           	
+           	 $(".assignedUser").click(function() {
+                
+           		scoreCardGroupUser = {};
+           		
+           		scoreCardGroupUser["contractId"]        = $("#contract_id").val();
+           		scoreCardGroupUser["contractNumber"]    = $("#contract_number").val();
+           		scoreCardGroupUser["contractManagerId"] = $("#contract_manager_id").val();
+           		scoreCardGroupUser["vendorId"]          = $("#vendor_id").val();
+           		scoreCardGroupUser["vendorCode"]        = $("#vendor_code").val();
+           		scoreCardGroupUser["categoryId"]        = $("#category_id").val();
+           		scoreCardGroupUser["categoryName"]      = $("#category_name").val();
+           		scoreCardGroupUser["subCategoryId"]     = $("#sub_category_id").val();
+           		scoreCardGroupUser["subCategoryName"]   = $("#sub_category_name").val();
+           		scoreCardGroupUser["plantId"]           = $("#plant_id").val();
+           		scoreCardGroupUser["departmentId"]      = $("#department_id").val();
+           		scoreCardGroupUser["departmentCode"]    = $("#department_code").val();
+           		scoreCardGroupUser["userId"]            = $("#changeusername").val();
+           		scoreCardGroupUser["employeeId"]        = $("#changeusername").val();
+           		scoreCardGroupUser["formId"]            = $("#form_id").val();
+           		scoreCardGroupUser["formName"]          = $("#form_name").val();
+           		scoreCardGroupUser["formGroupDetailId"] = $("#groupIdData").val();
+           		scoreCardGroupUser["contractManager"]   = $("#contract_manager_name").val();
+           		scoreCardGroupUser["plantCode"]         = $("#plant_code").val();
+           		scoreCardGroupUser["poItem"]        	 = $("#po_Item").val();
+           		scoreCardGroupUser["poItemDescription"]         = $("#po_Item_Description").val();
+           		scoreCardGroupUser["businessUnitId"]         = $("#business_unit_id").val();
+           		
+           		var jsonObj = JSON.stringify(scoreCardGroupUser);
+           		
+           		
+           		
+               	$.ajax({
+           			url: "/vedanta-web/form-save/assign",
+                    type: "POST",
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    data: jsonObj,
+                    success: function (data) {
+                    
+                    	window.location.href = '/vedanta-web/form-save';
+                    },
+                    error: function (xhr, status, error) {
+                        
+                       // console.log("token has been expired." + xhr.responseText);
+                    }
+                });
+               	
+               	
+               	$("#changeUser").modal('hide');
+               });
+            
+            $("input[type='text']").focusout(function() {
+            	
+            	var fieldId;
+            	
+            	if((this.id).indexOf('target') != -1){
+            		fieldId = (this.id).substr(6);
+            	}
+            	
+				if((this.id).indexOf('value') != -1){
+					fieldId = (this.id).substr(5);        		
+            	}
+			
+				if(fieldId != null && fieldId != 'undefined'){
+				
+					getValidation(this,fieldId,formGroups);	
+				}
+				
+			
+            });
+            
+            $("input[type='text']").focus(function() {
+            	
+				var fieldId;
+				$(this.id).removeClass('errorborder');
+            	if((this.id).indexOf('target') != -1){
+            		fieldId = (this.id).substr(6);
+            		$("#error_target"+fieldId).text("");            		
+            	}
+            	
+				if((this.id).indexOf('value') != -1){
+					fieldId = (this.id).substr(5);
+					$("#error_value"+fieldId).text("");
+            	}
+            });
+			
+
+            $('#vendorId').selectpicker({
+                liveSearch: true,
+                maxOptions: 1
+            });
+
+            $('#vendorId').on('change', function () {
+                var value = this.value;
+
+                $.ajax({
+                    url: "/vedanta-web/contract/" + value,
+                    type: "GET",
+                    success: function (data) {
+                        showContracts(data);
+                    },
+                    error: function (xhr, status, error) {
+                        //alert(xhr.responseText);
+                        //console.log("token has been expired." + xhr.responseText);
+                    }
+                });
+            });
+            
+            
+            $('#submitBTN').click(function(){
+            	
+            	  form=$('#saveFormData');
+            	 	var flag = 0;
+            	  
+            	  $.each(formGroups, function( index, formGroup ) {
+            		  
+            		  $.each(formGroup.formGroupDetail.formFields, function( key, formField ) {
+            			  if(formField.type == 'text' || formField.type == 'textbox'){
+            				  if($('#value'+formField.id+'_'+formGroup.formGroupDetail.id).val() == ''){
+            					 $('#value'+formField.id+'_'+formGroup.formGroupDetail.id).addClass('errorborder');
+            					 $('#error_value'+formField.id+'_'+formGroup.formGroupDetail.id).text('required field');
+            					 flag = 1;
+                				 return false;
+                			  }  
+            			  }
+            			  if(formField.type == 'radio'|| formField.type == 'checkbox'){
+            				  
+            				  var elementName;
+            				  
+            				  $('.radio_validation'+formField.id+'_'+formGroup.formGroupDetail.id).each(function(i, obj) {
+            					    elementName = obj.name;
+            				  });
+            				  
+            				  if(!$("input:radio[name='"+elementName+"']").is(":checked")){ 
+            						
+                				 $('#radio_error'+formField.id+'_'+formGroup.formGroupDetail.id).css('display','block');
+                				 flag = 1;
+                				 return false;
+                			  }
+            			  }
+                		});
+            		  
+            		  if(flag == 1)
+                  	  	return false;  
+            		  
+            		});
+            	   if(flag == 1)
+            	  	return false; 
+            	form.attr('action','/vedanta-web/form-save/save').trigger('submit');
+            	});
+                    
+            $('#submitApproveBTN').click(function(){
+            	
+            	  form=$('#saveFormData')
+            	  
+            	  var flag = 0;
+            	  
+            	  $.each(formGroups, function( index, formGroup ) {
+            		  
+            		  $.each(formGroup.formGroupDetail.formFields, function( key, formField ) {
+            			  if(formField.type == 'text' || formField.type == 'textbox'){
+            				  if($('#value'+formField.id+'_'+formGroup.formGroupDetail.id).val() == ''){
+            					 $('#value'+formField.id+'_'+formGroup.formGroupDetail.id).addClass('errorborder');
+            					 $('#error_value'+formField.id+'_'+formGroup.formGroupDetail.id).text('required field');
+            					 flag = 1;
+                				 return false;
+                			  }  
+            			  }
+            			  if(formField.type == 'radio'|| formField.type == 'checkbox'){
+            				  
+            				  var elementName;
+            				  
+            				  $('.radio_validation'+formField.id+'_'+formGroup.formGroupDetail.id).each(function(i, obj) {
+            					    elementName = obj.name;
+            				  });
+            				  
+            				  if(!$("input:radio[name='"+elementName+"']").is(":checked")){ 
+            						
+                				 $('#radio_error'+formField.id+'_'+formGroup.formGroupDetail.id).css('display','block');
+                				 flag = 1;
+                				 return false;
+                			  }
+            			  }
+                		});
+            		  
+            		  if(flag == 1)
+                  	  	return false;  
+            		  
+            		});
+            	   if(flag == 1)
+            	  	return false;
+            	
+            	   
+            	   
+            	   if(targetUrl == 'scorecard'){
+            		   form.attr('action','/vedanta-web/form-save/save-approve-by-scorecard/'+scorecardId).trigger('submit');
+            	   }else{
+            		   form.attr('action','/vedanta-web/form-save/save-approve').trigger('submit');
+            	   }
+            	  
+            	  
+            	});
+            
+            $('#submitDraftBTN').click(function(){
+            	  
+           	  form=$('#saveFormData');
+           	 if(targetUrl == 'scorecard'){
+           		form.attr('action','/vedanta-web/form-save/save-draft-by-scorecard/'+scorecardId).trigger('submit'); 
+           	 }else{
+           		form.attr('action','/vedanta-web/form-save/save-draft').trigger('submit');
+           	 }
+           	  
+           	});
+            
+            $('#submitRejectBTN').click(function(){
+             	  form=$('#saveFormData');
+                  if(targetUrl == 'scorecard'){
+                	  form.attr('action','/vedanta-web/form-save/save-reject-by-scorecard/'+scorecardId).trigger('submit');
+                  }else{
+                	  form.attr('action','/vedanta-web/form-save/save-reject').trigger('submit');
+                  }
+             	  
+             });
+            
+        });
+
+     
+        function getValidation(elementId,fieldId,formData){
+        	
+        	$.each( formData, function( formGroupKey, formGroup ) {
+        		  $.each( formGroup.formGroupDetail.formFields, function( fieldKey, field ) {
+        			  
+            		  if(fieldId.substr(0,fieldId.indexOf("_")) == field.id && fieldId.substr(fieldId.indexOf("_")+1) == formGroup.formGroupDetail.id ){  
+            			  $.each( field.formValidations, function( validationKey, validation ) {
+            				  
+            				var min = parseInt(validation.minValue) || -1;
+            				var max = parseInt(validation.maxValue) || -1;
+
+            				var isnum = /^\d+$/.test(elementId.value);
+            				/* integer data validator */
+            				if(validation.dataType == "INTEGER"){
+            					
+            					  if(isnum){
+            						  if(min != -1 && max != -1){
+            							  
+                    					  if(((elementId.value <= min) || (elementId.value >= max))){
+	                   						  if ((elementId.id).indexOf("target") <= 0){
+	                   							$('#error_'+elementId.id).text("value should be < "+max+" and > "+min);
+	                    						 $("#"+elementId.id).val('').addClass("errorborder");	  
+	                   						  }
+                    						 
+                    					  }
+                    				  }else if(min != -1){
+                    					  if((elementId.value <= min)){
+
+
+                    						  if ((elementId.id).indexOf("target") <= 0){
+                    							  $('#error_'+elementId.id).text("value should be >= "+min);
+                        						  $("#"+elementId.id).val('').addClass("errorborder");  
+                    						  }
+
+                    					  }
+                    				  }else if(max != -1){
+                    					  if((elementId.value >= max+1)){
+                    						  if ((elementId.id).indexOf("target") < 0){
+                    							  $('#error_'+elementId.id).text("value should be <= "+max);
+                        						  $("#"+elementId.id).val('').addClass("errorborder");  
+                    						  }
+                    					  }
+                    				  }
+            					  }else{
+            						  if ((elementId.id).indexOf("target") < 0){
+            							  
+            							  $('#error_'+elementId.id).text("data type should be : int");  
+                						  $("#"+elementId.id).val('').addClass("errorborder");  
+            						  }
+            						  
+            					  }  
+            				}
+            				
+            				/* string data validator */
+							
+            				if(validation.dataType == "string"){
+            					  if(isnum){
+            						  $('#error_'+elementId.id).text("data type should be : string");  
+            					  }  
+            				}
+            			  });
+            		  }
+            	});
+        	});
+        }
+        
+    
+		
+		/* Compare scoringCriteria */
+		function comparator(a, b) {
+		    return parseInt(b.rightOperand) - parseInt(a.rightOperand);
+		}
+        
+
+		
+        function showContracts(data) {
+            $('#contractors').html("");
+            /* $('#contractors').append("<option value='-1'>Select Contrator </option>"); */
+            for (var i = 0, len = data.length; i < len; ++i) {
+                var contractor = data[i];
+                $('#contractors').append("<option value=\"" + contractor.id + "\">" + contractor.name + "</option>");
+            }
+            $('#contractors').selectpicker({
+                liveSearch: true,
+                maxOptions: 1
+            });
+            $('#contractors').selectpicker('render');
+            $("#contractors").val('').selectpicker('refresh');
+        }
+    </script>
+</head>
+<body>
+<div id="wrapper" th:with="formSaveActive=${'active'}">
+    <i th:replace="/fragments/component :: sidebar"></i>
+
+    <div class="white-bg page-wrapper header-wrapper">
+        <!-- top header -->
+			<div th:replace="/fragments/component :: topheader" ></div>
+        <!-- Body Part -->
+        
+   
+        <div th:if="${contract != null }" class="wrapper wrapper-content">
+    	
+              <div id="complianceDiv" class="alert alert-success" style="display:none;">
+					<span id="complianceMsg">Statutory compliances form already filled.</span> 
+					<button  id="backToScorecard" type="button" class="btn btn-success pull-right">Back</button>
+			                     	       
+			    </div>
+
+            <div class="container-fluid">
+            
+            
+                <div class="row btm-brd">
+                    <div class="col-sm-8">
+                        <div class="page-title">
+                            <h3 th:if="${contract.vendorName != null }" th:text="${contract.vendorName}"></h3>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 text-right assigned pl0px">                    	
+                    	<label><b>Assigned User:</b> <span th:text="${form.userName != null ? form.userName : ''}">Username</span> <a th:if="${formSavedDetail.status ne 5 and formSavedDetail.status ne 7 and form.isAllGroupAccess }" class="mod" th:id="'formsaveId_'+${formSavedDetail.id}"  ><i class="fa fa-pencil"></i></a></label>                    	
+                    </div>
+                </div>
+            </div>
+            
+
+            <div class="container-fluid" th:if="${contract != null }">
+                <!-- <form class="client-form" action="#" th:action="@{/form-save/save}"
+                      th:object="${scoreCard}" method="POST"> -->
+               <form class="client-form" id="saveFormData"
+                      th:object="${scoreCard}" method="POST">       
+                    <input id="score_card_id" name="id" type="hidden" th:value="${formSavedDetail.id}">  
+                    <input id="contract_id" type="hidden" name="contractId" th:value="${formSavedDetail.contractId}"/>
+                    <input id="vendor_code" type="hidden" name="vendorCode" th:value="${formSavedDetail.vendorCode}" />
+                    <input id="vendor_id" type="hidden" name="vendorId" th:value="${formSavedDetail.vendorId}" />
+                    <input id="contract_number" type="hidden" name="contractNumber" th:value="${formSavedDetail.contractNumber}" />
+                    <input id="category_id" type="hidden" name="categoryId" th:value="${formSavedDetail.categoryId}" />
+                    <input id="category_name" type="hidden" name="categoryName" th:value="${formSavedDetail.categoryName}" />
+                    <input id="sub_category_id" type="hidden" name="subCategoryId" th:value="${formSavedDetail.subCategoryId}" />
+                    <input id="sub_category_name" type="hidden" name="subCategoryName" th:value="${formSavedDetail.subCategoryName}" />
+                    <input id="form_id" type="hidden" name="formId" th:value="${formSavedDetail.formId}" />
+                    <input id="form_name" type="hidden" name="formName" th:value="${formSavedDetail.formName}" />
+                    <input id="plant_id" type="hidden" name="plantId" th:value="${formSavedDetail.plantId}" />
+                    <input id="department_id" type="hidden" name="departmentId" th:value="${formSavedDetail.departmentId}" />
+                    <input id="contract_manager_id" type="hidden" name="contractManagerId" th:value="${formSavedDetail.contractManagerId}" />
+                    <input id="contract_manager_name" type="hidden" name="contractManagerName" th:value="${formSavedDetail.contractManagerName}" />
+                    <input id="plant_code" type="hidden" name="plantCode" th:value="${formSavedDetail.plantCode}" />                    
+                    <input id="business_unit_id" type="hidden" name="businessUnitId" th:value="${formSavedDetail.businessUnitId}" />
+                    <input id="po_Item" type="hidden" name="poItem" th:value="${formSavedDetail.poItem}" />
+                    <input id="po_Item_Description" type="hidden" name="poItemDescription" th:value="${formSavedDetail.poItemDescription}" />
+                    <input id="year_id" type="hidden" name="yearId" th:value="${formSavedDetail.yearId}" />
+                    <input id="month_id" type="hidden" name="monthId" th:value="${formSavedDetail.monthId}" />
+                    <input id="submitted_by" type="hidden" name="submittedBy" th:value="${formSavedDetail.submittedBy}" />
+                    <input id="approved_by" type="hidden" name="approvedBy" th:value="${formSavedDetail.approvedBy}" />
+                    <input id="rejected_by" type="hidden" name="rejectedBy" th:value="${formSavedDetail.rejectedBy}" />
+                    
+                  <!--   <input id="submitted_on" type="hidden" name="submittedOn" th:value="${formSavedDetail.submittedOn}"/>
+                    <input id="approved_on" type="hidden" name="approvedOn" th:value="${formSavedDetail.approvedOn}" />
+                    <input id="rejected_on" type="hidden" name="rejectedOn" th:value="${formSavedDetail.rejectedOn}" />
+                    -->
+                     <!--<input id="year_id" type="hidden" name="yearId" th:value="${contract.yearId}" />-->
+                    
+                    <div class="row scorecard">
+                        <div class="col-sm-3 ">
+                            <h4 class="mt10px">
+                                Vendor 
+                            </h4>
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="form-control no-border" >
+                            	<span th:text="${contract.vendorName} "></span> 
+                            	(<span th:text="${contract.vendorCode}"></span>)
+                            </label>                            
+                        </div>
+                    </div>
+                   
+                      <div class="row scorecard" >
+                        <div class="col-sm-3 ">
+                            <h4 class="mt10px">
+                                Contract Name 
+                            </h4>
+                        </div>
+                        <div class="col-sm-3">
+
+                           	<label class="form-control no-border" th:text="${contract[name]}"></label>
+
+                        </div>
+                    </div>
+                    <div class="row scorecard">
+                        <div class="col-sm-3 ">
+                            <h4 class="mt10px">
+                                Contract Number 
+                            </h4>
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="form-control no-border" th:text="${contract.number}"></label>
+                        </div>
+                    </div>
+               
+                    <div  class="row forms" th:each="formGroup,iter : ${formGroups}">
+                        <div class="col-sm-12">
+                            <div class="generate">
+                                <h3 class="form-title" th:if="${formGroup.formGroupDetail != null }">
+                                	<span th:text="${formGroup.formGroupDetail.labelName }"></span>
+                                	<label class="pull-right"><b>Assigned User:</b> <span th:text="${ formGroup.formGroupDetail.userName}">Username</span> <a class="mod" th:if="${formSavedDetail.status ne 5 and formSavedDetail.status ne 7  }" th:id="'groupId_'+${formGroup.formGroupDetail.id }"  ><i class="fa fa-pencil"></i></a></label>    
+                                </h3>
+                                 
+                                <div class="dynamic-field formEdit">
+									<div class="col-sm-12 mtb10px">
+										<div class=" dis-flex formview">									
+											<div class="col-sm-3 ">
+												<label class=""><strong>Dimensions</strong></label>
+											</div>
+											<div class="col-sm-3">
+	                                        	<label class="text-center"><strong>Description</strong></label>
+	                                        </div>
+											
+	                                        <div class="col-sm-4">
+	                                        	<label class="text-center"><strong>Actual Value</strong></label>
+	                                        </div>
+	                                     
+	                                        <div class="col-sm-2 ">
+	                                        	<label class="text-center"><strong>Remarks (Optional)</strong></label>
+	                                        </div>
+										</div>									
+									</div>
+	                                <div class="" th:each="formField,iter2 : ${formGroup.formGroupDetail.formFields}">
+	                                    <input type="hidden"
+	                                           th:name="'formParamList['+${iter.index}+']['+ ${iter2.index} +'].groupId'"
+	                                           th:value="${formGroup.formGroupDetail.id }" />
+	                                    <input	type="hidden" 
+	                                    		th:name="'formParamList['+${iter.index}+']['+ ${iter2.index} +'].fieldId'"
+	                                    		th:value="${formField.id }" />         
+	                                    <div class="col-sm-12 setting-content">
+	                                        <div class=" dis-flex formview">
+	                                            <div class="col-sm-3 " >
+	                                                <label>
+	                                                	<span class="name" th:text="${formField.labelName}"></span>	                                                	
+	                                                </label>	                                                
+	                                            </div>
+	                                            <div class="col-sm-3">
+	                                            	<label>
+	                                            		<span class="name" th:text="${formField.description}"></span>
+	                                            	</label>
+	                                            </div>
+	                                            <div th:each="formDataObject : ${formSavedDetail.formData}"
+		                                            	th:if="${formDataObject.groupId == formGroup.formGroupDetail.id and formDataObject.formFieldId == formField.id }" >
+		                                            <input 
+		                                            	th:name="'formParamList['+${iter.index}+']['+ ${iter2.index} +'].id'" 
+		                                            	th:id="'formParamList['+${iter.index}+']['+ ${iter2.index} +'].id'"
+		                                            	type="hidden" 
+		                                            	th:value="${formDataObject.id}" 
+		                                            	class="form-control sm-control" />
+		                                       </div>
+	                                       
+	                                            <div class="col-sm-4" th:if="${formField.type == 'text'}">
+	                                            	<div th:each="formDataObject : ${formSavedDetail.formData}"
+		                                            	th:if="${formDataObject.groupId == formGroup.formGroupDetail.id and formDataObject.formFieldId == formField.id }"
+		                                            >
+	                                                	<input required
+	                                                		th:id="'value' + ${formField.id} + '_'+ ${formGroup.formGroupDetail.id}" 
+	                                                		th:name="'formParamList['+${iter.index}+']['+ ${iter2.index} +'].value'" 
+	                                                		th:type="${formField.type}" 
+	                                                		th:value="${formDataObject.value}"
+	                                                		class="form-control sm-control"/>
+	                                                </div>
+	                                                <div th:if="${formSavedDetail == null || formSavedDetail.formData.size() < 1}">
+				                                       	<input required
+	                                                		th:id="'value' + ${formField.id} + '_'+ ${formGroup.formGroupDetail.id}" 
+	                                                		th:name="'formParamList['+${iter.index}+']['+ ${iter2.index} +'].value'" 
+	                                                		th:type="${formField.type}"
+	                                                		class="form-control sm-control"/>
+				                                       </div>
+	                                                <span class="errormsg" style="color:red;" th:id="'error_value' + ${formField.id}+ '_'+ ${formGroup.formGroupDetail.id}"></span>
+	                                            </div>
+	                                            <div class="col-sm-4" th:if="${formField.type == 'select'}">
+	                                                <select th.name="formParamList['+${iter.index}+']['+ ${iter2.index} +'].value'" class="form-control sm-control">
+	                                                    <option th:each="formFieldOption : ${formField.formFieldOptions}"
+	                                                            th:if="${formField.id == formFieldOption.formFieldId}"
+	                                                            th:value="${formFieldOption.optionValue}">
+                                                        <span th:text="${formFieldOption.optionName}"></span>
+                                                    </option>
+	                                                </select>
+	                                            </div>
+	                                            <div class="col-sm-4" th:if="${formField.type == 'textbox'}">
+	                                                <input type="text" th:name="'formParamList['+${iter.index}+']['+ ${iter2.index} +'].value'" class="form-control sm-control">
+	                                            </div>
+	                                            <div class="col-sm-4" th:if="${formField.type == 'checkbox'}">
+	                                                <ul class="dis-flex field-listing">
+	                                                    <li class=" check-box"
+	                                                        th:each="formFieldOption : ${formField.formFieldOptions}"
+	                                                        th:if="${formField.id == formFieldOption.formFieldId}">
+	                                                        <label class="vote-check "
+	                                                        	th:each="formDataObject : ${formSavedDetail.formData}"
+					                                            	th:if="${formDataObject.groupId == formGroup.formGroupDetail.id and formDataObject.fieldId == formField.id }"
+	                                                        >
+	                                                            <input type="checkbox" required
+	                                                                   th:name="'formParamList['+${iter.index}+']['+ ${iter2.index} +'].value'"
+	                                                                   th:value="${formFieldOption.optionValue}"
+	                                                                   checked="${formDataObject.value != formFieldOption.optionValue ? 'true' : 'false' }"
+	                                                                   />
+	                                                            <span th:text="${formFieldOption.optionName}"></span>
+	                                                        </label>
+	                                                    </li>
+	                                                </ul>
+	                                            </div>
+	                                            <div class="col-sm-4" th:if="${formField.type == 'radio'}">
+	                                                <ul class="dis-flex field-listing">
+	                                                    <li class=" radio-options"
+	                                                        th:each="formFieldOption : ${formField.formFieldOptions}"
+	                                                        th:if="${formField.id == formFieldOption.formFieldId}">
+	                                                        <label class="vote-radio" 
+	                                                        	th:each="formDataObject : ${formSavedDetail.formData}"
+					                                            	th:if="${formDataObject.groupId == formGroup.formGroupDetail.id and formDataObject.formFieldId == formField.id }">
+	                                                            <input type="radio" required
+	                                                            	   th:class ="'radio_validation'+ ${formField.id} + '_'+${formGroup.formGroupDetail.id}"
+	                                                            	   th:id="'radio' + ${formField.id} + '_'+${formGroup.formGroupDetail.id}"
+	                                                                   th:name="'formParamList['+${iter.index}+']['+ ${iter2.index} +'].value'"
+	                                                                   th:value="${formFieldOption.optionValue}"
+	                                                                   th:checked="${formDataObject.value == formFieldOption.optionValue ? 1 : 0 }" 
+	                                                                   />          
+	                                                            <span th:text="${formFieldOption.optionName}"></span>
+	                                                        </label>
+	                                                        <label class="vote-radio" th:if="${formSavedDetail == null || formSavedDetail.formData.size() < 1}">
+						                                       	<input type="radio" required
+	                                                            	   th:class ="'radio_validation'+ ${formField.id} + '_'+${formGroup.formGroupDetail.id}"
+	                                                            	   th:id="'radio' + ${formField.id} + '_'+${formGroup.formGroupDetail.id}"
+	                                                                   th:name="'formParamList['+${iter.index}+']['+ ${iter2.index} +'].value'"
+	                                                                   th:value="${formFieldOption.optionValue}" 
+	                                                                   />          
+	                                                            <span th:text="${formFieldOption.optionName}"></span>
+						                                    </label>
+	                                                    </li>
+	                                                </ul>
+	                                                <span class="radioerror" th:id="'radio_error'+${formField.id}+ '_'+ ${formGroup.formGroupDetail.id}">Required field</span>
+	                                            </div>
+	                                        	
+	                                        	 
+	                                        	<div class="col-sm-2 " th:each="formDataObject : ${formSavedDetail.formData}"
+		                                            	th:if="${formDataObject.groupId == formGroup.formGroupDetail.id and formDataObject.formFieldId == formField.id }">
+		                                        	<textarea  required
+		                                        		class="form-control" 
+		                                        		th:name="'formParamList['+${iter.index}+']['+ ${iter2.index} +'].remark'" 
+		                                        		th:text="${formDataObject.remarks}"
+		                                        		placeholder="Remarks"></textarea>
+		                                        </div>
+		                                        <div class="col-sm-2 " 
+		                                        th:if="${formSavedDetail == null || formSavedDetail.formData.size() < 1}">
+		                                        	<textarea  required
+		                                        		class="form-control" 
+		                                        		th:name="'formParamList['+${iter.index}+']['+ ${iter2.index} +'].remark'"
+		                                        		placeholder="Remarks"></textarea>
+		                                        </div>
+	                                        </div>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                        </div>
+                        </div>
+                    </div>
+                    <div class="row mtb20px">
+                    	<div class="col-sm-12">
+                    		<div class="row dis-flex formview">
+		                        <div class="col-sm-12 text-right p0px"> 
+		                        
+			                        <div class="dis-inl" th:if="${ formGroups != null and formGroups.size() > 0 AND formSavedDetail.status ne 7 AND formSavedDetail.status ne 5 }">
+			                       
+			                        	<button id="submitDraftBTN" type="button" class="btn btn-success"
+			                     		th:class="${formSavedDetail.isCompliance == true }? 'btn btn-success hide' : 'btn btn-success'"
+			                        	th:text="${formSavedDetail.isEnable == true }? 'save as draft' : 'save'"
+			                        	></button>
+			                    
+			                        </div>
+			                         <div class="dis-inl" th:if="${ formGroups != null and formGroups.size() > 0 AND formSavedDetail.status ne 7 AND formSavedDetail.status ne 5 }">
+			                            
+			                            
+			                         <!--    <div th:if="${!form.isApprover}">
+			                            	<button id="submitBTN" type="button" 
+			                            	th:class="${formSavedDetail.isEnable == true }? 'btn btn-success' : 'btn btn-success hide'"
+			                            	>submit</button>
+			                            </div>  -->  
+			                            
+			                           
+			                            	<button id="submitBTN" type="button" 
+			                            	th:class="${formSavedDetail.isCompliance == true }? 'btn btn-success hide' : 'btn btn-success'"
+			      
+			                            	>submit</button>
+			                   
+			                            
+			                                         
+			                        </div>
+			                        <div class="dis-inl" th:if="${ formGroups != null and formGroups.size() > 0 AND formSavedDetail.status ne 7 }">
+			                        	<div th:if="${form.isApprover}">
+			                            	<button id="submitApproveBTN" type="button" class="btn btn-success">Submit</button>
+			                            	<!-- <button id="submitRejectBTN" type="button" class="btn btn-success">reject</button> -->
+			                            </div>
+			                        </div>
+			                       
+			                      </div>
+		                    </div>
+	                    </div>
+                    </div>                    
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- footer -->
+		<div th:include="fragments/component :: footer"></div>
+    <!-- / page wrapper -->
+</div>
+<div class="vedanta popupmodal">
+	<div class="modal fade" id="changeUser" tabindex="-1" role="dialog" >
+		<div class="modal-dialog"  role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span class="close-icon"></span></button>
+					<h4 class="modal-title" >Change User</h4>
+				</div>
+				<form class="client-form">
+					<div class="modal-body">
+						<div class="setting-content">
+							<label class="col-sm-5 mt5px">Change Assigned User</label>
+							<div class="col-sm-7">
+								<select id="changeusername" class="form-control" name="">
+								</select>
+							</div>
+							<div>
+								<input type="hidden" id="groupIdData" /> 
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<div class="col-sm-12 dis-block">
+							<button type="button" class="btn btn-compose assignedUser" >OK</button>
+							<button type="button" data-dismiss="modal" class="btn btn-cancel">Cancel</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- /wrapper -->
+</body>
+<script>
+
+			var tempData;
+		   $(document).ready(function () {
+	         
+          	$( ".bs-searchbox input" ).keypress(function() {
+          		      		        		
+          		var str = $('.bs-searchbox input').val().trim();
+          		
+          			var name = str.replace(/\s/g,''); 	
+          			tempData = name;
+          			var url;
+          			if(name.length > 1){
+         
+	     		          if(formSavedDetail.isCompliance == true){
+	     		        	 url ="/vedanta-web/form-save/getAllHrUserByName/"+name+"/"+formSavedDetail.businessUnitId;
+	     		          }else{
+	     		        	url ="/vedanta-web/form-save/getAllUserNotAdminAndHrByName/"+name+"/"+formSavedDetail.businessUnitId;
+	     		          }      				
+          		
+              		}else{
+              			
+              			 if(formSavedDetail.isCompliance == true){
+              				url ="/vedanta-web/form-save/getAllHrUserByLimit/"+formSavedDetail.businessUnitId;
+        		          }else{
+        		        	  url ="/vedanta-web/form-save/getAllUserNotAdminAndHrByLimit/"+formSavedDetail.businessUnitId;
+        		          }
+              			
+              		}
+          		
+          	
+          	     	$.ajax({
+                 			url: url,
+                          type: "GET",
+                          dataType: "json",
+                          contentType: "application/json; charset=utf-8",
+                          success: function (data) {
+  							
+  								$('#changeusername').find('option').remove();
+  								
+  								if(data.length > 0){
+  									 for ( var i = 0; i< data.length; ++i) {
+  		                       			 if(data[i].office == 'undefined' || data[i].office == null){
+  		                       				 data[i].office = "";
+  		                       			 }
+  		                       			 if(data[i].departmentName == 'undefined' || data[i].departmentName == null){
+  		                       				 data[i].departmentName = "";
+  		                       			 }
+  		      			 			   $('#changeusername').append("<option value=\"" + data[i].employeeId + "\">" + data[i].name+"  "+data[i].office +"  "+data[i].departmentName+ "</option>");
+  		      						}
+  		            				$('#changeusername').selectpicker('render');
+  		            				$("#changeusername").val('').selectpicker('refresh');
+  								}
+
+                          },
+                          error: function (xhr, status, error) {
+                              
+                             // console.log("token has been expired." + xhr.responseText);
+                          }
+                      });
+
+          		});
+          	
+		   });
+		   
+		   $('#changeusername').on('shown.bs.select', function (e) {
+			   $( ".bs-searchbox input" ).val(tempData);
+			 });
+</script>
+</html>

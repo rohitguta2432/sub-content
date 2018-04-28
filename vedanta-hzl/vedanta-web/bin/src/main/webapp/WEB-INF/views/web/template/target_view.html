@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Vedanta</title>
+<object th:include="fragments/header :: head" th:remove="tag" ></object>
+<!-- Favicon -->
+<link rel="shortcut icon" type="image/icon" th:href="@{/resources/images/favicon.ico}"/>
+</head>
+<body>
+	<div id="wrapper" th:with="templateActive=${'active'}">
+		<i th:replace="/fragments/component :: sidebar"></i>
+		<div class="white-bg page-wrapper header-wrapper">
+			<!-- top header -->
+			<div th:replace="/fragments/component :: topheader" ></div>
+			<!-- Body Part -->
+			<div class="wrapper wrapper-content">
+
+				<div class="container-fluid">
+					<div class="row btm-brd">
+						<div class="col-sm-6">
+							<div class="page-title">
+								<h3>View Form</h3>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-sm-10">
+							<div class="setting-content client-form viewlisting">
+								
+								<div class="row form-group">
+                                    <div class="col-sm-1"></div>
+                                    <div class="col-sm-3">
+                                        <label class="mtb5px pull-right">Category :</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <select class="form-control " id="categoryId"
+                                                name="categoryId" disabled>
+                                            <option value="0">Select Category</option>
+                                            <option th:each="target: ${categories}"
+                                                    th:value="${target.id}" 
+                                                    th:selected="${targetvalue.categoryId != target.id ? selected : ''}"
+                                                    >
+                                                <span th:text="${target.categoryName}"></span>
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col-sm-1"></div>
+                                    <div class="col-sm-3">
+                                        <label class="mtb5px pull-right">Sub-category :</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <select class="form-control " id="subCategories" name="subCategoryId" disabled>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col-sm-1"></div>
+                                    <div class="col-sm-3">
+                                        <label class="mtb5px pull-right">Value :</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="hidden" name="id" th:value="${targetvalue.id}">
+                                        <input class="form-control" type="text" id="value" name="value"
+                                               th:value="${targetvalue.value}"/>
+                                    </div>
+                                </div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- / page wrapper -->
+	</div>
+	<!-- /wrapper -->
+</body>
+</html>

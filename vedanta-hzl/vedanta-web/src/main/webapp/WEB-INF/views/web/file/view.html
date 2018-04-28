@@ -1,0 +1,128 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Vedanta</title>
+<object th:include="fragments/header :: head" th:remove="tag"></object>
+<!-- Favicon -->
+<link rel="shortcut icon" type="image/icon"
+	th:href="@{/resources/images/favicon.ico}" />
+</head>
+<body>
+	<div id="wrapper"
+		th:with="adminApproverUpdateActive=${'active'}">
+		<i th:replace="/fragments/component :: sidebar"></i>
+
+		<div class="white-bg page-wrapper header-wrapper">
+			<!-- top header -->
+			<div th:replace="/fragments/component :: topheader"></div>
+			<!-- Body Part -->
+			<div class="wrapper wrapper-content">
+
+				<div class="container-fluid">
+					<div class="row btm-brd">
+						<div class="col-sm-12">
+							<div class="page-title">
+								<h3>Upload Approver Data For Scorecard</h3>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-sm-10">
+							<div class="setting-content">
+								<form id="contactForm1" class="client-form" action="#"
+									th:action="@{/form-file/uploadFile}" th:object="${form}"
+									method="POST" enctype="multipart/form-data">
+									
+									<div class="row form-group">
+										<div class="col-sm-4 col-md-3 col-md-offset-1">
+											<label class="mtb5px pull-right">Select businessUnit:</label>
+										</div>
+										<div class="col-sm-4">
+											<!-- <input type="text" id="businessUnitId" name="businessUnitId" /> -->
+											
+											<select id="businessUnitId" name="businessUnitId"
+												class="form-control filterselect">
+												<!-- <option value="0">SELECT BU</option> -->
+												<option th:if="${data['businessUnits'] != null}"
+													th:each="businessUnit : ${data['businessUnits']}"
+													th:value="${businessUnit.id}"><span
+														th:text="${businessUnit.unitName}"></span>
+												</option>
+											</select>
+											
+										</div>
+									</div>
+									<div class="row form-group">
+										<div class="col-sm-4 col-md-3 col-md-offset-1">
+											<label class="mtb5px pull-right">Select Month:</label>
+										</div>
+										<div class="col-sm-4">
+											<!-- <input type="text" id="businessUnitId" name="businessUnitId" /> -->
+											
+											<select id="monthId" name="monthId"
+												class="form-control filterselect">
+												<!-- <option value="0">SELECT BU</option> -->
+												<option value="0"><span>January</span></option>
+												<option value="1"><span >February</span></option>
+												<option value="2"><span >March</span></option>
+												<option value="3"><span >April</span></option>
+												<option value="4"><span >May</span></option>
+												<option value="5"><span >June</span></option>
+												<option value="6"><span >July</span></option>
+												<option value="7"><span >August</span></option>
+												<option value="8"><span >September</span></option>
+												<option value="9"><span >October</span></option>
+												<option value="10"><span >November</span></option>
+												<option value="11"><span >December</span></option>
+											</select>
+										</div>
+									</div>
+									<div class="row form-group">
+										<div class="col-sm-4 col-md-3 col-md-offset-1">
+											<label class="mtb5px pull-right">Upload your excel:</label> 
+										</div>
+										<div class="col-sm-4">
+											<input type="file" class="form-control" id="file" name="file" accept=".xls,.xlsx" />
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-8 text-right">
+											<button class="btn btn-success" type="submit">Upload</button>
+										</div>
+										<div class="col-sm-4 ">
+											<a class="btn btn-link" th:href="@{/form-file/format-download}">
+												<i class="fa fa-cloud-download"></i>
+												<span>Download Excel Format</span>
+											</a>
+										</div>
+									</div>
+									<div class="row" >
+										<div class="col-sm-8 col-md-8 text-center" th:if="${data != null AND data['code'] == '200'}">
+											<h6>File Upload Successfully. You will get E-mail shortly. </h6>
+										</div>
+										<div class="col-sm-8 col-md-8 text-center" th:if="${data != null AND data['code'] == '500' }">
+											<h6>File Upload Failed.</h6>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- footer -->
+		<div th:include="fragments/component :: footer"></div>
+		<!-- / page wrapper -->
+	</div>
+
+<script type="text/javascript">
+
+</script>
+</body>
+</html>

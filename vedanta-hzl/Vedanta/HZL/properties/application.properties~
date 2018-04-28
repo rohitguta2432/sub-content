@@ -1,0 +1,279 @@
+industry.insight.delimiter=::
+resource.location=/Users/manishsanger/Vedanta/HZL/data/
+
+image.url=/Users/manishsanger/Vedanta/HZL/data/Que/pdf/images
+
+# support file path
+file.location.support=/home/orange/Documents/vedanta/
+
+# support email address
+support.email.to=negi.narender@orangemantra.in
+
+image.location=images/
+pdf.location=pdfs/
+pitch.book=pitchbook/
+moa-plan=moa-plan
+
+on.boarding=on-boarding
+product.overview=product/
+client.batch.size=2
+
+web.server.url=http://localhost:8989/vedanta-rest/
+
+# scheduler configuration
+#eic.url=https://eic-api-sit.se.scb.co.th/service/
+eic.url=https://eic-api-uat.se.scb.co.th/service/
+app.id=LDSdVVa8kVxTDIcGvPrJqAWmGrVHjN1P
+secret.key=qY6znxMz6PFqoQ2YjaEmoArkUVzthOnaDh7nx//kqWBnuxV
+eic.cron.expression=0 0/59 0/23 * * ?
+key.store.p.string=7A7E6rxyMspTLIXj0UWWkt9162HbRBow
+adfs.key.store.p.string= tHs1mBy5AvfVQn2qX+EVHz05yLKMOsWh
+key.store.path=/Users/manishsanger/Vedanta/HZL/properties/keystore/
+
+pitch.book.template.image=/Users/manishsanger/Vedanta/HZL/data/images/pitchbooktemplate/
+
+
+pitch.book.moaplan.graph=/Users/manishsanger/Vedanta/HZL/data/images/moa-plan/
+
+
+# data source properties
+db.driver=com.mysql.jdbc.Driver
+#db.url=jdbc:mysql://127.0.0.1:3309/vedanta?max_allowed_packet=100M&useUnicode=true&characterEncoding=UTF-8&useSSL=false
+db.url=jdbc:mysql://localhost:3306/vedanta?max_allowed_packet=100M&useUnicode=true&characterEncoding=UTF-8&useSSL=false
+db.username=root
+#db.p.string=Apple@123
+db.p.string=root
+#db.p.string=bjzM/bhG0UcUrAJgTTMYe58TWliPqowb
+
+
+db.connection.min.size=5
+db.connection.max.size=30
+db.connection.time.out=300
+db.connection.max.stmt=100
+db.connection.idle.test=3000
+
+#Hibernate Configuration:
+hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
+hibernate.show_sql=false
+hibernate.hbm2ddl.auto=update
+entitymanager.packages.to.scan=com.vedanta.vpmt.model
+
+# authorization token proeprties
+scw.token.header=X-Auth-Token
+scw.token.secret=sssshhhh!
+
+
+scb.token.expiration=72000
+scb.token.inactivity.time=72000
+
+
+#ADFS Details
+scb.adfs.url=https://adfs3.se.scb.co.th/adfs/ls/idpinitiatedsignon.aspx
+scb.adfs.user.prefix=SE\\%s
+scb.adfs.u.key=UserName
+scb.adfs.p.key=Password
+scb.adfs.relying_party=RelyingParty
+scb.adfs.relying_party.value=3b724af3-367b-e611-8126-005056840be4
+scb.adfs.sign_in_other_site=SignInOtherSite
+scb.adfs.sign_in_submit=SignInSubmit
+scb.adfs.sign_in_submit.value=Sign in
+scb.adfs.single_sign_out=SingleSignOut
+scb.adfs.auth.method=AuthMethod
+scb.adfs.auth.method.value=FormsAuthentication
+scb.adfs.path=/adfs
+scb.adfs.domain=adfs3.se.scb.co.th
+scb.adfs.key.set_cookie=Set-Cookie
+scb.adfs.MSIS.saml.request=MSISSamlRequest
+scb.adfs.MSIS.auth=MSISAuth
+
+
+#LDAP comman attribute
+ldap.attributes = cn,givenName,mail,memberOf,company,department,manager,sAMAccountName,telephonenumber,l,physicalDeliveryOfficeName,department
+
+#LDAP HZL Config
+hzl.ldap.url = ldap://10.101.37.101
+hzl.ldap.context.factory = com.sun.jndi.ldap.LdapCtxFactory
+hzl.ldap.security.authentication = simple
+hzl.ldap.timeout = 5000
+hzl.ldap.domain =HZL01.vedantaresource.local
+hzl.ldap.domain.content= DC=HZL01,DC=vedantaresource,DC=local
+hzl.ldap.userLDAP =Sp.test12
+hzl.ldap.passwordLDAP =mail@12345
+
+#LDAP SESA Config
+sesa.ldap.url = ldap://10.101.37.101
+sesa.ldap.context.factory = com.sun.jndi.ldap.LdapCtxFactory
+sesa.ldap.security.authentication = simple
+sesa.ldap.timeout = 5000
+sesa.ldap.domain =HZL01.vedantaresource.local
+sesa.ldap.domain.content= DC=HZL01,DC=vedantaresource,DC=local
+sesa.ldap.userLDAP =Sp.test12
+sesa.ldap.passwordLDAP =mail@12345
+
+#LDAP STERLITE Config
+#sterlite.ldap.url = ldap://10.101.37.101
+#sterlite.ldap.context.factory = com.sun.jndi.ldap.LdapCtxFactory
+#sterlite.ldap.security.authentication = simple
+#sterlite.ldap.timeout = 5000
+#sterlite.ldap.domain =HZL01.vedantaresource.local
+#sterlite.ldap.domain.content= DC=HZL01,DC=vedantaresource,DC=local
+#sterlite.ldap.userLDAP =Sp.test12
+#sterlite.ldap.passwordLDAP =mail@12345
+
+#LDAP VAL Config
+val.ldap.url = ldap://10.101.37.101
+val.ldap.context.factory = com.sun.jndi.ldap.LdapCtxFactory
+val.ldap.security.authentication = simple
+val.ldap.timeout = 5000
+val.ldap.domain =HZL01.vedantaresource.local
+val.ldap.domain.content= DC=HZL01,DC=vedantaresource,DC=local
+val.ldap.userLDAP =Sp.test12
+val.ldap.passwordLDAP =mail@12345
+
+# LDAP ACtive user
+#cron.expression.LDAPActiveUser= 0 0 6 1/1 * ? *
+cron.expression.LDAPActiveUser= 0 50 18 ? 1/1 WED#1 *
+
+#Fire at 12 AM every day
+#cron.expression.populate.scorecard= 0 0 0 1/1 * ? *
+cron.expression.populate.scorecard= 0 15 16 ? 1/1 THU#1 *
+
+#cron.expression.populate.forms= 0 58 17 * * ?
+cron.expression.populate.forms=0 16 16 ? 1/1 THU#1 *
+#0 16 16 ? 1/1 THU#1 *
+
+#Fire at everyday at 6 am
+#for Email Notification
+cron.expression.email.notification= 0 0 6 1/1 * ? *
+
+#Fire at 2 AM every day
+#cron.expression.populate.contracts= 0 0 2 1/1 * ? *
+cron.expression.populate.contracts= 0 50 18 ? 1/1 WED#1 *
+
+#Form Aggregation
+cron.expression.formAggregation= 0 16 18 ? 1/1 THU#1 *
+
+#Fire at 4 AM every day
+#cron.expression.update.plants= 0 0 4 1/1 * ? *
+cron.expression.update.plants= 0 15 10 * * ? 2025
+cron.update.plants.sync.limit = 1
+
+#scorecard-aggregation
+cron.expression.scorecard.aggregation=0 0 10 ? * SUN *
+
+
+
+#HZl SAP
+sap.jco.host=10.250.4.57
+sap.jco.system.number=00
+sap.jco.instance.number=009
+sap.jco.user=ORANGEMANTRA
+sap.jco.password=Apple@123
+sap.jco.language=en
+
+#SESA SAP
+sesa.sap.jco.host=10.250.4.154
+sesa.sap.jco.system.number=00
+sesa.sap.jco.instance.number=500
+sesa.sap.jco.user=BCG_AJAYK
+sesa.sap.jco.password=Apple@123456
+sesa.sap.jco.language=en
+
+#for smtp authentications
+smtp.email.user=raj.rohit@orangemantra.in
+smtp.email.password=BpLcI$^V#Skl
+smtp.email.port=25
+smtp.email.host=mail.orangemantra.in
+smtp.email.from=raj.rohit@orangemantra.in
+
+#for generic url for user email notification(scorecard && survey Invitation)
+survey.email.user.url=http://192.168.1.35:8080/vedanta-web/form-save/user/
+
+scorecard.scheduler.notification.url=http://192.168.1.35:8080/vedanta-web/scorecard/user/
+
+
+#for User-Department
+crone.expression.user.department=0 0 12 ? * SUN *
+
+#for scorecard-compliance
+cron.expression.scorecard.compliance=0 0 13 ? * SUN *
+
+
+#for compliance-form url
+form.email.user.url=http://192.168.1.35:8080/vedanta-web/form-save/user/
+
+scorecard.email.user.url=http://192.168.1.35:8080/vedanta-web/scorecard/user/
+
+
+
+#SESA CRONE FOR POPULATE CONTRACTS	
+sesa.cron.expression.populate.contracts=0 6 14 1/1 * ? *
+
+#SESA CRONE FOR POPULATE SCORECARD	
+sesa.cron.expression.populate.scorecard=0 30 17 1/1 * ? *
+
+#SESA CRONE FOR POPULATE FORM	
+sesa.cron.expression.populate.form=0 6 16 1/1 * ? *
+
+#JHARSUGDA CRONE FOR LDAP	
+jharsugda.cron.expression.LDAPActiveUser=0 55 11 1/1 * ? *
+
+#JHARSUGDA LDAP CONFIG
+jharsuguda.ldap.url = ldap://10.101.141.118
+jharsuguda.ldap.context.factory = com.sun.jndi.ldap.LdapCtxFactory
+jharsuguda.ldap.security.authentication = simple
+jharsuguda.ldap.timeout = 50000
+jharsuguda.ldap.domain =VALJHA.vedantaresource.local
+jharsuguda.ldap.domain.content= DC=VALJHA,DC=vedantaresource,DC=local
+jharsuguda.ldap.attributes = cn,givenName,mail,memberOf,company,department,manager,sAMAccountName,telephonenumber,l,physicalDeliveryOfficeName,department
+jharsuguda.ldap.userLDAP =syssp
+jharsuguda.ldap.passwordLDAP =word@pass2
+
+#CAIRN LDAP USER CONFIG
+carin.cron.expression.LDAPActiveUser=0 25 12 1/1 * ? *
+
+#LDAP Cairn India Config
+#cairn.ldap.url = ldap://10.101.7.9
+cairn.ldap.url = ldap://10.1.6.12
+cairn.ldap.context.factory = com.sun.jndi.ldap.LdapCtxFactory
+cairn.ldap.security.authentication = simple
+cairn.ldap.timeout = 70000
+#cairn.ldap.domain =vmum.vedantaresource.local
+#cairn.ldap.domain.content= DC=vmum,DC=vedantaresource,DC=local
+cairn.ldap.domain =cairnenergy.com
+cairn.ldap.domain.content= DC=cairnenergy,Dc=com
+cairn.ldap.attributes = cn,givenName,mail,memberOf,company,department,manager,sAMAccountName,telephonenumber,l,physicalDeliveryOfficeName,department
+cairn.ldap.userLDAP =vpmadmin
+cairn.ldap.passwordLDAP =Welcome@123
+
+#BALCO LDAP ACTIVE USER
+balco.cron.expression.LDAPActiveUser=0 49 13 1/1 * ? 
+
+#BALCO LDAP Configuration
+balco.ldap.url = ldap://10.101.71.67
+balco.ldap.context.factory = com.sun.jndi.ldap.LdapCtxFactory
+balco.ldap.security.authentication = simple
+balco.ldap.timeout = 70000
+balco.ldap.domain =balco1.vedantaresource.local
+balco.ldap.domain.content= DC=balco1,DC=vedantaresource,DC=local
+balco.ldap.attributes = cn,givenName,mail,memberOf,company,department,manager,sAMAccountName,telephonenumber,l,physicalDeliveryOfficeName,department
+balco.ldap.userLDAP =testuser
+balco.ldap.passwordLDAP =test@1234
+
+#STERLITE LDAP ACTIVE USER
+sterlite.cron.expression.LDAPActiveUser=0 32 16 1/1 * ?
+
+#LDAP STERLITE Config
+sterlite.ldap.url = ldap://10.101.0.4
+sterlite.ldap.context.factory = com.sun.jndi.ldap.LdapCtxFactory
+sterlite.ldap.security.authentication = simple
+sterlite.ldap.timeout = 5000
+sterlite.ldap.domain =siilcu.vedantaresource.local
+sterlite.ldap.domain.content= DC=SIILCU,DC=vedantaresource,DC=local
+sterlite.ldap.userLDAP =522TP
+sterlite.ldap.passwordLDAP =pass$123
+
+#AUTH TOKEN TRUNCATE
+auth.token.truncate.job=0 12 02 1/1 * ?
+
+

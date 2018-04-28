@@ -1,0 +1,173 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Vedanta</title>
+<object th:include="fragments/header :: head" th:remove="tag"></object>
+<!-- Favicon -->
+<link rel="shortcut icon" type="image/icon"
+	th:href="@{/resources/images/favicon.ico}" />
+
+<script src="https://cdn.ckeditor.com/4.7.3/standard-all/ckeditor.js"></script>
+<script type="text/javascript"
+	th:src="@{/resources/js/email_template.js}"></script>
+<script type="text/javascript"
+	th:src="@{/resources/js/bootstrap-multiselect.js}"></script>
+
+
+</head>
+<body>
+	<div id="wrapper" th:with="emailTemplateActive=${'active'},settingActive=${'active'}">
+		<i th:replace="/fragments/component :: sidebar"></i>
+
+		<div class="white-bg page-wrapper header-wrapper">
+			<!-- top header -->
+
+			<div th:replace="/fragments/component :: topheader" ></div>
+
+			<!-- Body Part -->
+			<div class="wrapper wrapper-content">
+
+				<div class="container-fluid">
+					<div class="row btm-brd">
+						<div class="col-sm-12">
+							<div class="page-title">
+								<h3>Add/Update Email Template information</h3>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="setting-content">
+								<form class="client-form">
+
+									<input type="hidden" name="id" id="id"
+										th:value="${EmailTemplate.id}">
+									<div class="row form-group">
+										<div class="col-sm-3">
+											<label class="mtb5px ">Business Unit :</label>
+											<select class="form-control " id="businessUnitId"
+                                                name="businessUnitId">
+	                                             <option value="0">Select bussinessId</option>
+												<option 
+												th:if="${bussinessId!= null }" 
+												th:each="buId : ${bussinessId}"
+												th:value="${buId.id}"
+												th:selected="${buId.id==EmailTemplate.businessUnitId}">
+												<span th:text="${buId.unitName}"></span>
+											</option>
+	                                        </select>
+										</div>
+										
+										<div class="col-sm-3">
+											<label class="mtb5px ">Template Name :</label>
+											<input type="hidden" name="templateName"
+												th:value="${EmailTemplate.name}"> <input
+												class="form-control" type="text" id="templateName"
+												name="templateName" th:value="${EmailTemplate.name}"
+												placeholder="Template Name" required="required"
+												autofocus="autofocus">
+										</div>
+										<div class="col-sm-3">
+											<label class="mtb5px ">Title :</label>
+											<input type="hidden" name="title"
+												th:value="${EmailTemplate.title}"> <input
+												class="form-control" type="text" id="title" name="title"
+												th:value="${EmailTemplate.title}" placeholder="Title"
+												required="required" autofocus="autofocus">
+										</div>
+									
+										<div class="col-sm-3">
+											<label class="mtb5px ">Description:</label>
+											<input type="hidden" name="description"
+												th:value="${EmailTemplate.Description}"> <input
+												class="form-control" type="text" id="description"
+												name="Description" th:value="${EmailTemplate.Description}"
+												placeholder="Description" required="required"
+												autofocus="autofocus">
+										</div>
+									</div>
+									
+<!-- 
+				<div class="row form-group">
+										<div class="col-sm-1"></div>
+										<div class="col-sm-3">
+											<label class="mtb5px pull-right">Select User:</label>
+										</div>
+										<div class="col-sm-6">
+
+											<select id="scorecard-users" name="emailuser" multiple="multiple">
+
+												<option th:each="scoreCard: ${scoreCards}"
+													th:value="${scoreCard.id}"><span
+														th:text="${scoreCard.contractManagerName}"></span>
+												</option>
+											</select>
+										</div>
+									</div>
+ 					-->
+
+
+
+									<div class="row form-group">
+									<div class="col-sm-12"><label class="mtb5px ">Message</label></div>
+										<div class="col-sm-12">
+											
+										
+											<input type="hidden" name="editor1"
+												th:value="${EmailTemplate.msgContent}">
+											<textarea class="form-control" id="editor1" name="editor1" rows="10"
+												th:text="${EmailTemplate.msgContent}" placeholder="Message"
+												required="required" autofocus="autofocus">
+									</textarea>
+										</div>
+									</div>
+									<br /> <br/>
+
+										<div class="row">
+										<div class="col-sm-12 text-right">
+											<button class="btn btn-success" id="templatebutton"
+												name="templatebutton" type="submit">Save</button>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- / page wrapper -->
+	</div>
+	<!-- /wrapper -->
+	<script>
+		$(document).ready(
+				function() {
+					CKEDITOR.replace('editor1', {
+						uiColor : '#3465a4',
+						extraPlugins : 'placeholder',
+						height : 220
+					});
+					CKEDITOR.on('dialogDefinition', function(event) {
+						if ('placeholder' == event.data.name) {
+							var input = event.data.definition.getContents(
+									'info').get('name');
+							input.type = 'select';
+							input.items = [ ['Name'],['CategoryName'],['SubCategoryName'],['Message'],['Contract Manager'],
+							                ['Vendor Name'],['ScorecardMonth'],['fromName'],['link'],['surveyName'],['dueDate'],['monthId'],
+							                ['yearId'],['submittedBy'],['submittedOn'],['contractNumber']
+								 ];
+							input.setup = function() {
+								this.setValue('Name');
+							};
+						}
+					});
+				});
+	</script>
+
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!doctype html>
+<html class="no-js" lang="en" xmlns:th="www.thymeleaf.org">
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Vedanta</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="apple-touch-icon" href="apple-touch-icon.png">
+        <!-- Place favicon.ico in the root directory -->
+     <!--    <link rel="stylesheet" href="css/vendor.css">
+		<link rel="stylesheet" id="theme-style" href="css/app.css">
+		<link rel="stylesheet" id="theme-style" href="css/app-purple.css"> -->
+		<object th:include="fragments/header :: head" th:remove="tag" />
+        <!-- Theme initialization -->
+        <script type="text/javascript" th:inline="javascript">
+
+function fillData(){
+	var result = [[${Status}]];
+	if(result ==true){
+		alert("User updated successfully || Please login again");
+	}
+}
+window.onload = function () { fillData(); }
+</script>
+<link rel="shortcut icon" type="image/icon" th:href="@{/resources/images/favicon.ico}"/>
+
+    </head>
+
+    <body>
+    	<div class="login-bg">
+            <div class="auth-container">
+                <div class="card1">
+                    <img th:src="@{/resources/assets/logo_vedanta.png}" alt="Vedanta" class="img-responsive center-block" />
+                    <div class="auth-content-logout">
+                       <!--  <p class="massage-pass" style="color: blue">You have been logged out</p>
+						<div class="massage-pass-dip" style="color: blue"></div> -->
+						 <h2> You have successfully logged out of <span> Vedanta Web Portal</span></h2>
+							
+						<form class="form-narrow form-horizontal" action="#" method="GET" th:action="@{/}">
+							<div class="form-group text-center"> 
+		                           <!--  <input type="hidden"	name="_spring_security_remember_me" /> -->
+								<h3>Login again <button type="submit" class="link">here</button></h3> 
+								<!-- <button type="submit" class="btn btn-primary btn-space btn-login">Log in</button> -->
+							</div> 
+						</form>
+				    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Reference block for JS -->
+
+    </body>
+
+</html>

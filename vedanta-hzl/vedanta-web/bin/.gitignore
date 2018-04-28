@@ -1,0 +1,8 @@
+/target/
+/.settings/
+/.classpath
+/logs/
+/.project
+/*.iml
+/src/main/*.iml
+/*/web.xml

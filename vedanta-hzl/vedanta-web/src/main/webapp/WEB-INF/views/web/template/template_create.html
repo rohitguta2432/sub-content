@@ -1,0 +1,468 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Vedanta</title>
+    <object th:include="fragments/header :: head" th:remove="tag"></object>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/icon" th:href="@{/resources/images/favicon.ico}"/>
+</head>
+<body>
+<div id="wrapper"   th:with="templateActive=${'active'},templateListActive=${'active'}" >
+    <i th:replace="/fragments/component :: sidebar"></i>
+
+    <div class="white-bg page-wrapper header-wrapper">
+       <!-- top header -->
+			<div th:replace="/fragments/component :: topheader" ></div>
+        <!-- Body Part -->
+        <div class="wrapper wrapper-content">
+
+            <div class="container-fluid">
+                <div class="row btm-brd">
+                    <div class="col-sm-12">
+                        <div class="page-title">
+                            <h3>Add/Update Template information</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-10 mt10px">
+                        <div class="setting-content">
+                            <form class="client-form" action="#" th:action="@{/admin/template/save}"
+                                  th:object="${template}" method="POST">
+                                <div class="row form-group">
+                                    <div class="col-sm-4 col-md-3 col-md-offset-1">
+                                        <label class="mtb5px pull-right">BusinessUnit :</label>
+                                    </div>
+                                    <div class="col-sm-8 col-md-6">
+                                        <select class="form-control " id="businessUnitId"
+                                                name="businessUnitId" onchange="checkBusinessUnit();">
+                                            <option value="0">Select bussinessId</option>
+											<option 
+												th:if="${bussinessId!= null }" 
+												th:each="buId : ${bussinessId}"
+												th:value="${buId.id}"
+												th:selected="${buId.id==template.businessUnitId}">
+												<span th:text="${buId.unitName}"></span>
+											</option>
+                                        </select>
+                                     	<span class='errormsg text-left' style="display:none;" id="buSpan">Select any business unit</span>  
+                                    </div>                                     
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col-sm-4 col-md-3 col-md-offset-1">
+                                        <label class="mtb5px pull-right">Category :</label>
+                                    </div>
+                                    <div class="col-sm-8 col-md-6">
+                                        <select class="form-control " id="categoryId"
+                                                name="categoryId" onchange="checkCategory();">
+                                        </select>
+                                     	<span class='errormsg text-left' style="display:none;" id="catSpan">Select any category</span>  
+                                    </div>                                     
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col-sm-4 col-md-3 col-md-offset-1">
+                                        <label class="mtb5px pull-right">Sub-category:</label>
+                                    </div>
+                                    <div class="col-sm-8 col-md-6">
+                                        <select class="form-control " id="subCategories" name="subCategoryId">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col-sm-4 col-md-3 col-md-offset-1">
+                                        <label class="mtb5px pull-right">Template Name :</label>
+                                    </div>
+                                    <div class="col-sm-8 col-md-6">
+                                        <input type="hidden" name="id" th:value="${template.id}">
+                                        <input class="form-control" type="text" id="name" name="name"
+                                               th:value="${template.name}" onkeypress="checkTemplate();"/>
+                                     	<span class='errormsg text-left' style="display:none;" id="tempSpan">Please enter template name</span>
+                                    </div>                                       
+                                </div>                                
+                                <div class="row form-group">
+                                    <div class="col-sm-4 col-md-3 col-md-offset-1">
+                                        <label class="mtb5px pull-right">Forms :</label>
+                                    </div>
+                                    <div class="col-sm-8 col-md-6">
+										<select name="forms"  class="form-control"  id="formIds" multiple="true">
+											<option value="0">Select Forms</option>
+											<option 
+												th:if="${forms != null }" 
+												th:each="form : ${forms}"
+												th:selected="${form != null and !template.isContainsFormId(form.id) ? selected : ''}"
+												th:value="${form.id}">
+												<span th:text="${form.name}"></span>
+											</option>
+										</select>
+									</div>
+                                </div>
+                                <!--  -->
+                                <div class="row form-group">
+                                    <div class="col-sm-4 col-md-3 col-md-offset-1">
+                                        <label class="mtb5px pull-right">Description :</label>
+                                    </div>
+                                    <div class="col-sm-8 col-md-6">
+                                        <input class="form-control" type="text" id="name2"
+                                               name="description" th:value="${template.description}"/>
+                                    </div>
+                                </div>
+
+                                <input class="form-control" type="hidden" id="name-slug"
+                                       name="slug" th:value="${template.slug}"/>
+
+                                <div class="row form-group">
+                                    <div class="col-sm-4 col-md-3 col-md-offset-1">
+                                        <label class="mtb5px pull-right">Title :</label>
+                                    </div>
+                                    <div class="col-sm-8 col-md-6">
+                                        <input class="form-control" type="text" id="name3"
+                                               name="title" th:value="${template.title}"/>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col-sm-4 col-md-3 col-md-offset-1">
+                                        <label class="mtb5px pull-right">Frequency :</label>
+                                    </div>
+                                    <div class="col-sm-8 col-md-6">
+                                        <select class="form-control" name="frequency" id="frequency">
+                                            <option value="NA">Select Type</option>
+                                     <!--      <option value="DAILY" th:selected="${template.frequency} == DAILY">
+                                                DAILY
+                                            </option> -->  
+                                            <option value="MONTHLY" th:selected="${template.frequency} == MONTHLY">
+                                                MONTHLY
+                                            </option>
+                                            <option value="WEEKLY" th:selected="${template.frequency} == WEEKLY">
+                                                WEEKLY
+                                            </option>
+                                            <option value="QUARTERLY" th:selected="${template.frequency} == QUARTERLY">
+                                                QUARTERLY
+                                            </option>
+                                            <option value="YEARLY" th:selected="${template.frequency} == YEARLY">
+                                                YEARLY
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col-sm-4 col-md-3 col-md-offset-1">
+                                        <label class="mtb5px pull-right">Day of frequency :</label>
+                                    </div>
+                                    <div class="col-sm-8 col-md-6">
+                                        <input class="form-control" type="text" maxlength="4" id="dayOfFrequency"
+                                              name="dayOfFrequency" th:value="${template.dayOfFrequency}"/>
+                                     	<span class='errormsg text-left' style="display:none;" id="daySpan">Please enter number only</span>
+                                    </div>
+                                       
+                                </div>
+
+                                <div class="row form-group">
+                                    <div class="col-sm-4 col-md-3 col-md-offset-1" >
+                                        <label class="mtb5px pull-right">Due Day of frequency :</label>
+                                    </div>
+                                    <div class="col-sm-8 col-md-6">
+                                        <input class="form-control" type="text" maxlength="4" id="dueDayOfFrequency"
+                                            name="dueDayOfFrequency" th:value="${template.dueDayOfFrequency}"/>
+                                    	<span class='errormsg text-left' style="display:none;" id="dueSpan">Please enter number only</span>    
+                                    </div>
+                                    
+                                </div>
+
+                                <br/>
+                                <br/>
+
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-10 text-right">
+                                        <button class="btn btn-success" type="submit">Save</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- footer -->
+		<div th:include="fragments/component :: footer"></div>
+    <!-- / page wrapper -->
+</div>
+<!-- /wrapper -->
+<script th:inline="javascript">
+$(document).ready(function() {
+    console.log("ready!");
+  /*   
+    /*<![CDATA[*/
+
+    var myForm = [[${myForm}]];
+    var categories = [[${categories}]];
+    var template = [[${template}]];
+/*]]>*/
+          if(template!= null){
+        	  var templateBusinessUnitId = template.businessUnitId;
+        	  var templateCategoryId = template.categoryId;
+			  var templateSubCategoryId = template.subCategoryId;
+              $.ajax({
+                  url : "/vedanta-web/category/"+templateCategoryId,
+                  type : "GET",
+                  success : function(data) {
+                	  showSubCategoriesData(data);
+                  },
+                  error : function(xhr, status, error) {
+                      
+                      console.log("token has been expired."+xhr.responseText);
+                  }
+              });
+              
+              $.ajax({
+                  url : "/vedanta-web/category/business-unit-id/"+templateBusinessUnitId,
+                  type : "GET",
+                  success : function(data) {
+                	  showCategoriesData(data);
+                  },
+                  error : function(xhr, status, error) {
+                      
+                      console.log("token has been expired."+xhr.responseText);
+                  }
+              });
+          }
+
+          function showSubCategoriesData(data) {
+		  			$('#subCategories').html("");
+		  			/* $('#subCategories').append("<option value='0'>Select Sub-category </option>"); */
+		  			console.log(data);
+		  			for ( var i = 0, len = data.subCategories.length; i < len; ++i) {
+		  			    var category = data.subCategories[i];
+		  			    console.log(category)
+		  			    if(category.id == template.subCategoryId ){
+		  			    	$('#subCategories').append("<option selected=\"selected\" value=\"" + category.id + "\">" + category.categoryName+ "</option>");	
+		  			    }else{ 
+		  			    $('#subCategories').append("<option value=\"" + category.id + "\">" + category.categoryName+ "</option>");
+		  			    }
+		  			}
+		  			$('#subCategories').selectpicker({
+		  				      liveSearch: true,
+		  				      maxOptions: 1
+		  				    });
+		  			//$('#subCategories').selectpicker('render');
+		  			//$("#subCategories").val('').selectpicker('refresh');
+		  	}
+          
+         function showCategoriesData(data) {
+	  			$('#categoryId').html("");
+	  			/* $('#subCategories').append("<option value='0'>Select Sub-category </option>"); */
+	  			console.log(data);
+	  			for ( var i = 0, len = data.length; i < len; ++i) {
+	  			    var category = data[i];
+	  			    console.log(category)
+	  			    if(category.id == template.categoryId ){
+	  			    	$('#categoryId').append("<option selected=\"selected\" value=\"" + category.id + "\">" + category.categoryName+ "</option>");	
+	  			    }else{ 
+	  			    	$('#categoryId').append("<option value=\"" + category.id + "\">" + category.categoryName+ "</option>");
+	  			    }
+	  			}
+	  			$('#categoryId').selectpicker({
+	  				      liveSearch: true,
+	  				      maxOptions: 1
+	  				    });
+	  			//$('#categoryId').selectpicker('render');
+	  			//$("#categoryId").val('').selectpicker('refresh');
+	  	}
+
+          
+/*$('#subCategories').html("");
+
+for ( var i = 0, len = categories[template.categoryId].length; i < len; ++i) {
+	var category = categories[template.categoryId].subCategories[i];
+	
+	if(template.categoryId == category.id)
+    	alert("T-ID"+template.categoryId+" :C-ID"+category.id+"TRUE");
+    else
+    	alert("T-ID"+template.categoryId+" :C-ID"+category.id+"False");
+}
+
+*/    
+//$('#subCategories').append("<option selected value=\"" + category.id + "\">" + category.categoryName+ "</option>");
+
+		$('#formIds').selectpicker({
+		      liveSearch: true,
+		      maxOptions: false
+		    });
+		
+        
+        $('#categoryId').on('change', function() {
+                    var value = this.value;
+                    var businessUnitId= $("#businessUnitId").value;
+
+                    $.ajax({
+                        url : "/vedanta-web/category/"+value,
+                        type : "GET",
+                        success : function(data) {
+                            showSubCategories(data);
+                        },
+                        error : function(xhr, status, error) {
+                            
+                            console.log("token has been expired."+xhr.responseText);
+                        }
+                    });
+                })
+                
+                
+         $('#businessUnitId').on('change', function() {
+                    var value = this.value;
+
+                    $.ajax({
+                        url : "/vedanta-web/category/business-unit-id/"+value,
+                        type : "GET",
+                        success : function(data) {
+                        	showCategories(data);
+                        },
+                        error : function(xhr, status, error) {
+                            
+                            console.log("token has been expired."+xhr.responseText);
+                        }
+                    });
+                })       
+                
+    });
+
+	function showCategories(data) {
+		$('#categoryId').html("");
+		$('#categoryId').append("<option value='0'>Select Sub-category </option>");
+		for ( var i = 0, len = data.length; i < len; ++i) {
+		    var category = data[i];
+		    $('#categoryId').append("<option value=\"" + category.id + "\">" + category.categoryName+ "</option>");
+		}
+		 $('#categoryId').selectpicker({
+			      liveSearch: true,
+			      maxOptions: 1
+			    });
+		 $('#categoryId').selectpicker('render');
+		 $("#categoryId").val('').selectpicker('refresh');
+	}
+
+	function showSubCategories(data) {
+			$('#subCategories').html("");
+			/* $('#subCategories').append("<option value='0'>Select Sub-category </option>"); */
+			for ( var i = 0, len = data.subCategories.length; i < len; ++i) {
+			    var category = data.subCategories[i];
+
+
+			    $('#subCategories').append("<option value=\"" + category.id + "\">" + category.categoryName+ "</option>");
+			}
+			 $('#subCategories').selectpicker({
+				      liveSearch: true,
+				      maxOptions: 1
+				    });
+			 $('#subCategories').selectpicker('render');
+			 $("#subCategories").val('').selectpicker('refresh');
+	}
+	
+
+	 $('form').submit(function () {	
+
+		 buChecked = $("#businessUnitId").val();
+
+         if(buChecked == 0) {
+	          $("#buSpan").show();
+    	       return false;
+         }
+		 
+		 checked = $("#categoryId").val();
+
+          if(checked == 0) {
+           // alert("Select anyone category");
+           $("#catSpan").show();
+         
+            return false;
+          }
+          
+          var name = jQuery.trim($("#name").val());
+
+          if (name.length == 0)
+          {
+        	     $( "#tempSpan" ).show();
+        	     return false;
+          }
+          
+          var day = jQuery.trim($("#dayOfFrequency").val());
+
+          if (day.length == 0)
+          {
+        	     $( "#daySpan" ).show();
+        	     return false;
+          }
+          
+          
+          var due = jQuery.trim($("#dueDayOfFrequency").val());
+
+          if (due.length == 0)
+          {
+        	     $( "#dueSpan" ).show();
+        	     return false;
+          }
+          
+
+        }); 
+	 
+	 function checkCategory(){
+		 checked = $("#categoryId").val();
+
+	          if (checked > 0)
+	          {
+	        	     $( "#catSpan" ).hide();
+	          }
+		}
+	 
+	 function checkBusinessUnit(){
+		 checked = $("#businessUnitId").val();
+
+	          if (checked > 0)
+	          {
+	        	     $( "#buSpan" ).hide();
+	          }
+		}
+	 
+	 
+	 function checkTemplate(){
+		    var name = jQuery.trim($("#name").val());
+
+	          if (name.length > 0)
+	          {
+	        	     $( "#tempSpan" ).hide();
+	          }
+			}
+	 
+
+	  $(document).ready(function () {
+	 
+		  $("#dayOfFrequency").keypress(function (e) {
+		     if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+		        $("#daySpan").show();
+		               return false;
+		    }else{
+		    	$("#daySpan").hide();
+		    }
+		   });
+		  
+		  $("#dueDayOfFrequency").keypress(function (e) {
+			     if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+			        $("#dueSpan").show();
+			               return false;
+			    }else{
+			    	$("#dueSpan").hide();
+			    }
+			   });
+		});
+	
+
+
+
+</script>
+</body>
+</html>

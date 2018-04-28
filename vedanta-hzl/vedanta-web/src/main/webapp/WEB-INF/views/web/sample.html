@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vedanta</title>
+<object th:include="fragments/header :: head" th:remove="tag" ></object>
+<!-- Favicon -->
+<link rel="shortcut icon" type="image/icon" href="images/favicon.ico" />
+</head>
+<body>
+	<div id="wrapper">
+		<i th:replace="/fragments/component :: sidebar"></i>
+		<div class="white-bg page-wrapper header-wrapper">
+			<!-- top header -->
+				<div th:replace="/fragments/component :: topheader" ></div>
+			<!-- Body Part -->
+			<div class="wrapper wrapper-content">
+
+				<div class="container-fluid">
+					<div class="row btm-brd">
+						<div class="col-sm-6">
+							<div class="page-title">
+								<h3>Add Form</h3>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-sm-12">
+							<form class="client-form">
+								<div class="add-client">
+
+									<div class="setting-content">
+										<div class="socio-table table-responsive">
+											
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- footer -->
+		<div th:include="fragments/component :: footer"></div>
+		<!-- / page wrapper -->
+	</div>
+	<!-- /wrapper -->
+</body>
+</html>

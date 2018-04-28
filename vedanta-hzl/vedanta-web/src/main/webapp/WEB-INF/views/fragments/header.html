@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head">
+<meta charset="utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>Vedanta</title>
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+
+<link href="../../../resources/css/bootstrap.min.css" rel="stylesheet" media="screen" th:href="@{/resources/css/bootstrap.min.css}" />
+<link href="../../../resources/css/app.css" rel="stylesheet" media="screen" th:href="@{/resources/css/custom.css}" />
+<link href="../../../resources/css/app-purple.css" rel="stylesheet" media="screen" th:href="@{/resources/css/app-purple.css}" />
+<link href="../../../resources/css/socioseer.css" rel="stylesheet" media="screen" th:href="@{/resources/css/socioseer.css}" />
+<link href="../../../resources/css/responsive.css" rel="stylesheet" media="screen" th:href="@{/resources/css/responsive.css}" />
+<link href="../../../resources/css/animate.css" rel="stylesheet" media="screen" th:href="@{/resources/css/animate.css}" />
+<link href="../../../resources/fonts/flaticon.css" rel="stylesheet" media="screen" th:href="@{/resources/fonts/flaticon.css}" />
+<link href="../../../resources/css/font-awesome.min.css" rel="stylesheet" media="screen" th:href="@{/resources/css/font-awesome.min.css}" />
+<link href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700" rel="stylesheet">
+<link href="../../../resources/css/bootstrap-select.css" th:href="@{/resources/css/bootstrap-select.css}" rel="stylesheet">
+<link href="../../../resources/css/bootstrap-multiselect.css" th:href="@{/resources/css/bootstrap-multiselect.css}" rel="stylesheet">
+<link href="../../../resources/css/jquery-datatable.min.css" th:href="@{/resources/css/jquery-datatable.min.css}" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker-standalone.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+<link href="../../../resources/css/pace.css" th:href="@{/resources/css/pace.css}" rel="stylesheet">
+
+<script type="text/javascript" th:src="@{/resources/js/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/resources/js/script.js}"></script>
+
+<script>
+	var isIE = /*@cc_on!@*/false || !!document.documentMode;
+		if(isIE) {		   
+		    $('head').append('<link rel="stylesheet" type="text/css" href="/vedanta-web/resources/css/vedantaIE.css">');	
+		}
+</script>
+
+
+<script type="text/javascript" th:src="@{/resources/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/resources/js/pace.min.js}"></script>
+<script type="text/javascript" th:src="@{/resources/js/jquery.metisMenu.js}"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.min.js"></script>
+<!-- <script type="text/javascript" th:src="@{/resources/js/bootstrap-select.js}"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+
+
+<script type="text/javascript" th:src="@{/resources/js/notify.min.js}"></script>
+
+<script type="text/javascript" th:src="@{/resources/js/custom.js}"></script>
+	<!-- <script type="text/javascript" th:src="@{/resources/js/header.js}"></script> -->
+
+
+
+   
+</head>
+<body>
+	<div id="cbAlert" class="modal fade">
+
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h4 id="alertTitle" class="modal-title" style="font-size: large;"></h4>
+				</div>
+				<div id="modalText" class="modal-body">
+					<p id="cbAlertText" class="text-warning"></p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Alert modal window end -->
+
+
+	<!-- Confirmation modal window start -->
+
+	<div id="cbModal" class="modal fade">
+
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h4 class="modal-title">Confirmation</h4>
+				</div>
+				<div id="modalText" class="modal-body">
+					<p id="cbModalText" class="text-warning"></p>
+				</div>
+				<div class="modal-footer">
+					<button id="cbModelCancelButton" name="cbModelCancelButton"
+						type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button id="cbModelOkButton" name="cbModelOkButton" type="button"
+						class="btn btn-success">Save changes</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="spinner"></div>
+</body>
+ 
+</html>

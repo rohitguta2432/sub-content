@@ -1,0 +1,191 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Vedanta</title>
+<object th:include="fragments/header :: head" th:remove="tag"></object>
+<!-- Favicon -->
+<link rel="shortcut icon" type="image/icon"
+	th:href="@{/resources/images/favicon.ico}" />
+
+
+</head>
+<body>
+	<div id="wrapper">
+		<i th:replace="/fragments/component :: sidebar"></i>
+
+		<div class="white-bg page-wrapper header-wrapper">
+			<!-- top header -->
+
+			<div th:replace="/fragments/component :: topheader"></div>
+
+			<!-- Body Part -->
+			<div class="wrapper wrapper-content">
+
+				<div class="alert alert-success" id="success-alert"
+					th:if="${success}">
+					<button type="button" class="close" data-dismiss="alert">x</button>
+					<strong> <span th:text="${success}"></span></strong>
+
+				</div>
+
+				<div class="container-fluid">
+					<div class="row btm-brd">
+						<div class="col-sm-12">
+							<div class="page-title">
+								<h3>Support information</h3>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="setting-content">
+								<form class="client-form" th:action="@{/support/save}"
+									enctype="multipart/form-data" method="POST">
+									<div class="row form-group">
+										<div class="col-sm-3 col-md-3 col-md-offset-1">
+											<label class="mtb5px text-right">Subject</label>
+										</div>
+										<div class="col-sm-6 col-md-5">
+											<input class="form-control" type="text" id="title"
+												name="title" placeholder="Title" />
+												<span class="errormsg text-left" style="display:none;" id="titleErrorSpan">Please enter any title</span>
+										</div>
+									</div>
+
+									<div class="row form-group">
+										<div class="col-sm-4 col-md-3 col-md-offset-1">
+											<label class="mtb5px text-right">Email Id</label>
+										</div>
+										<div class="col-sm-6 col-md-5">
+											<input class="form-control" type="email" id="emailId"
+												name="emailId" placeholder="Email Id" />
+												<span class="errormsg text-left" style="display:none;" id="emailErrorSpan">Please enter an email address</span>
+										</div>
+									</div>
+
+									<div class="row form-group">
+										<div class="col-sm-3 col-md-3 col-md-offset-1">
+											<label class="mtb5px text-right">Message</label>
+										</div>
+										<div class="col-sm-6 col-md-5">
+											<textarea class="form-control height-auto" id="message"
+												name="message" rows="6" placeholder="Message"
+												required="required"></textarea>
+												<span class="errormsg text-left" style="display:none;" id="messageErrorSpan">Please enter the message</span>
+										</div>
+									</div>
+
+									<div class="row form-group">
+										<div class="col-sm-3 col-md-3 col-md-offset-1">
+											<label class="mtb5px text-right">Attachment </label>
+
+										</div>
+										<div class="col-sm-6 col-md-5">
+											<input class="form-control" type="file" id="files"
+												multiple="multiple" accept="image/jpg,image/png,image/jpeg"
+												name="files" placeholder="Attachment" /> <label
+												class="pull-right note">(Only .jpg/png files)</label>
+
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-10 col-md-9 text-right">
+											<button class="btn btn-success" id="submit" name="submit"
+												type="submit">Submit</button>
+										</div>
+									</div>
+
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- / page wrapper -->
+		<!-- footer -->
+		<div th:include="fragments/component :: footer"></div>
+	</div>
+
+</body>
+<script type="text/javascript">
+
+
+//validate before submit
+$('#submit').on('click', function() {
+
+  var emailId = $('#emailId').val();
+  var message = $('#message').val();
+  var title = $('#title').val();
+  
+  $("#titleErrorSpan").hide();
+  $("#emailErrorSpan").hide();
+  $("#messageErrorSpan").hide();
+
+  if (title == "") {
+	  $("#titleErrorSpan").show();
+	  $("#title").focus();
+	  return false;
+  }
+  if (emailId == "") {
+	  $("#emailErrorSpan").show();
+	  $("#emailId").focus();
+	  return false;
+  }
+  if (message == "") {
+	  $("#messageErrorSpan").show();
+	  $("#message").focus();
+	  return false;
+  }
+
+});
+/* 	$('form').submit(function () {
+	
+		var files = $("#files").val();
+			
+	    var a=(files[0].size);
+	    alert(a);
+	    if(a > 2) {
+	        return false;
+	    };
+	
+	});
+	
+ */
+ 
+ 
+ $(document).on('change', '#files', function() {
+  var totalSize = 0;
+  var files = this.files;
+
+  if ($("#files")[0].files.length > 4) {
+    alert("You can select only 4 images");
+    this.value = null;
+    return;
+  }
+
+  $.each(files, function(index, value) {
+    totalSize = totalSize + files[index].size;
+  });
+
+  //size limit 5 mb for all files
+  if (totalSize > 5242880) {  
+    alert("You can select files upto 5MB, current size:"+(totalSize/(1024*1024)).toFixed(2)+"MB");
+    this.value = null;
+    return
+  }
+
+}); 
+ 
+ $("#success-alert").fadeTo(5000, 500).slideUp(500, function() {
+	    $("#success-alert").slideUp(100);
+	  });
+
+
+</script>
+</html>

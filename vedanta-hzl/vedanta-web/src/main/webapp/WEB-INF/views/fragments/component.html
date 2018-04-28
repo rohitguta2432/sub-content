@@ -1,0 +1,378 @@
+<!DOCTYPE  html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+	<aside th:fragment="sidebar">
+		<nav class="navbar-default navbar-static-side" role="navigation">
+			<div class="sidebar-collapse">
+				<ul class="nav metismenu" id="side-menu">
+					<li
+						sec:authorize="hasAnyRole('ROLE_ADMIN,ROLE_PLANT_HEAD,ROLE_BUSINESS_UNIT_HEAD')"
+						class="brand"><a th:href="@{/web/dashboard/get}"><img
+							th:src="@{/resources/assets/logo_vedanta.png}"
+							class="img-responsive center-block big-logo" /></a></li>
+					<li
+						sec:authorize="hasAnyRole('ROLE_ADMIN,ROLE_PLANT_HEAD,ROLE_BUSINESS_UNIT_HEAD')"
+						th:class="${dashboardActive != null ? 'active' : 'inactive'}">
+						<a th:href="@{/web/dashboard/get}"><i class="fa fa-tachometer"></i>
+							<span class="nav-label">Dashboard</span></a>
+					</li>
+					<li sec:authorize="hasAnyRole('ROLE_ADMIN,ROLE_PLANT_HEAD,ROLE_BUSINESS_UNIT_HEAD')"
+						th:class="${adminApproverUpdateActive != null ? 'active' : 'inactive'}">
+						<a th:href="@{/form-file/get}"><i class="fa fa-file-excel-o"></i>
+							<span class="nav-label">Upload Approver</span></a>
+					</li>
+					<li
+						sec:authorize="hasAnyRole('ROLE_DATA_UPLOAD,ROLE_CONTRACT_MANAGER')"
+						class="brand"><a th:href="@{/scorecard}"><img
+							th:src="@{/resources/assets/logo_vedanta.png}"
+							class="img-responsive center-block big-logo" /></a></li>
+					
+					<li sec:authorize="hasAnyRole('ROLE_HR')"
+						class="brand"><a th:href="@{/form-save}"><img
+							th:src="@{/resources/assets/logo_vedanta.png}"
+							class="img-responsive center-block big-logo" /></a></li>		
+							
+					<li
+						sec:authorize="hasAnyRole('ROLE_DATA_UPLOAD')"
+						th:class="${dashboardActive != null ? 'active' : 'inactive'}">
+						<a th:href="@{/web/dashboard}"><i class="fa fa-tachometer"></i>
+							<span class="nav-label">Dashboard</span></a>
+					</li>
+					<li th:class="${formSaveActive != null ? 'active' : 'inactive'}">
+						<a th:href="@{/form-save}"><i class="fa fa-book"></i> <span
+							class="nav-label">Forms</span></a>
+
+					</li>
+					<li id="balco"
+						sec:authorize="hasAnyRole('ROLE_ADMIN,CONTRACT_MANAGER,ROLE_PLANT_HEAD,ROLE_BUSINESS_UNIT_HEAD')"
+						th:class="${scorecardListActive != null ? 'active' : 'inactive'}">
+						<a th:href="@{/scorecard}"><i class="fa fa-file-excel-o"></i>
+							<span class="nav-label">Score Card</span></a>
+
+					</li>
+
+					<li sec:authorize="hasAnyRole('ROLE_ADMIN')"
+						th:class="${vendorListActive != null ? 'active' : 'inactive'}">
+						<a th:href="@{/vendor/get}"><i class="fa fa-male"
+							aria-hidden="true"></i> <span class="nav-label">Vendors</span> </a> <!-- <ul class="nav nav-second-level collapse">
+								<li><a th:href="@{/vendor}"> Create</a></li>								
+								<li><a th:href="@{/vendor/get}"> View</a></li>
+								<li><a href="#"> Update</a></li>
+								<li><a href="#"> Delete</a></li>
+							</ul> -->
+					</li>
+
+					<li id="template" style="display: none"
+						sec:authorize="hasAnyRole('ROLE_ADMIN')"
+						th:class="${templateActive != null ? 'active' : 'inactive' }">
+						<a href="#"><i class="fa fa-cubes"></i> <span
+							class="nav-label">Templates</span><span class="fa arrow"></span></a>
+						<ul class="nav nav-second-level collapse">
+							<li
+								th:class="${templateListActive != null ? 'active' : 'inactive'}">
+								<a th:href="@{/admin/template}">Templates</a>
+							</li>
+							<li
+								th:class="${templateFieldActive != null ? 'active' : 'inactive'}">
+								<a th:href="@{/admin/template/field}">Fields</a>
+							</li>
+							<li
+								th:class="${templateGroupActive != null ? 'active' : 'inactive'}">
+								<a th:href="@{/admin/template/group}">Groups</a>
+							</li>
+							<li
+								th:class="${templateGroupFieldActive != null ? 'active' : 'inactive'}">
+								<a th:href="@{/admin/template/group/fields}">Group Fields</a>
+							</li>
+							<li
+								th:class="${templateGroupsActive != null ? 'active' : 'inactive'}">
+								<a th:href="@{/admin/template/groups}">Template Groups</a>
+							</li>
+
+						</ul>
+					</li>
+
+					<li id="formAdmin" style="display: none"
+						sec:authorize="hasAnyRole('ROLE_ADMIN')"
+						th:class="${adminFormActive != null ? 'active' : 'inactive'}">
+						<a href="#"><i class="fa fa-files-o"></i> <span
+							class="nav-label">Forms Admin</span><span class="fa arrow"></span></a>
+						<ul class="nav nav-second-level collapse">
+							<li
+								th:class="${adminFormListActive != null ? 'active' : 'inactive'}">
+								<a th:href="@{/admin/form}">Forms</a>
+							</li>
+							<li
+								th:class="${adminFormGroupListActive != null ? 'active' : 'inactive'}">
+								<a th:href="@{/admin/form/groups}">Form Group</a>
+							</li>
+							<li
+								th:class="${adminFormFormFieldActive != null ? 'active' : 'inactive'}">
+								<a th:href="@{/admin/form/field}">Form Fields</a>
+							</li>
+							<li
+								th:class="${adminFormGroupFieldListActive != null ? 'active' : 'inactive'}">
+								<a th:href="@{/admin/form/group/fields}">Form Group Field</a>
+							</li>
+							<li
+								th:class="${adminFormFormGroupDetailActive != null ? 'active' : 'inactive'}">
+								<a th:href="@{/admin/form/group}">Form Group Detail</a>
+							</li>
+
+						</ul>
+					</li>
+
+
+					<!-- Reports -->
+					<li
+						sec:authorize="hasAnyRole('ROLE_ADMIN,ROLE_PLANT_HEAD,ROLE_BUSINESS_UNIT_HEAD')"
+						th:class="${reportActive != null ? 'active' : 'inactive'}"><a
+						href="#"><i class="fa fa-file-text-o"></i> <span
+							class="nav-label">Reports</span><span class="fa arrow"></span></a>
+						<ul class="nav nav-second-level collapse">
+							<li
+								th:class="${reportScorecardActive != null ? 'active' : 'inactive'}">
+								<a th:href="@{/reports}">Score Card Reports</a>
+							</li>
+
+							<li
+								th:class="${reportScorecardExportActive != null ? 'active' : 'inactive'}">
+								<a th:href="@{/reports/scorecard-export-reports}">Score Card
+									Exports</a>
+							</li>
+
+
+						</ul></li>
+
+
+					<!-- Reports End -->
+
+					<li sec:authorize="hasAnyRole('ROLE_ADMIN')"
+						th:class="${surveyActive != null ? 'active' : 'inactive'}"><a
+						th:href=@{/email/survey/reminder}><i class="fa fa-file"></i> <span
+							class="nav-label">Survey</span></a></li>
+
+					<li id="setting" style="display: none;"
+						sec:authorize="hasAnyRole('ROLE_ADMIN')"
+						th:class="${settingActive != null ? 'active' : 'inactive' }">
+						<a href="#"><i class="fa fa-cog"></i> <span class="nav-label">Settings</span><span
+							class="fa arrow"></span></a>
+						<ul class="nav nav-second-level collapse">
+
+							<li th:class="${userListActive != null ? 'active' : 'inactive'}">
+								<a th:href="@{/user/get}"><i class="fa fa-users"></i> <span
+									class="nav-label">Users</span></a>
+
+							</li>
+
+							<li id="emailTemplate" style="display: none"
+								th:class="${emailTemplateActive != null ? 'active' : 'inactive'}">
+								<a th:href=@{/email/admin/template}><i
+									class="fa fa-envelope"></i> <span class="nav-label">Email
+										Template</span></a>
+							</li>
+
+							<li th:class="${plantHeadActive != null ? 'active' : 'inactive'}">
+								<a th:href=@{/plantHead}><i class="fa fa-male"></i> <span
+									class="nav-label">Plant Head</span></a>
+							</li>
+							
+							<li th:class="${humanResourceActive != null ? 'active' : 'inactive'}">
+								<a th:href=@{/humanResource}><i class="fa fa-male"></i> <span
+									class="nav-label">HR</span></a>
+							</li>
+
+							<li id="support"	style="display: none"
+								th:class="${supportListActive != null ? 'active' : 'inactive'}">
+								<a th:href=@{/support/support-list}><i class="fa fa-question-circle"></i>
+									<span class="nav-label">Support Requests</span></a>
+								</li>
+
+							</ul>
+					</li>
+				</ul>
+
+			</div>
+
+		</nav>
+	</aside>
+
+	<!-- Top Header -->
+	<div class="row" th:fragment="topheader">
+		<nav class="navbar navbar-fixed-top white-bg " role="navigation">
+			<div class="navbar-header ">
+				<a class="navbar-minimalize visible-xs-inline-block" href="#"><i
+					class="fa fa-bars fa-3x "></i> </a> <a href="javascript:void(0)"
+					class="hindlogo hidden-xs"> <img id="imagesrc" src=""
+					class="img-responsive center-block" />
+				</a>
+				<script type="text/javascript">
+				$.ajax({
+					url : "/vedanta-web/getUserDetails",
+					type : "GET",
+					headers : {
+						'api-key' : 'mykey'
+					},
+					success : function(data) {
+						
+						showHeaderLogo(data);
+						showMenu(data);
+					},
+					error : function(xhr, status, error) {
+
+						console.log("token has been expired." + xhr.responseText);
+						$("#imagesrc").attr("src", "/vedanta-web/resources/assets/logo_vedanta1.jpg");	
+					}
+				});
+
+				function showHeaderLogo(data) {
+					
+					/* for SUPER ADMIN businessUnit */
+					if(data.businessUnitId === 0){
+						$("#imagesrc").attr("src", "/vedanta-web/resources/assets/superadmin.jpg");	
+					} 
+					/* for HZL businessUnit */
+					if(data.businessUnitId === 1){
+						$("#imagesrc").attr("src", "/vedanta-web/resources/assets/hindustanzinc.jpg");	
+					}
+					/* for STERLITE businessUnit */
+					if(data.businessUnitId === 2){
+						$("#imagesrc").attr("src", "/vedanta-web/resources/assets/Sterlite.jpg");	
+					}
+					/* for CARIN businessUnit */
+					if(data.businessUnitId === 3){
+						$("#imagesrc").attr("src", "/vedanta-web/resources/assets/cairn.jpg");	
+					}
+					/* for SESA businessUnit */
+					if(data.businessUnitId === 4){
+						$("#imagesrc").attr("src", "/vedanta-web/resources/assets/sesa.jpg");	
+					}
+					/* for VGCB businessUnit */
+					if(data.businessUnitId === 5){
+						$("#imagesrc").attr("src", "/vedanta-web/resources/assets/vgbc.jpg");	
+					}
+					/* for FUJAIRAH businessUnit */
+					if(data.businessUnitId === 6){
+						$("#imagesrc").attr("src", "/vedanta-web/resources/assets/fujagold.jpg");	
+					}
+					/* for BALCO businessUnit */
+					if(data.businessUnitId === 7){
+						$("#imagesrc").attr("src", "/vedanta-web/resources/assets/balco.jpg");	
+						/* $('#balco').show();  */
+					}
+					/* for JHARSUGUDA businessUnit */
+					if(data.businessUnitId === 8){
+						$("#imagesrc").attr("src", "/vedanta-web/resources/assets/vedantalimited.jpg");	
+					}
+					/* for VALLANJIGARH businessUnit */
+					if(data.businessUnitId === 9){
+						$("#imagesrc").attr("src", "/vedanta-web/resources/assets/vedantalimited.jpg");	
+					}
+					/* for TSPL businessUnit */
+					if(data.businessUnitId === 10){
+						$("#imagesrc").attr("src", "/vedanta-web/resources/assets/tspl.jpg");	
+					}
+					/* for KCM businessUnit */
+					if(data.businessUnitId === 11){
+						$("#imagesrc").attr("src", "/vedanta-web/resources/assets/konkola.jpg");	
+					}
+					/* for  ZI businessUnit */
+					if(data.businessUnitId === 12){
+						$("#imagesrc").attr("src", "/vedanta-web/resources/assets/vedantazinc.jpg");	
+					}
+					
+				}
+			
+					
+					function showMenu(data) {
+						
+					if (data.authorities === "ROLE_ADMIN") {
+						
+							/* for PLANT Admin */
+						 if (data.businessUnitId > 0 && data.plantCode > 0) {
+							
+							}
+							/* for BUSINESSUNIT-ADMIN */
+							else if (data.businessUnitId > 0
+									&& data.plantCode == 0) {
+								console.log(data.plantCode);
+								$('#setting').show();
+								$('#formAdmin').show();
+								$('#template').show();
+								
+							}
+							/* for SUPER-ADMIN */
+							else if(data.businessUnitId == 0 && data.plantCode == 0){
+								$('#setting').show();
+								$('#formAdmin').show();
+								$('#template').show();
+								$('#emailTemplate').show();
+								$('#support').show();
+							}
+
+						}
+					}
+				</script>
+			</div>
+
+			<div class="col-sm-4 pull-right">
+				<ul class="nav navbar mb0px list-inline navbar-right">
+					<li sec:authorize="!hasAnyRole('ROLE_ADMIN')"
+						class="dropdown notifiybell"><a id="alert"
+						class="dropdown-toggle " data-toggle="dropdown" href="#"> <i
+							class="fa fa-bell-o fa-lg"></i> <span
+							class="notification-icon hidden" id="countNotification"></span>
+					</a>
+						<div
+							class="dropdown-menu dropdown-messages dropdown-arrow notification-list">
+							<div class="panel">
+								<div class="panel-heading">
+									<h3 class="panel-title">Notifications</h3>
+								</div>
+								<div class="panel-body p0px">
+
+									<ul class="pl0px noti-liNotifications
+								st" id="ulNotify">
+									</ul>
+								</div>
+								<div class="panel-footer">
+									<a href="/vedanta-web/notification/getAllnotification">View
+										All</a>
+								</div>
+							</div>
+							<script type="text/javascript"
+								th:src="@{/resources/js/notification.js}"></script>
+						</div></li>
+					<li>
+						<div class="logout">
+							<a class="" th:href="@{/logout}"><i class="fa fa-power-off"></i>
+								<span>Logout</span> </a>
+						</div>
+					</li>
+				</ul>
+			</div>
+
+		</nav>
+	</div>
+
+	<!-- Top Header -->
+
+	<footer class="footer" th:fragment="footer">
+		<div id="footer">
+			<div class="brdtop copyright">
+				<p class="pull-right">
+					Powered by <a href="https://www.orangemantra.com/" target="_blank"><span
+						class="orange">orangemantra</span></a> <a href="/vedanta-web/support"
+						class="ml10px brdleft">Support</a>
+				</p>
+			</div>
+		</div>
+
+
+	</footer>
+
+</body>
+</html>

@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		<title>Vedanta</title>   			
+		<object th:include="fragments/header :: head" th:remove="tag" />
+		<link rel="shortcut icon" type="image/icon" th:href="@{/resources/images/favicon.ico}"/>
+		<script src="https://code.highcharts.com/highcharts.js"></script>
+		<!-- <script src="http://code.highcharts.com/modules/no-data-to-display.js"></script> -->
+		<!-- <script type="text/javascript" th:src="@{/resources/js/dashboardGraph.js}"></script> -->
+		<script type="text/javascript" th:src="@{/resources/js/highcharts.js}"></script>
+		<link href="../../../resources/css/highcharts.css" th:href="@{/resources/css/highcharts.css}" rel="stylesheet">
+		
+		<style>
+	text.highcharts-credits 
+	{
+	
+    display: none;
+    }
+    
+    a.fade-out .fa {
+	color: #aaa !important;
+}
+
+div#load {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 99;
+}
+    
+	</style>
+<script type="text/javascript">
+document.onreadystatechange = function () {
+	  var state = document.readyState
+	  if (state == 'complete') {
+	      setTimeout(function(){
+	          document.getElementById('interactive');
+	         document.getElementById('load').style.visibility="hidden";
+	      },500); 
+	  }
+	}
+
+</script>	
+</head>
+<body class="fixed-sidebar">
+<div id="load">
+	<img th:src="@{/resources/images/loading.gif}">
+</div>
+	<div id="wrapper" th:with="dashboardActive=${'active'}">
+		<div th:replace="/fragments/component :: sidebar" ></div>
+		<div class="white-bg page-wrapper header-wrapper">
+			<!-- top header -->
+			<div th:replace="/fragments/component :: topheader" ></div>
+			<!-- Body Part -->
+			<div class="wrapper wrapper-content">
+			
+			
+
+				<div class="container-fluid">
+					<div class="row btm-brd">
+						<div class="col-sm-6">
+							<div class="page-title">
+								<h3>Welcome: <span th:text="${userName}"></span></h3>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+					
+				
+				<div class="container-fluid xsClass newdashboard">
+					<div class="row">
+						<div class="col-sm-12">
+							<h4 class="heading">Filters</h4>
+						</div>
+						<div class="col-sm-2 mb10px pr0px filterwidth" id="bu_Block">
+							<label>Select Bussiness Unit</label>
+							<select id="bussinessId" class="form-control filterselect">
+								<!-- <option value="0">SELECT BU</option> -->
+								<option 
+									th:if="${AllbussinessUnit != null}" 
+									th:each="BussinessId : ${AllbussinessUnit}"
+									th:selected="${searchBussinessId == BussinessId.id}"
+									th:value="${BussinessId.id}">
+									<span th:text="${BussinessId.unitName}"></span>	
+								</option>
+							</select>
+						</div>
+						<div class="col-sm-2 mb10px pr0px filterwidth">
+							<label>Select Plant</label>
+							<select id="plantId" class="form-control filterselect">
+								<!-- <option value="0">Select Plant</option> -->
+								<option 
+									th:if="${dashBoardData.ALL_PLANTS != null}" 
+									th:each="plant : ${dashBoardData.ALL_PLANTS}"
+									th:selected="${searchPlantId == plant.id}"
+									th:value="${plant.id}">
+									<span th:text="${plant.name}"></span>	
+								</option>
+							</select>
+						</div>
+						<div class="col-sm-2 mb10px pr0px filterwidth" >
+							<label>Category</label>
+							<select id="categoryId" class="form-control filterselect">
+								<!-- <option value="0">Select Category</option> -->
+								<option
+								th:if="${dashBoardData.CATEGORIES != null}" 
+									th:each="category : ${dashBoardData.CATEGORIES}"
+									th:selected="${searchCategoryId == category.id}"
+									th:value="${category.id}">
+								<span th:text="${category.categoryName}"></span>	
+								</option>
+							</select>
+						</div>
+						<div class="col-sm-2 mb10px pr0px filterwidth">
+							<label>Sub-Category</label>
+							<select id="subCategories" class="form-control filterselect">
+							  <!-- <option value="0">Select SubCategory</option> -->
+								 <option
+								th:if="${dashBoardData.ALL_SUBCATEGORIES != null}" 
+									th:each="subCategory : ${dashBoardData.ALL_SUBCATEGORIES}"
+									th:selected="${searchSubCategoryId == subCategory.id}"
+									th:value="${subCategory.id}">
+								<span th:text="${subCategory.categoryName}"></span>	
+								</option> 
+							</select>
+						</div>
+						<div  class="col-sm-2 mb10px pr0px filterwidth" >
+							<label>Contract</label>
+							<select id="contractId" class="form-control filterselect">
+								<option value="0">Select Contract</option> 
+							 	<option
+								th:if="${dashBoardData.ALL_CONTRACTS != null}" 
+									th:each="contract : ${dashBoardData.ALL_CONTRACTS}"
+									th:selected="${searchContractId == contract.id}"
+									th:value="${contract.id}">
+								<span th:text="${contract.number}"></span>	
+								</option> 
+							</select>
+						</div>
+						<div class='col-sm-2 daterangefilter mb10px'>
+				      	<label>Date</label>
+				        <div class="input-group calendar">
+				        	<span class="input-group-addon" id='cal'><i class="fa fa-calendar fa-lg"></i></span>
+			            	<input type='text' class="form-control" id='datetimepickerFrom' placeholder="From" />
+			            
+				        	<span class="input-group-addon"><i class="fa fa-calendar fa-lg"></i></span>
+			            	<input type='text' class="form-control" id='datetimepickerTo' placeholder="To" />
+			            </div>
+		              </div>
+		              <div class="clearfix"></div>
+		                <div class="p0px dis-flex">
+			              
+			              <div class="col-sm-12 text-right pr15px ">
+			              	<label>&nbsp;</label>
+			              	<button id="dateRangeSearch" class="btn  btn-success mr5px">Go!</button>
+			              	<a th:href="@{/web/dashboard/get}" class="btn btn-success btn-info">Reset</a>
+			              </div>
+			           </div>
+
+			            <div class="clearfix"></div>
+					</div>
+				</div>
+				
+					<div class="container">
+						<div class="row mt10px">
+							<div class="col-sm-6 ">
+								<div id="graph1"></div>
+							</div>
+								<div class="col-sm-6">
+								<div id="graph2"></div>
+							</div>
+						</div>
+					</div>
+  		
+				<div class="container-fluid mtb10px">
+					<div class="row">
+						<div class="col-sm-8 mtb10px pr0px">
+							<ul class="legend">
+							    <li><span class="pending"></span> Pending</li>
+							    <li><span class="draft"></span> Draft</li>
+							    <li><span class="submitted"></span> Submitted</li>
+							    <li><span class="approved"></span> Approved</li>
+							    <li><span class="overdue"></span> Overdue</li>
+							    <li><span class="notgenerated"></span> Not Generated</li>
+							    <li><span class="rejected"></span>Rejected</li>
+							</ul>
+						</div>
+						<div class="col-sm-12 dashboard">
+							<div class="settings table-responsive">
+								<table class="table table-bordered mb20px ">
+									<thead>
+										<tr>
+											<td class="fix-width">Plant</td>
+											<td>
+												<table class="table inner-table">
+													<tr>
+														<td class="fix-width">Category</td>
+														<td>
+															<table class="table inner-table">
+																<tr>
+																	<td class="fix-width">Sub Category</td>
+																	<td>
+																		<table class="table inner-table">
+																			<tr>
+																				<td class="fix-width">Contract #</td>
+																				<td>
+																					<table class="table inner-table">
+																						<tr th:if="${ dashBoardData != null}" class="months">
+																							<td th:text="${parserUtils.getSortMonthString(dashBoardData.monthList.get('0').monthId) +'-'+dashBoardData.monthList.get('0').yearId}">Jan</td>																				
+																							<td th:text="${parserUtils.getSortMonthString(dashBoardData.monthList.get('1').monthId) +'-'+dashBoardData.monthList.get('1').yearId}">Mar</td>
+																							<td th:text="${parserUtils.getSortMonthString(dashBoardData.monthList.get('2').monthId) +'-'+dashBoardData.monthList.get('2').yearId}">Mar</td>
+																							<td th:text="${parserUtils.getSortMonthString(dashBoardData.monthList.get('3').monthId) +'-'+dashBoardData.monthList.get('3').yearId}">Mar</td>
+																							<td th:text="${parserUtils.getSortMonthString(dashBoardData.monthList.get('4').monthId) +'-'+dashBoardData.monthList.get('4').yearId}">Mar</td>
+																							<td th:text="${parserUtils.getSortMonthString(dashBoardData.monthList.get('5').monthId) +'-'+dashBoardData.monthList.get('5').yearId}">Mar</td>
+																							<td th:text="${parserUtils.getSortMonthString(dashBoardData.monthList.get('6').monthId) +'-'+dashBoardData.monthList.get('6').yearId}">Mar</td>
+																							<td th:text="${parserUtils.getSortMonthString(dashBoardData.monthList.get('7').monthId) +'-'+dashBoardData.monthList.get('7').yearId}">Mar</td>
+																							<td th:text="${parserUtils.getSortMonthString(dashBoardData.monthList.get('8').monthId) +'-'+dashBoardData.monthList.get('8').yearId}">Mar</td>
+																							<td th:text="${parserUtils.getSortMonthString(dashBoardData.monthList.get('9').monthId) +'-'+dashBoardData.monthList.get('9').yearId}">Mar</td>
+																							<td th:text="${parserUtils.getSortMonthString(dashBoardData.monthList.get('10').monthId) +'-'+dashBoardData.monthList.get('10').yearId}">Mar</td>
+																							<td th:text="${parserUtils.getSortMonthString(dashBoardData.monthList.get('11').monthId) +'-'+dashBoardData.monthList.get('11').yearId}">Mar</td>
+																							
+																							</tr>
+           																			</table>
+																				</td>
+																			</tr>
+																		</table>
+																	</td>
+																</tr>
+															</table>
+														</td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+									</thead>
+									<tbody id ="mytbody">
+										<tr th:if="${ dashBoardData != null AND dashBoardData.newDashboardDetails.size() > 0 }" 
+											th:each="plantData : ${dashBoardData.newDashboardDetails}">
+											<td class="fix-width category_border">
+												<label class="no-break" th:text="${plantData.key}">CHANDERIYA LEAD ZINC SMELTER</label>
+											</td>
+											<td>
+												<table class="table inner-table" style="height:100%;" width="100%" cellpadding="0" cellspacing="0" border="0">
+													<tr th:each="categoryData : ${plantData.value}">
+														<td class="fix-width category_border"><label th:text="${categoryData.key}">OPS &amp; MAINT </label></td>
+														<td class="">
+															<table style="height:100%;" class="table inner-table" width="100%" cellpadding="0" cellspacing="0" border="0">																
+																<tr th:each="subCategoryData : ${categoryData.value}">
+																	<td class="fix-width category_border"><label th:text="${subCategoryData.key}">EQUIPMENT UPKEEP	</label></td>
+																	<td class="category_border big-width">
+																		<table style="height:100%;" class="table inner-table" cellpadding="0" cellspacing="0" border="0">
+																			<tr th:each="contractData : ${subCategoryData.value}">
+																				<td class="fix-width"><label th:text="${contractData.key}">	5100020868</label></td>
+																				<td>
+																					<table style="height:100%;" class="table inner-table" width="100%" cellpadding="0" cellspacing="0" border="0">
+																						<tr>
+																							<td class="notgenerated">
+																								 <label th:each="monthYearData : ${contractData.value}"
+																									th:if="${dashBoardData.monthList.get('0').monthId == monthYearData.monthId AND dashBoardData.monthList.get('0').yearId == monthYearData.yearId}"
+																									th:class="${ parserUtils.compareDateStringToCurrentDate(monthYearData.dueDate) le 0 ? ((monthYearData.status == 5 || monthYearData.status == 7 )  ? 'status'+monthYearData.status: 'overdue') : 'status'+monthYearData.status}"
+																									th:text="${ (monthYearData.sumActualScore ge monthYearData.totalScore) ? monthYearData.avgActualScore+' / '+parserUtils.doubleToIneger(monthYearData.totalScore) : monthYearData.sumActualScore+' / '+parserUtils.doubleToIneger(monthYearData.totalScore) }">
+																									0/100
+																								</label>	
+																							</td>
+																								<td class="notgenerated">
+																								 <label th:each="monthYearData : ${contractData.value}"
+																									th:if="${dashBoardData.monthList.get('1').monthId == monthYearData.monthId AND dashBoardData.monthList.get('1').yearId == monthYearData.yearId}"
+																									th:class="${ parserUtils.compareDateStringToCurrentDate(monthYearData.dueDate) le 0 ? ((monthYearData.status == 5 || monthYearData.status == 7 )  ? 'status'+monthYearData.status: 'overdue') : 'status'+monthYearData.status}"
+																									th:text="${ (monthYearData.sumActualScore ge monthYearData.totalScore) ? monthYearData.avgActualScore+' / '+parserUtils.doubleToIneger(monthYearData.totalScore) : monthYearData.sumActualScore+' / '+parserUtils.doubleToIneger(monthYearData.totalScore) }">
+																									0/100
+																								</label>	
+																							</td>
+																								<td class="notgenerated">
+																								 <label th:each="monthYearData : ${contractData.value}"
+																									th:if="${dashBoardData.monthList.get('2').monthId == monthYearData.monthId AND dashBoardData.monthList.get('2').yearId == monthYearData.yearId}"
+																									th:class="${ parserUtils.compareDateStringToCurrentDate(monthYearData.dueDate) le 0 ? ((monthYearData.status == 5 || monthYearData.status == 7 )  ? 'status'+monthYearData.status: 'overdue') : 'status'+monthYearData.status}"
+																									th:text="${ (monthYearData.sumActualScore ge monthYearData.totalScore) ? monthYearData.avgActualScore+' / '+parserUtils.doubleToIneger(monthYearData.totalScore) : monthYearData.sumActualScore+' / '+parserUtils.doubleToIneger(monthYearData.totalScore) }">
+																									0/100
+																								</label>	
+																							</td>
+																								<td class="notgenerated">
+																								 <label th:each="monthYearData : ${contractData.value}"
+																									th:if="${dashBoardData.monthList.get('3').monthId == monthYearData.monthId AND dashBoardData.monthList.get('3').yearId == monthYearData.yearId}"
+																									th:class="${ parserUtils.compareDateStringToCurrentDate(monthYearData.dueDate) le 0 ? ((monthYearData.status == 5 || monthYearData.status == 7 )  ? 'status'+monthYearData.status: 'overdue') : 'status'+monthYearData.status}"
+																									th:text="${ (monthYearData.sumActualScore ge monthYearData.totalScore) ? monthYearData.avgActualScore+' / '+parserUtils.doubleToIneger(monthYearData.totalScore) : monthYearData.sumActualScore+' / '+parserUtils.doubleToIneger(monthYearData.totalScore) }">
+																									0/100
+																								</label>	
+																							</td>
+																								<td class="notgenerated">
+																								 <label th:each="monthYearData : ${contractData.value}"
+																									th:if="${dashBoardData.monthList.get('4').monthId == monthYearData.monthId AND dashBoardData.monthList.get('4').yearId == monthYearData.yearId}"
+																									th:class="${ parserUtils.compareDateStringToCurrentDate(monthYearData.dueDate) le 0 ? ((monthYearData.status == 5 || monthYearData.status == 7 )  ? 'status'+monthYearData.status: 'overdue') : 'status'+monthYearData.status}"
+																									th:text="${ (monthYearData.sumActualScore ge monthYearData.totalScore) ? monthYearData.avgActualScore+' / '+parserUtils.doubleToIneger(monthYearData.totalScore) : monthYearData.sumActualScore+' / '+parserUtils.doubleToIneger(monthYearData.totalScore) }">
+																									0/100
+																								</label>	
+																							</td>
+																								<td class="notgenerated">
+																								 <label th:each="monthYearData : ${contractData.value}"
+																									th:if="${dashBoardData.monthList.get('5').monthId == monthYearData.monthId AND dashBoardData.monthList.get('5').yearId == monthYearData.yearId}"
+																									th:class="${ parserUtils.compareDateStringToCurrentDate(monthYearData.dueDate) le 0 ? ((monthYearData.status == 5 || monthYearData.status == 7 )  ? 'status'+monthYearData.status: 'overdue') : 'status'+monthYearData.status}"
+																									th:text="${ (monthYearData.sumActualScore ge monthYearData.totalScore) ? monthYearData.avgActualScore+' / '+parserUtils.doubleToIneger(monthYearData.totalScore) : monthYearData.sumActualScore+' / '+parserUtils.doubleToIneger(monthYearData.totalScore) }">
+																									0/100
+																								</label>	
+																							</td>
+																								<td class="notgenerated">
+																								 <label th:each="monthYearData : ${contractData.value}"
+																									th:if="${dashBoardData.monthList.get('6').monthId == monthYearData.monthId AND dashBoardData.monthList.get('6').yearId == monthYearData.yearId}"
+																									th:class="${ parserUtils.compareDateStringToCurrentDate(monthYearData.dueDate) le 0 ? ((monthYearData.status == 5 || monthYearData.status == 7 )  ? 'status'+monthYearData.status: 'overdue') : 'status'+monthYearData.status}"
+																									th:text="${ (monthYearData.sumActualScore ge monthYearData.totalScore) ? monthYearData.avgActualScore+' / '+parserUtils.doubleToIneger(monthYearData.totalScore) : monthYearData.sumActualScore+' / '+parserUtils.doubleToIneger(monthYearData.totalScore) }">
+																									0/100
+																								</label>	
+																							</td>
+																								<td class="notgenerated">
+																								 <label th:each="monthYearData : ${contractData.value}"
+																									th:if="${dashBoardData.monthList.get('7').monthId == monthYearData.monthId AND dashBoardData.monthList.get('7').yearId == monthYearData.yearId}"
+																									th:class="${ parserUtils.compareDateStringToCurrentDate(monthYearData.dueDate) le 0 ? ((monthYearData.status == 5 || monthYearData.status == 7 )  ? 'status'+monthYearData.status: 'overdue') : 'status'+monthYearData.status}"
+																									th:text="${ (monthYearData.sumActualScore ge monthYearData.totalScore) ? monthYearData.avgActualScore+' / '+parserUtils.doubleToIneger(monthYearData.totalScore) : monthYearData.sumActualScore+' / '+parserUtils.doubleToIneger(monthYearData.totalScore) }">
+																									0/100
+																								</label>	
+																							</td>
+																								<td class="notgenerated">
+																								 <label th:each="monthYearData : ${contractData.value}"
+																									th:if="${dashBoardData.monthList.get('8').monthId == monthYearData.monthId AND dashBoardData.monthList.get('8').yearId == monthYearData.yearId}"
+																									th:class="${ parserUtils.compareDateStringToCurrentDate(monthYearData.dueDate) le 0 ? ((monthYearData.status == 5 || monthYearData.status == 7 )  ? 'status'+monthYearData.status: 'overdue') : 'status'+monthYearData.status}"
+																									th:text="${ (monthYearData.sumActualScore ge monthYearData.totalScore) ? monthYearData.avgActualScore+' / '+parserUtils.doubleToIneger(monthYearData.totalScore) : monthYearData.sumActualScore+' / '+parserUtils.doubleToIneger(monthYearData.totalScore) }">
+																									0/100
+																								</label>	
+																							</td>
+																								<td class="notgenerated">
+																								 <label th:each="monthYearData : ${contractData.value}"
+																									th:if="${dashBoardData.monthList.get('9').monthId == monthYearData.monthId AND dashBoardData.monthList.get('9').yearId == monthYearData.yearId}"
+																									th:class="${ parserUtils.compareDateStringToCurrentDate(monthYearData.dueDate) le 0 ? ((monthYearData.status == 5 || monthYearData.status == 7 )  ? 'status'+monthYearData.status: 'overdue') : 'status'+monthYearData.status}"
+																									th:text="${ (monthYearData.sumActualScore ge monthYearData.totalScore) ? monthYearData.avgActualScore+' / '+parserUtils.doubleToIneger(monthYearData.totalScore) : monthYearData.sumActualScore+' / '+parserUtils.doubleToIneger(monthYearData.totalScore) }">
+																									0/100
+																								</label>	
+																							</td>
+																								<td class="notgenerated">
+																								 <label th:each="monthYearData : ${contractData.value}"
+																									th:if="${dashBoardData.monthList.get('10').monthId == monthYearData.monthId AND dashBoardData.monthList.get('10').yearId == monthYearData.yearId}"
+																									th:class="${ parserUtils.compareDateStringToCurrentDate(monthYearData.dueDate) le 0 ? ((monthYearData.status == 5 || monthYearData.status == 7 )  ? 'status'+monthYearData.status: 'overdue') : 'status'+monthYearData.status}"
+																									th:text="${ (monthYearData.sumActualScore ge monthYearData.totalScore) ? monthYearData.avgActualScore+' / '+ parserUtils.doubleToIneger(monthYearData.totalScore) : monthYearData.sumActualScore+' / '+ parserUtils.doubleToIneger(monthYearData.totalScore) }">
+																									0/100
+																								</label>	
+																							</td>
+																								<td class="notgenerated">
+																								 <label th:each="monthYearData : ${contractData.value}"
+																									th:if="${dashBoardData.monthList.get('11').monthId == monthYearData.monthId AND dashBoardData.monthList.get('11').yearId == monthYearData.yearId}"
+																									th:class="${ parserUtils.compareDateStringToCurrentDate(monthYearData.dueDate) le 0 ? ((monthYearData.status == 5 || monthYearData.status == 7 )  ? 'status'+monthYearData.status: 'overdue') : 'status'+monthYearData.status}"
+																									th:text="${ (monthYearData.sumActualScore ge monthYearData.totalScore) ? monthYearData.avgActualScore+' / '+ parserUtils.doubleToIneger(monthYearData.totalScore): monthYearData.sumActualScore+' / '+ parserUtils.doubleToIneger(monthYearData.totalScore) }">
+																									0/100
+																								</label>	
+																							</td>
+										
+																						</tr>
+																					</table>
+																				</td>
+																			</tr>
+																		</table>
+																	</td>
+																</tr>
+															</table>
+														</td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+										<tr class="nodata" th:unless="${ dashBoardData.newDashboardDetails != null AND dashBoardData.newDashboardDetails.size() > 0 }" >
+											<td colspan="2" class="text-center">
+												<span >No Data Found</span>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>	
+				
+				<!-- ------------------------------------------------------------------------------ -->
+				
+			</div>
+		</div>				
+	</div>
+	
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script th:inline="javascript">
+
+
+
+
+const buId=$('#bussinessId').val();
+/* for  on change BussinessUnit Id */
+$('#bussinessId').change(function(){
+	
+	const buId=$('#bussinessId').val();
+
+	var baseUrl = window.location.protocol+"//"+window.location.host+"/vedanta-web/web/dashboard/get?"
+	baseUrl = baseUrl+"bussinessId="+buId+"&plantId="+$("#plantId").val()+"&categoryId="+$("#categoryId").val()+"&subCategoryId="+
+	$('#subCategories').val()+"&contractId="+$('#contractId').val()+"&fromDate="+
+	$("#datetimepickerFrom").val()+"&toDate="+$("#datetimepickerTo").val();
+	window.location.href = baseUrl;
+	
+	});
+
+	/*<![CDATA[*/
+  	var filter = [[${filter}]]
+  	/*]]>*/
+
+  	var dashbordData=[[${dashBoardData}]]
+  	//console.log(dashbordData);
+  	
+	const isSuperAdmin=[[${isSuperAdmin}]];
+  	//console.log(isSuperAdmin);
+  	const isBusinessUnitAdmin=[[${isBusinessUnitAdmin}]]
+  	//console.log(isBusinessUnitAdmin);
+  	const isPlantUnitAdmin=[[${isPlantUnitAdmin}]]
+  	
+  	
+  	if(isBusinessUnitAdmin){
+  		$("#bussinessId").prop("disabled", true);
+		$('#bu_Block').show(); 
+  		$('.daterangefilter').addClass('col-sm-2').removeClass('col-sm-4');
+  		$('.newdashboard .col-sm-2').addClass('filterwidth');
+  		} else{
+		$('#bu_Block').hide();
+		$('.daterangefilter').addClass('col-sm-4').removeClass('col-sm-2');
+		$('.newdashboard .col-sm-2').removeClass('filterwidth');
+		} 
+  	
+  	
+  	if(isSuperAdmin){
+  		$('#bu_Block').show(); 
+  		$('.daterangefilter').addClass('col-sm-2').removeClass('col-sm-4');
+  		$('.newdashboard .col-sm-2').addClass('filterwidth');
+  		}
+  		/* else{
+  		$('#bu_Block').hide();
+  		$('.daterangefilter').addClass('col-sm-4').removeClass('col-sm-2');
+  		$('.newdashboard .col-sm-2').removeClass('filterwidth');
+  	} */
+
+  	if(isPlantUnitAdmin){
+  		$("#plantId").prop("disabled", true);
+  	}
+  	else{
+  		$("#plantId").prop("disabled", false);
+  	}
+
+   if(filter != null)
+   	$('#datetimepickerFrom').val(filter.fromDate);
+   if(filter != null)
+  	$('#datetimepickerTo').val(filter.toDate);		
+   
+	$(document).ready(function() {
+	var ht = $('.multi-table').closest('td').height();
+	//alert("height: "+ ht);
+	//$('.multi-table').css('height', ht);
+	
+	$('.filterselect').selectpicker({
+		liveSearch: true,
+	});
+	$('#datetimepickerFrom').datetimepicker({
+        		viewMode: 'years',
+            	format: 'MM/YYYY'
+          });
+          $('#datetimepickerTo').datetimepicker({
+        	  	viewMode: 'years',
+              format: 'MM/YYYY'
+               
+       }); 
+       $("#data-table").dataTable();   
+          $('#dateRangeSearch').on('click', function() {
+        	  
+        	  /* const buId=$('#bussinessId').val(); */
+   
+          	let categoryId=$('#categoryId').val();
+          	let subCategoryId=$("#subCategories").val();
+          	let contractId=$("#contractId").val(); 
+          	
+          	let fromDate=$("#datetimepickerFrom").val();
+          	let toDate=$("#datetimepickerTo").val();
+          	
+          
+          	const from = fromDate.split("/");
+          	const d1 = new Date(from[1], (+from[0] - 1));
+          	
+          	
+          	const to=toDate.split("/");
+          	const d2 = new Date(to[1], (+to[0] - 1));
+          	
+      	  	if (subCategoryId ==null || contractId==null)
+          	{
+          		contractId=0;
+          		subCategoryId=0;
+          	}
+          	
+          	if(fromDate !=null && toDate!=null){
+          		
+              	if(d1 > d2){
+              		
+              			$('#datetimepickerTo').css('border-color', 'red');
+              		
+              		}else{
+              			
+              			var baseUrl = window.location.protocol+"//"+window.location.host+"/vedanta-web/web/dashboard/get?"
+                  		baseUrl = baseUrl+"bussinessId="+buId+"&plantId="+$("#plantId").val()+"&categoryId="+$("#categoryId").val()+"&subCategoryId="+
+                  		$('#subCategories').val()+"&contractId="+$('#contractId').val()+"&fromDate="+
+                  		$("#datetimepickerFrom").val()+"&toDate="+$("#datetimepickerTo").val();
+                  		window.location.href = baseUrl;  
+              		}
+          		
+          	}else{
+          		
+          		var baseUrl = window.location.protocol+"//"+window.location.host+"/vedanta-web/web/dashboard/get?"
+          		baseUrl = baseUrl+"bussinessId="+buId+"&plantId="+$("#plantId").val()+"&categoryId="+$("#categoryId").val()+"&subCategoryId="+
+          		subCategoryId+"&contractId="+contractId+"&fromDate="+
+          		$("#datetimepickerFrom").val()+"&toDate="+$("#datetimepickerTo").val();
+          		window.location.href = baseUrl;  
+          		
+          	}
+          	
+          });
+          
+
+          /* DASHBOARD GRAPHS */
+          
+       
+var janAvg=[];
+var febAvg=[];
+var marAvg=[];
+var aprilAvg=[];
+var mayAvg=[];
+var junAvg=[];
+var julyAvg=[];
+var augAvg=[];
+var septAvg=[];
+var octAvg=[];
+var novAvg=[];
+var decAvg=[];
+
+
+// for graph2
+
+// for finalvendorDetails
+var vendorDetails=[];
+//console.log(vendorDetails);
+
+var vendorArray=[];
+// console.log(vendorArray);
+
+
+var monthWithYear=[];
+//console.log(monthWithYear);
+          
+          
+	$.each(dashbordData.monthList, function(key, value) {
+		// console.log(value);
+
+      	var currentMonthId=value.monthId;
+      	var currentyearId=value.yearId;
+      	
+         			
+      $.each(dashbordData.newDashboardDetails, function(key, value1) {
+      		// console.log(value1);
+
+      $.each(value1,function(key,value2){
+      	// console.log(value2);
+      	
+      	$.each(value2,function(key,value3){
+      	 	// console.log(key);
+      		// console.log(value3);
+      		
+      	 	$.each(value3,function(key,value4){
+      	 		// console.log(key);
+      	 
+      		
+      			$.each(value4,function(key,value5){
+          	 	 	// console.log(key);
+          			// console.log(value5);
+          		
+          			var vendorName=value5['vendorName'];
+          			var monthId=value5['monthId'];
+          			var sumActualscore=value5['sumActualScore'];
+          			var totalScore=value5['totalScore'];
+          			var avgActualScore=value5['avgActualScore'];
+          			var contractNumber=value5['contractNumber'];
+          			var vendorId=value5['vendorId'];
+          			var yearId=value5['yearId'];
+          			
+          			
+          			
+          			if (monthId === currentMonthId && yearId === currentyearId){
+          				
+          				// for jan
+      	    			if (monthId === 0){
+      	    				if (sumActualscore>totalScore){
+      		    				
+      		    				janAvg.push(avgActualScore);
+      		    				
+      		    				vendorDetails.push({
+      			    					"contractNumber":contractNumber,
+      			    					"finalValue":avgActualScore,
+      			    					"monthId":monthId,
+      			    					"vendorId":vendorId,
+      			    					'vendorName':vendorName
+      			    					});
+      		    				monthWithYear.push('jan' +'-'+yearId);
+      		    				
+      		    			} else{
+      		    				
+      		    				janAvg.push(sumActualscore);
+      		    				
+      		    				vendorDetails.push({
+      		    					"contractNumber":contractNumber,
+      		    					"finalValue":sumActualscore,
+      		    					"monthId":monthId,
+      		    					"vendorId":vendorId,
+      		    					'vendorName':vendorName
+      		    					
+      		    					});
+      		    				monthWithYear.push('jan' +'-'+yearId);
+      		    				}
+      	    				}
+      	    			
+      	    			// for feb
+      	    			if (monthId === 1){
+      	    				if (sumActualscore>totalScore){
+      	    				
+      		    				febAvg.push(avgActualScore);
+      		    				
+      		    				vendorDetails.push({
+      		    					"contractNumber":contractNumber,
+      		    					"finalValue":avgActualScore,
+      		    					"monthId":monthId,
+      		    					"vendorId":vendorId,
+      		    					'vendorName':vendorName
+      		    					});
+      		    				monthWithYear.push('feb' +'-'+yearId);
+      		    				
+      		    			} else{
+      		    				
+      		    				febAvg.push(sumActualscore);
+      		    				
+      		    				vendorDetails.push({
+      		    					"contractNumber":contractNumber,
+      		    					"finalValue":sumActualscore,
+      		    					"monthId":monthId,
+      		    					"vendorId":vendorId,
+      		    					'vendorName':vendorName
+      		    					});
+      		    				monthWithYear.push('feb' +'-'+yearId);
+      		    				}
+      	    				}
+      	
+      	    			
+      	    			// for march
+      	    			if (monthId === 2){
+      	    				if (sumActualscore>totalScore){
+      		    				
+      		    				marAvg.push(avgActualScore);
+      		    				
+      		    				vendorDetails.push({
+      		    					"contractNumber":contractNumber,
+      		    					"finalValue":avgActualScore,
+      		    					"monthId":monthId,
+      		    					"vendorId":vendorId,
+      		    					'vendorName':vendorName
+      		    					});
+      		    				monthWithYear.push('mar' +'-'+yearId);
+      		    				
+      		    			} else{
+      		    				
+      		    				marAvg.push(sumActualscore);
+      		    				
+      		    				vendorDetails.push({
+      		    					"contractNumber":contractNumber,
+      		    					"finalValue":sumActualscore,
+      		    					"monthId":monthId,
+      		    					"vendorId":vendorId,
+      		    					'vendorName':vendorName
+      		    					});
+      		    				monthWithYear.push('mar' +'-'+ yearId);
+      		    				}
+      	    				}
+      	    			
+      	    			
+      	    			// for april
+      	    			if (monthId === 3){
+      	    				if (sumActualscore>totalScore){
+      		    				
+      		    				aprilAvg.push(avgActualScore);
+      		    				
+      		    				vendorDetails.push({
+      		    					"contractNumber":contractNumber,
+      		    					"finalValue":avgActualScore,
+      		    					"monthId":monthId,
+      		    					"vendorId":vendorId,
+      		    					'vendorName':vendorName
+      		    					});
+      		    				monthWithYear.push('apr'+'-'+yearId);
+      		    			} else{
+      		    				
+      		    				aprilAvg.push(avgActualScore);
+      		    				
+      		    				vendorDetails.push({
+      		    					"contractNumber":contractNumber,
+      		    					"finalValue":sumActualscore,
+      		    					"monthId":monthId,
+      		    					"vendorId":vendorId,
+      		    					'vendorName':vendorName
+      		    					});
+      		    				monthWithYear.push('apr'+'-'+yearId);
+      		    				}
+      	    				}
+      	    			
+      	    			
+      	    			// for may
+      	    			if (monthId === 4){
+      	    				if (sumActualscore>totalScore){
+      		    				
+      		    				mayAvg.push(avgActualScore);
+      		    				
+      		    				vendorDetails.push({
+      		    					"contractNumber":contractNumber,
+      		    					"finalValue":avgActualScore,
+      		    					"monthId":monthId,
+      		    					"vendorId":vendorId,
+      		    					'vendorName':vendorName
+      		    					});
+      		    				monthWithYear.push('may' +'-'+yearId);
+      		    			} else{
+      		    				
+      		    				mayAvg.push(sumActualscore);
+      		    				
+      		    				vendorDetails.push({
+      		    					"contractNumber":contractNumber,
+      		    					"finalValue":sumActualscore,
+      		    					"monthId":monthId,
+      		    					"vendorId":vendorId,
+      		    					'vendorName':vendorName
+      		    					});
+      		    				monthWithYear.push('may' +'-'+ yearId);
+      		    				}
+      	    				}
+      	    			
+      	    			
+      	    			// for jun
+      	    			if (monthId === 5){
+      	    				if (sumActualscore>totalScore){
+      		    				
+      		    				junAvg.push(avgActualScore);
+      		    				
+      		    				vendorDetails.push({
+      		    					"contractNumber":contractNumber,
+      		    					"finalValue":avgActualScore,
+      		    					"monthId":monthId,
+      		    					"vendorId":vendorId,
+      		    					'vendorName':vendorName
+      		    					});
+      		    				monthWithYear.push('jun' +'-'+yearId);
+      		    			} else{
+      		    				
+      		    				junAvg.push(sumActualscore);
+      		    				
+      		    				vendorDetails.push({
+      		    					"contractNumber":contractNumber,
+      		    					"finalValue":sumActualscore,
+      		    					"monthId":monthId,
+      		    					"vendorId":vendorId,
+      		    					'vendorName':vendorName
+      		    					});
+      		    				monthWithYear.push('jun'+'-'+yearId);
+      		    				}
+      	    				}
+      	    			
+      	    			// for july
+      	    			if (monthId === 6){
+      	    				if (sumActualscore>totalScore){
+      		    				
+      		    				julyAvg.push(avgActualScore);
+      		    				
+      		    				vendorDetails.push({
+      		    					"contractNumber":contractNumber,
+      		    					"finalValue":avgActualScore,
+      		    					"monthId":monthId,
+      		    					"vendorId":vendorId,
+      		    					'vendorName':vendorName
+      		    					});
+      		    				monthWithYear.push('july'+'-'+yearId);
+      		    			}else{
+      		    				
+      		    				julyAvg.push(sumActualscore);
+      		    				
+      		    				vendorDetails.push({
+      		    					"contractNumber":contractNumber,
+      		    					"finalValue":sumActualscore,
+      		    					"monthId":monthId,
+      		    					"vendorId":vendorId,
+      		    					'vendorName':vendorName
+      		    					});
+      		    				monthWithYear.push('july' +'-'+yearId);
+      		    				}
+      	    				}
+      	    			
+      	    			// for aug average
+      	    			if (monthId === 7){
+      	    				if(sumActualscore>totalScore){
+      		    				
+      		    				augAvg.push(avgActualScore);
+      		    				
+      		    				vendorDetails.push({
+      		    					"contractNumber":contractNumber,
+      		    					"finalValue":avgActualScore,
+      		    					"monthId":monthId,
+      		    					"vendorId":vendorId,
+      		    					'vendorName':vendorName
+      		    					});
+      		    				monthWithYear.push('aug'+'-'+yearId);
+      		    			}else{
+      		    				
+      		    				augAvg.push(sumActualscore);
+      		    				
+      		    				vendorDetails.push({
+      		    					"contractNumber":contractNumber,
+      		    					"finalValue":sumActualscore,
+      		    					"monthId":monthId,
+      		    					"vendorId":vendorId,
+      		    					'vendorName':vendorName
+      		    					});
+      		    				monthWithYear.push('aug'+ '-'+ yearId);
+      		    				}
+      	    				}
+      	    			
+      	    			
+      	    			// for sept
+      	    			if (monthId === 8){
+      	    				if(sumActualscore>totalScore){
+      		    				
+      		    				septAvg.push(avgActualScore);
+      		    				
+      		    				vendorDetails.push({
+      		    					"contractNumber":contractNumber,
+      		    					"finalValue":avgActualScore,
+      		    					"monthId":monthId,
+      		    					"vendorId":vendorId,
+      		    					'vendorName':vendorName
+      		    					});
+      		    				monthWithYear.push('sept'+'-'+yearId);
+      		    				
+      		    			}else{
+      		    				
+      		    				septAvg.push(sumActualscore);
+      		    				
+      		    				vendorDetails.push({
+      		    					"contractNumber":contractNumber,
+      		    					"finalValue":sumActualscore,
+      		    					"monthId":monthId,
+      		    					"vendorId":vendorId,
+      		    					'vendorName':vendorName
+      		    					});
+      		    				monthWithYear.push('sept'+'-'+yearId);
+      		    				}
+      	    				}
+      	    			
+      	    			// for oct
+      	    			if(monthId === 9){
+      	    				if(sumActualscore>totalScore){
+      		    			
+      		    				octAvg.push(avgActualScore);
+      		    				
+      		    				vendorDetails.push({
+      		    					"contractNumber":contractNumber,
+      		    					"finalValue":avgActualScore,
+      		    					"monthId":monthId,
+      		    					"vendorId":vendorId,
+      		    					'vendorName':vendorName
+      		    					});
+      		    				monthWithYear.push('oct'+'-'+yearId);
+      		    			}else{
+      		    				
+      		    				octAvg.push(sumActualscore);
+      		    				
+      		    				vendorDetails.push({
+      		    					"contractNumber":contractNumber,
+      		    					"finalValue":sumActualscore,
+      		    					"monthId":monthId,
+      		    					"vendorId":vendorId,
+      		    					'vendorName':vendorName
+      		    					});
+      		    				monthWithYear.push('oct'+'-'+yearId);
+      		    				}
+      	    				}
+      	    			
+      	    			// for nov
+      	    			if(monthId === 10){
+      	    				if(sumActualscore>totalScore){
+      		    				
+      		    				novAvg.push(avgActualScore);
+      		    				
+      		    				vendorDetails.push({
+      		    					"contractNumber":contractNumber,
+      		    					"finalValue":avgActualScore,
+      		    					"monthId":monthId,
+      		    					"vendorId":vendorId,
+      		    					'vendorName':vendorName
+      		    					});
+      		    				monthWithYear.push('nov'+'-'+yearId);
+      		    			}else{
+      		    				
+      		    				novAvg.push(sumActualscore);
+      		    				
+      		    				vendorDetails.push({
+      		    					"contractNumber":contractNumber,
+      		    					"finalValue":sumActualscore,
+      		    					"monthId":monthId,
+      		    					"vendorId":vendorId,
+      		    					'vendorName':vendorName
+      		    					});
+      		    				monthWithYear.push('nov'+'-'+yearId);
+      		    				}
+      	    				}
+      	    			
+      	    			// for dec
+      	    			if(monthId === 11){
+      	    				if(sumActualscore>totalScore){
+      		    				
+      		    				decAvg.push(avgActualScore);
+      		    				
+      		    				vendorDetails.push({
+      		    					"contractNumber":contractNumber,
+      		    					"finalValue":avgActualScore,
+      		    					"monthId":monthId,
+      		    					"vendorId":vendorId,
+      		    					'vendorName':vendorName
+      		    					});
+      		    				monthWithYear.push('dec'+'-'+yearId);
+      		    			}else{
+      		    				
+      		    				decAvg.push(sumActualscore);
+      		    				
+      		    				vendorDetails.push({
+      		    					"contractNumber":contractNumber,
+      		    					"finalValue":sumActualscore,
+      		    					"monthId":monthId,
+      		    					"vendorId":vendorId,
+      		    					'vendorName':vendorName
+      		    					});
+      		    				monthWithYear.push('dec' +'-'+yearId);
+      				    				}
+      			    				}
+      		    				}
+      		    			
+      		    			});  
+      	    			
+      	 				}); 
+      	    		
+      	    		});
+      	    
+      	    	});
+      	    
+      		});
+        
+        });
+		/* for unique monthWithYear */
+	monthWithYear = monthWithYear.filter( function( item, index, inputArray ) {
+           return inputArray.indexOf(item) == index;
+    });
+		
+	  // for Average of All Months
+	var janVal=eval(janAvg.join('+'))/janAvg.length;
+	var febVal=eval(febAvg.join('+'))/febAvg.length;
+	var marVal=eval(marAvg.join('+'))/marAvg.length;
+	var aprilVal=eval(aprilAvg.join('+'))/aprilAvg.length;  
+	var mayVal=eval(mayAvg.join('+'))/mayAvg.length;
+	var junVal=eval(junAvg.join('+'))/junAvg.length;
+	var julyVal=eval(julyAvg.join('+'))/julyAvg.length;
+	var augtVal=eval(augAvg.join('+'))/augAvg.length;
+	var septVal=eval(septAvg.join('+'))/septAvg.length;
+	var octVal=eval(octAvg.join('+'))/octAvg.length;
+	var novVal=eval(novAvg.join('+'))/novAvg.length;
+	var decVal=eval(decAvg.join('+'))/decAvg.length;
+	
+
+	var Datacharts=[];
+	// console.log(Datacharts);
+
+	if(janVal!== null && janVal.toString() !== 'NaN'){
+		Datacharts.push(janVal);
+	}
+	if(febVal!=null && febVal.toString() !== 'NaN'){
+		Datacharts.push(febVal);
+	}
+	if(marVal!=null && marVal.toString() !== 'NaN'){
+		Datacharts.push(marVal);
+	}
+	if(aprilVal!=null && aprilVal.toString() !== 'NaN'){
+		Datacharts.push(aprilVal);
+	}
+	if(mayVal!=null && mayVal.toString() !== 'NaN'){
+		Datacharts.push(mayVal);
+	}
+	if(junVal!=null && junVal.toString() !== 'NaN'){
+		Datacharts.push(junVal);
+	}
+	if(julyVal!=null && julyVal.toString() !== 'NaN'){
+		Datacharts.push(julyVal);
+	}
+	if(augtVal!=null && augtVal.toString() !== 'NaN'){
+		Datacharts.push(augtVal);
+	}
+	if(septVal!=null && septVal.toString() !== 'NaN'){
+		Datacharts.push(septVal);
+	}
+	if(octVal!=null && octVal.toString() !== 'NaN'){
+		Datacharts.push(octVal);
+	}
+	if(novVal!=null && novVal.toString() !== 'NaN'){
+		Datacharts.push(novVal);
+	}
+	if(decVal!=null && decVal.toString() !== 'NaN'){
+		Datacharts.push(decVal);
+	} 
+		
+     
+       Highcharts.chart('graph1', {
+
+       title: {
+           text: 'Performance of categories-subcategories across months'
+           },
+
+       	xAxis: {
+               categories:monthWithYear
+           },
+         
+           yAxis:{
+               min: 0, max: 100,
+
+               lineColor: '#FF0000',
+		       lineWidth: 1,
+		       title: {
+		           text: 'Performance of categories-subcategories'
+		       }
+       },
+       tooltip: {
+           	headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+       		pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+           		'<td style="padding:0"><b>{point.y:.2f} </b></td></tr>',
+       		footerFormat: '</table>',
+           	shared: true,
+           	useHTML: true
+       },
+       plotOptions: {
+           series: {
+               dataLabels: {
+                   enabled: true,
+            
+                   formatter: function () {
+                       return Highcharts.numberFormat(this.y,2);
+                   }, 
+               },
+               
+           }
+       },
+
+       series: [{
+       	 name: 'Average Performance of categories-subcategories',
+       	        data:Datacharts
+       	    }]
+
+       	});
+       	
+       
+      		/* DASHBOARD GRAPH-2 */
+      	
+      		if(vendorDetails.length !== 0){
+    	   
+    	 var sums = {}, counts = {}, vendorAverage = [], contractNumber;
+        	
+    		for (var i = 0; i < vendorDetails.length; i++) {
+        		contractNumber = vendorDetails[i].contractNumber;
+        	
+        	if (!(contractNumber in sums)) {
+                sums[contractNumber] = 0;
+                counts[contractNumber] = 0;
+            }
+        	sums[contractNumber] += vendorDetails[i].finalValue;
+            counts[contractNumber]++;
+            }
+    		
+    		for(contractNumber in sums) {
+    			
+    			var vendorAverageDetail=vendorDetails.filter(function(key){
+       				return	key['contractNumber'] === contractNumber;
+       				});
+    			
+    			var vendorDetailsById = vendorAverageDetail.filter(function (a) {
+       		        return !this[a.contractNumber] && (this[a.contractNumber] = true);
+       		    	
+       			 },Object.create(null))
+       			 
+       			 for(j=0;j<vendorDetailsById.length;j++){
+       				 
+				var vendorId=vendorDetailsById[j].vendorId;	
+    			var vendorName=vendorDetailsById[j].vendorName;
+				
+    		vendorAverage.push({ contractNumber: contractNumber, value: sums[contractNumber] / counts[contractNumber],vendorId:vendorId,vendorName:vendorName});
+    		
+       			 }
+    		}
+    		console.log(vendorAverage)
+    		if(vendorAverage.length !== 0 ){
+    			
+    			 var sums = {}, counts = {}, vendorFinalAverage = [], vendorId;
+    			 
+    				for (var i = 0; i < vendorAverage.length; i++) {
+    					vendorId = vendorAverage[i].vendorId;
+    					
+    	        	if (!(vendorId in sums)) {
+    	                sums[vendorId] = 0;
+    	                counts[vendorId] = 0;
+    	            }
+    	        	sums[vendorId] += vendorAverage[i].value;
+    	            counts[vendorId]++;
+    	            
+    	            }
+    				for(vendorId in sums) {
+    				
+    					var vendorNameDetailas=vendorAverage.filter(function(key){
+    	       				return	key['vendorId'] === Number(vendorId);
+    	       				});
+    					
+    					var vendorNameById = vendorNameDetailas.filter(function (a) {
+    	       		        return !this[a.vendorId] && (this[a.vendorId] = true);
+    	       		    	
+    	       			 },Object.create(null))
+    	       			 
+    	       			  for(var a=0;a<vendorNameById.length;a++){
+    	       				  
+    	       				  var vendorName=vendorNameById[a].vendorName;
+    	       			 
+    				vendorFinalAverage.push({ vendorId: vendorId, finalValue: sums[vendorId] / counts[vendorId],vendorName:vendorName});
+    	       			  
+    	       			  }
+    				}
+    				
+    				console.log(vendorFinalAverage)
+    			}
+    		
+    		var vendorAverageValue=[];
+    		var vendor=[];
+    		for(var z=0;z<vendorFinalAverage.length;z++){
+    			
+    			vendorAverageValue.push(vendorFinalAverage[z].finalValue);
+    			vendor.push(vendorFinalAverage[z].vendorName);
+    		
+    		}
+    	}
+    
+    	$('#graph2').highcharts({
+    			
+    			responsive: {
+    			        rules: [{
+    			            condition: {
+    			                maxWidth: 500
+    			            },
+    			            chartOptions: {
+    			                legend: {
+    			                    layout: 'horizontal',
+    			                    align: 'center',
+    			                    verticalAlign: 'bottom'
+    			                }
+    			            }
+    			        }]
+    			    },
+    			    title: {
+    			        text: 'Performance of Vendors'
+    			    },
+    			
+    			    xAxis: {
+    			        categories:vendor,
+    			       	crosshair: true
+    			    }, 
+    			    yAxis:{
+    		            min: 0, max: 100,
+
+    		            lineColor: '#FF0000',
+    		            lineWidth: 1,
+    		            title: {
+    		                text: 'Vendor Performance'
+    		            }
+    		        },
+    			    tooltip: {
+    			        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+    			        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+    			            '<td style="padding:0"><b>{point.y:.2f} </b></td></tr>',
+    			        footerFormat: '</table>',
+    			        shared: true,
+    			        useHTML: true
+    			    }, 
+    			  plotOptions: {
+    			        series: {
+    			        	lineColor: '#303030',
+    			            dataLabels: {
+    			                enabled: true,
+    			         
+    			               formatter: function () {
+    			                    return Highcharts.numberFormat(this.y,2);
+    			                }, 
+    			               
+    			            },
+    			           
+    			        }
+    			    }, 
+    			    series: [{
+    			        name: 'vendor performance',
+    		    		        data:vendorAverageValue
+    		    		        }]
+    		    		});
+
+			});
+
+
+
+	</script>
+		
+	</body>
+</html>

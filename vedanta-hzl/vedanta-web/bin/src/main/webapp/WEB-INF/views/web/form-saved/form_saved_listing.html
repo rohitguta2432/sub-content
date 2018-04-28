@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vedanta</title>
+<object th:include="fragments/header :: head" th:remove="tag"></object>
+<!-- Favicon -->
+<link rel="shortcut icon" type="image/icon" th:href="@{/resources/images/favicon.ico}" />
+
+<style>
+a.fade-out .fa {
+	color: #aaa !important;
+}
+
+div#load {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 99;
+}
+
+</style>
+
+<script th:inline="javascript">
+document.onreadystatechange = function () {
+	  var state = document.readyState
+	  if (state == 'complete') {
+	      setTimeout(function(){
+	          document.getElementById('interactive');
+	         document.getElementById('load').style.visibility="hidden";
+	      },500); 
+	  }
+	}
+        $(document).ready(function () {
+        	
+        	/*<![CDATA[*/
+        	var statusData = [[${status}]];
+        	let flag=[[${flag}]];
+        	let form=[[${formSavedList}]]
+        	let bublock=[[${buBlock}]]
+        	
+        /*]]>*/
+        
+        if(flag){
+        	$('#buSearch').show();
+        }else{
+        	$('#buSearch').hide();
+        }
+        if(bublock){
+        	$('#bu_Block').hide();
+        }else{
+        	$('#bu_Block').show();
+        }
+        
+       	$('#filter').on('change', function() {
+        		var buId=$('#bussinessId').val();
+		    	var plantCode=$("#plantId").val();
+        		
+        		var baseUrl = window.location.protocol+"//"+window.location.host+"/vedanta-web/"
+        		if(this.value == 5){
+        			baseUrl = baseUrl+"form-save?status=5&bussinessId"+buId+"&plantCode="+plantCode;
+        		}
+        		if(this.value == 3){
+        			baseUrl = baseUrl+"form-save?status=3&bussinessId"+buId+"&plantCode="+plantCode;
+        		}
+        		if(this.value == 6){
+        			baseUrl = baseUrl+"form-save?status=6&bussinessId"+buId+"&plantCode="+plantCode;
+        		}
+        		if(this.value == 7){
+        			baseUrl = baseUrl+"form-save?status=7&bussinessId"+buId+"&plantCode="+plantCode;
+        		}
+        		if(this.value == 0){
+        			baseUrl = baseUrl+"form-save?status=0&bussinessId"+buId+"&plantCode="+plantCode;
+        		}
+        		if(this.value == 2){
+        			baseUrl = baseUrl+"form-save?bussinessId"+buId+"&plantCode="+plantCode;
+        		}
+        		window.location.href = baseUrl;
+        		}); 
+        	
+        	
+  		  		 
+		    	$('#bussinessId').change(function(){
+		    	const buId=$('#bussinessId').val();
+		    	var baseUrl = window.location.protocol+"//"+window.location.host+"/vedanta-web/form-save?"
+		    	baseUrl = baseUrl+"bussinessId="+buId;
+		    	window.location.href = baseUrl;
+		    }); 
+        	
+            $('#buIdSearch').on('click', function() {
+            	const buId=$('#bussinessId').val();
+		    	const plantCode=$("#plantId").val();
+		    
+		    	var baseUrl = window.location.protocol+"//"+window.location.host+"/vedanta-web/form-save?"
+		    	baseUrl = baseUrl+"bussinessId="+buId+"&plantCode="+plantCode;
+		    	window.location.href = baseUrl;
+		    });
+        });
+    </script>    
+
+</head>
+<body>
+<div id="load">
+	<img th:src="@{/resources/images/loading.gif}">
+</div>
+	<div id="wrapper" th:with="formSaveActive=${'active'},formSaveListActive=${'active'}">
+		<i th:replace="/fragments/component :: sidebar"></i>
+		<div class="white-bg page-wrapper header-wrapper">
+			<!-- top header -->
+			<div th:replace="/fragments/component :: topheader" ></div>
+			<!-- Body Part -->
+			<div class="wrapper wrapper-content">
+
+				<div class="container-fluid">
+					<div class="row btm-brd">
+						<div class="col-sm-6">
+							<div class="page-title">
+								<h3>FormSave List</h3>
+							</div>
+						</div>
+					</div>
+					<div class="row client-form mt10px" id="buSearch">
+						<div class="col-sm-2 mb10px pr0px filterwidth" id="bu_Block">
+							<label>Select Bussiness Unit</label>
+							<select id="bussinessId" class="form-control filterselect">
+								<!-- <option value="0">SELECT BU</option> -->
+								<option 
+									th:each="BussinessId : ${AllbussinessUnit}"
+									th:selected="${searchBussinessId == BussinessId.id}"
+									th:value="${BussinessId.id}">
+									<span th:text="${BussinessId.unitName}"></span>	
+								</option>
+							</select>
+						</div>
+						
+						<div class="col-sm-2 mb10px pr0px filterwidth">
+							<label>Select Plant</label>
+							<select id="plantId" class="form-control filterselect">
+								<!-- <option value="0">Select Plant</option> -->
+								<option 
+									 
+									th:each="plant : ${getAllplantsByBuId}"
+									th:selected="${searchPlantId == plant.plantCode}"
+									th:value="${plant.plantCode}">
+									<span th:text="${plant.name}"></span>	
+								</option>
+							</select>
+						</div>
+						<div class="col-sm-4  pr15px">
+			              	<label>&nbsp;</label>
+			              	<button id="buIdSearch" class="btn  btn-success mr5px">Go!</button>
+			              	<a th:href="@{/form-save}" class="btn btn-success btn-info">Reset</a>
+			            </div>
+			        </div>
+				</div>
+			
+			 			
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-sm-12">
+							<form class="client-form">
+								<div class="add-client">
+
+									<div class="setting-content">
+										<div class="socio-table table-responsive">
+											<table id="data-table" 
+												class="table table-striped table-bordered table-hover settings">
+												<thead>
+												<!-- <th class="small-width text-center ">S.No <i class="fa fa-exchange fa-rotate-90 pull-right" aria-hidden="true"></i></th> -->
+												<th class="sm-width">Form Name <i class="fa fa-exchange fa-rotate-90 pull-right" aria-hidden="true"></i></th>
+												<th class="sm-width">Contract # <i class="fa fa-exchange fa-rotate-90 pull-right" aria-hidden="true"></i></th>
+												<th class="sm-width">Vendor Name <i class="fa fa-exchange fa-rotate-90 pull-right" aria-hidden="true"></i></th>
+												<th class="sm-width">Category Name <i class="fa fa-exchange fa-rotate-90 pull-right" aria-hidden="true"></i></th>
+												<th class="sm-width">SubCategory Name <i class="fa fa-exchange fa-rotate-90 pull-right" aria-hidden="true"></i></th>
+												<th sec:authorize="hasAnyRole('ROLE_ADMIN,ROLE_PLANT_HEAD,ROLE_BUSINESS_UNIT_HEAD')" class="sm-width">Submitted By <i class="fa fa-exchange fa-rotate-90 pull-right" aria-hidden="true"></i></th>
+												<th sec:authorize="hasAnyRole('ROLE_ADMIN,ROLE_PLANT_HEAD,ROLE_BUSINESS_UNIT_HEAD')" class="sm-width">Submitted On <i class="fa fa-exchange fa-rotate-90 pull-right" aria-hidden="true"></i></th>
+												<th class="sm-width">
+													Status
+													<select id="filter" class="form-control sm-control pull-right">
+														<option value="2"
+														  	th:selected="${status == 2}">
+															All
+														</option>
+														<option 
+															value="0"
+															th:selected="${status == 0}">
+															Pending
+														</option>vedanta
+														<option 
+															value="3"
+															th:selected="${status == 3}">
+															Draft
+														</option>
+														<option 
+															value="5"
+															th:selected="${status == 5}">
+															Submitted
+														</option>
+														<option 
+															value="6" 
+															th:selected="${status == '6'}">
+															Rejected
+														</option>
+														<option 
+															value="7"
+															th:selected="${status == 7}">
+															Approved
+														</option>	
+													</select>
+												</th>
+												<!-- <th class="sm-width">TotalScore</th> -->
+													
+													
+
+													<!-- <th>Parent Id</th> -->
+												</thead>
+												<tbody>
+													<tr th:if="${formSavedList != null }"
+														th:each="formsaved,iterator : ${formSavedList}">
+														<!-- <td ><label class="text-center" th:text="${iterator.index + 1}"></label></td> -->
+														<td><span th:if="${formsaved.formName != null }"
+															th:text="${formsaved.formName}"></span></td>
+														<td > <a th:href="@{/form-save/user/}+${formsaved.id}"><span th:if="${formsaved.contractNumber != null }"
+															th:text="${formsaved.contractNumber}">
+															</span></a></td>
+														<td><span th:if="${formsaved.vendorName != null }"
+															th:text="${formsaved.vendorName}"></span></td>
+														<td><span th:if="${formsaved.categoryName != null }"
+															th:text="${formsaved.categoryName}"></span></td>
+														<td><span th:if="${formsaved.subCategoryName != null }"
+															th:text="${formsaved.subCategoryName}"></span></td>
+														
+														<td sec:authorize="hasAnyRole('ROLE_ADMIN,ROLE_PLANT_HEAD,ROLE_BUSINESS_UNIT_HEAD')">
+															<span th:if="${formsaved.submittedNameBy != null }"
+															th:text="${formsaved.submittedNameBy}">
+															</span>
+															<span th:unless="${formsaved.submittedNameBy != null }">
+															--
+															</span>
+														</td >
+														<td sec:authorize="hasAnyRole('ROLE_ADMIN,ROLE_PLANT_HEAD,ROLE_BUSINESS_UNIT_HEAD')"><span th:if="${formsaved.submittedOn != null }"
+															th:text="${parserUtils.getDateString(formsaved.submittedOn)}"></span>
+															<span th:unless="${formsaved.submittedOn != null }">--</span>	
+														</td>		
+														<td>
+															<span th:if="${formsaved.status != null }"
+															  	  th:text="${formsaved.status == 0 ? 'Pending' : formsaved.status == 3 ? 'Draft' : formsaved.status == 5 ? 'Submitted' : formsaved.status == 6 ? 'Rejected' : formsaved.status == 7 ? 'Approved' :'Unknown'}">
+															</span>
+														</td>
+														<!-- <td><span th:if="${formsaved.totalScore != null }"
+															th:text="${formsaved.totalScore + '/100'}"></span></td> -->
+															
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- / page wrapper -->
+	</div>
+	<!-- /wrapper -->
+	<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+		<script>
+		  $(function(){
+		    $("#data-table").dataTable(
+		    		{
+		    		    "order": [],
+		    		    "stateSave": true,
+		    		    "columnDefs": [
+			    		 
+			    		]
+		    });
+		})
+		  
+		  
+		</script>
+</body>
+</html>

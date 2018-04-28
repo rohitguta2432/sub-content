@@ -1,0 +1,347 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Vedanta</title>
+<object th:include="fragments/header :: head" th:remove="tag"></object>
+<!-- Favicon -->
+<link rel="shortcut icon" type="image/icon"
+	th:href="@{/resources/images/favicon.ico}" />
+	<style>
+		.message{
+		    font-size: 17px;
+		    display: block;
+		    font-weight: 400;
+		}
+		.message span.error {
+		    color: #f00;
+		}
+		.message span.success {
+			color:#075221
+		}
+	</style>
+</head>
+<body>
+	<div id="wrapper" th:with="plantHeadActive=${'active'},settingActive=${'active'} ">
+		<i th:replace="/fragments/component :: sidebar"></i>
+
+		<div class="white-bg page-wrapper header-wrapper">
+			<!-- top header -->
+			<div th:replace="/fragments/component :: topheader"></div>
+			<!-- Body Part -->
+			<div class="wrapper wrapper-content">
+			
+			<div class="alert alert-success" id="success-alert"  th:if="${success}">
+			    <button type="button" class="close" data-dismiss="alert" >x</button>
+			    <strong> <span th:text="${success}"></span></strong>		 
+			</div>
+			
+			<div class="alert alert-danger" id="danger-alert"  th:if="${error}">
+			    <button type="button" class="close" data-dismiss="alert" >x</button>
+			    <strong> <span th:text="${error}"></span></strong>		 
+			</div>
+			
+	
+
+				<div class="container-fluid">
+					<div class="row btm-brd">
+						<div class="col-sm-12">
+							<div class="page-title">
+								<h3>Add/Update Plant Head Information</h3>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-sm-10 mt10px">
+							<div class="setting-content">
+								<form class="client-form" action="#"
+									th:action="@{/plantHead/save}" th:object="${plantHead}"
+									method="POST">
+							
+									<div class="form-group">
+										<div class="row">
+											<div class="col-sm-4 col-md-3 col-md-offset-1">
+												<label class="pt10px pull-right">Business Units</label>
+											</div>
+											<div class="col-sm-8 col-md-6">
+												<select class="form-control" id="businessUnitId"
+													name="businessUnitId" onchange="checkBusinessUnit();">
+													<option value="0">Select Business Unit</option>
+													<option th:each="businessUnits: ${businessUnits}"
+														th:value="${businessUnits.id}"
+														th:selected="${plantHead.businessUnitId != businessUnits.id ? selected : ''}"
+														>
+                                                		<span th:text="${businessUnits.unitName}"></span>
+                                            		</option>
+												</select> <span class='errormsg text-left' style="display: none;"
+													id="catSpan">Select anyone business Unit</span>
+													 <input type="hidden" name="id" th:value="${plantHead.id}">
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="row">
+											<div class="col-sm-4 col-md-3 col-md-offset-1">
+												<label class="pt10px pull-right">Plant</label>
+											</div>
+											<div class="col-sm-8 col-md-6">
+
+												<select class="form-control " id="plantCode"
+													name="plantCode">
+												</select>
+
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="row">
+											<div class="col-sm-4 col-md-3 col-md-offset-1">
+												<label class="pt10px pull-right">User</label>
+											</div>
+											<div class="col-sm-8 col-md-6">
+
+												<select class="form-control " id="employeeId"
+													name="employeeId">
+												</select>
+												<span class='errormsg text-left' style="display:none;" id="catSpan">Select anyone business Unit</span>
+											</div>
+										</div>
+									</div>
+
+
+									<div class="row">
+										<div class="col-sm-12 col-md-10 text-right">
+											<button class="btn btn-success" type="submit">Save</button>											
+										</div>
+										<!-- <div class="col-sm-offset-4 col-sm-8">
+											<div class="message">
+												<span class="error" th:text="${error}"></span>
+												<span class="success" th:text="${success}"></span>
+											</div>
+										</div> -->
+										
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- / page wrapper -->
+	</div>
+	<!-- /wrapper -->
+	<script th:inline="javascript">
+		$(document).ready(
+				function() {
+					
+					
+				
+					 var plantHead = [[${plantHead}]];
+					 
+					// console.log(plantHead);
+					
+					   if(plantHead!= null){
+				        	  var businessUnitId = plantHead.businessUnitId;
+							//  var templateSubCategoryId = plantHead.subCategoryId;
+				              $.ajax({
+				                  url : "/vedanta-web/user/businessUnit/"+businessUnitId,
+				                  type : "GET",
+				                  success : function(data) {
+				                	  showPlantlistData(data);
+				                  },
+				                  error : function(xhr, status, error) {
+				                      
+				                      console.log("token has been expired."+xhr.responseText);
+				                  }
+				              });  
+				              
+				              
+				              $.ajax({
+				                  url : "/vedanta-web/user/userByPlantHeadAndBusinessUnitId/"+businessUnitId,
+				                  type : "GET",
+				                  success : function(data) {
+				                	  showUserlistData(data);
+				                  },
+				                  error : function(xhr, status, error) {
+				                      
+				                      console.log("token has been expired."+xhr.responseText);
+				                  }
+				              });  
+				              
+				          }
+					 
+					 
+					      function showPlantlistData(data) {
+					    	
+					  			$('#plantCode').html("");
+					  			for ( var i = 0, len = data.length; i < len; ++i) {
+					  			   var plant = data[i];
+					  		
+					  			    if(plantHead.plantCode == plant.plantCode ){
+					  			    	$('#plantCode').append("<option selected=\"selected\" value=\"" + plant.plantCode + "\">" + plant.name+ "</option>");	
+					  			    }else{ 
+					  			    $('#plantCode').append("<option value=\"" +  plant.plantCode + "\">" + plant.name+ "</option>");
+					  			    }
+					  			}
+					  			$('#plantCode').selectpicker({
+					  				      liveSearch: true,
+					  				      maxOptions: 1
+					  				    });
+					  		
+					  	}
+					
+					 	 
+					      function showUserlistData(data) {
+					    	
+					  			$('#employeeId').html("");
+					  			for ( var i = 0, len = data.length; i < len; ++i) {
+					  			   var user = data[i];
+					  		
+					  			    if(plantHead.employeeId == user.employeeId ){
+					  			    	$('#employeeId').append("<option selected=\"selected\" value=\"" + user.employeeId + "\">" + user.name+ "</option>");	
+					  			    }else{ 
+					  			    $('#employeeId').append("<option value=\"" +  user.employeeId + "\">" + user.name+ "</option>");
+					  			    }
+					  			}
+					  			$('#employeeId').selectpicker({
+					  				      liveSearch: true,
+					  				      maxOptions: 1
+					  				    });
+					  		
+					  	}
+							
+					
+
+					// get plant by business id
+					
+				    $('#businessUnitId').on('change', function() {
+				        var value = this.value;
+				        $('#employeeId').find('option') .remove();
+				        $('#plantCode').find('option') .remove();
+				        $('#employeeId').selectpicker('render');
+						$("#employeeId").val('').selectpicker('refresh');
+						$('#plantCode').selectpicker('render');
+						$("#plantCode").val('').selectpicker('refresh');
+				      	
+				        $('#employeeId').find('option') .remove();
+				        $('#plantCode').find('option') .remove();
+				        $('#employeeId').selectpicker('render');
+						$("#employeeId").val('').selectpicker('refresh');
+						$('#plantCode').selectpicker('render');
+						$("#plantCode").val('').selectpicker('refresh');
+				        $.ajax({
+				            url : "/vedanta-web/user/businessUnit/"+value,
+				            type : "GET",
+				            success : function(data) {
+				            	//console.log(data);
+				                showPlantlist(data);
+				       
+				            },
+				            error : function(xhr, status, error) {
+				                
+				                console.log("token has been expired."+xhr.responseText);
+				            }
+				        });
+				        
+				        $.ajax({
+				            url : "/vedanta-web/user/userByPlantHeadAndBusinessUnitId/"+value,
+				            type : "GET",
+				            success : function(data) {
+				            	//console.log(data);
+				                showUserlist(data);
+				            },
+				            error : function(xhr, status, error) {
+				                
+				                console.log("token has been expired."+xhr.responseText);
+				            }
+				        });
+				    })
+				    
+				    function showUserlist(data) {
+							$('#employeeId').html("");
+							 $('#employeeId').find('option') .remove();
+						  
+							
+							for ( var i = 0, len = data.length; i < len; ++i) {
+							    var employee = data[i];
+							    $('#employeeId').append("<option value=\"" + employee.employeeId + "\">" + employee.name +" </option>");
+							    
+							  
+							 $('#employeeId').selectpicker({
+								      liveSearch: true,
+								      maxOptions: 1
+								    });
+							 $('#employeeId').selectpicker('render');
+							 $("#employeeId").val('').selectpicker('refresh');
+					}
+				   
+				} 
+					
+				    function showPlantlist(data) {
+						$('#plantCode').html("");
+					
+					        $('#plantCode').find('option') .remove();
+						
+						for ( var i = 0, len = data.length; i < len; ++i) {
+						    var plant = data[i];
+						    $('#plantCode').append("<option value=\"" + plant.plantCode + "\">" + plant.name +" </option>");
+						    
+						  
+						 $('#plantCode').selectpicker({
+							      liveSearch: true,
+							      maxOptions: 1
+							    });
+						 $('#plantCode').selectpicker('render');
+						 $("#plantCode").val('').selectpicker('refresh');
+				}
+			   
+			} 	
+				    
+				    
+		
+		});
+	
+		
+		$('form').submit(function () {	
+
+		    businessUnitIdCheck = $("#businessUnitId").val();
+
+		     if(businessUnitIdCheck == 0 || businessUnitIdCheck == 'NA') {
+		    	 $("#catSpan").show();
+		           return false;
+		         }
+		     	
+		     
+
+		   });
+		
+		
+		function checkBusinessUnit(){
+			 checked = $("#businessUnitId").val();
+
+		         if (checked > 0)
+		         {
+		       	     $( "#catSpan" ).hide();
+		         }
+			}
+		
+		$(document).ready (function(){
+			  
+	        $("#success-alert").fadeTo(2000, 500).slideUp(500, function(){
+	      		 $("#success-alert").slideUp(500);
+	        });   
+	        
+	        $("#danger-alert").fadeTo(2000, 500).slideUp(500, function(){
+	 	       $("#danger-alert").slideUp(500);
+	 	    });
+
+	});
+			
+	</script>
+</body>
+</html>

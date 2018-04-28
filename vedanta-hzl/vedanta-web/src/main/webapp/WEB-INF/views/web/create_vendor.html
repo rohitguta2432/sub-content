@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Vedanta</title>
+<object th:include="fragments/header :: head" th:remove="tag" />
+
+<!-- Favicon -->
+<link rel="shortcut icon" type="image/icon" th:href="@{/resources/images/favicon.ico}"/>
+
+</head>
+<body>
+
+	<div id="wrapper">
+		<i th:replace="/fragments/component :: sidebar"></i>
+		<div class="white-bg page-wrapper header-wrapper">
+			<!-- top header -->
+			<div th:replace="/fragments/component :: topheader" ></div>
+			<!-- Body Part -->
+			<div class="wrapper wrapper-content">
+
+				<div class="container-fluid">
+					<div class="row btm-brd">
+						<div class="col-sm-6">
+							<div class="page-title">
+								<h3>Create Vendor</h3>
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-sm-10 mtb20px">
+							<form class="client-form" method="post"
+								th:action="@{/vendor/saveNewVendor}" onsubmit="return validation()" th:object="${createVendor}">
+								<div class="col-sm-12">
+									<div class="form-group ">
+										<div class="row">
+											<div class="col-sm-3 col-sm-offset-1">
+												<label class="pt10px pull-right">Vendor Name:</label>
+											</div>
+											<div class="col-sm-9">
+												<input type="text" placeholder=" Name" name="name"
+													class="form-control" />
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="row">
+											<div class="col-sm-3 col-sm-offset-1">
+												<label class="pt10px pull-right">Description:</label>
+											</div>
+											<div class="col-sm-9">
+												<div class="row">
+													<div class="col-sm-12">
+														<input type="text" name="description"
+															placeholder="Description" class="form-control" />
+													</div>
+
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="row">
+											<div class="col-sm-3 col-sm-offset-1">
+												<label class="pt10px pull-right">Vendor Code:</label>
+											</div>
+											<div class="col-sm-9">
+												<div class="row">
+													<div class="col-sm-12">
+														<input type="text" name="vendorCode"
+															placeholder="Vendor Code" class="form-control" />
+													</div>
+
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="row">
+											<div class="col-sm-3">
+												<label class="pt10px pull-right">Parent ID:</label>
+											</div>
+											<div class="col-sm-9">
+												<div class="row">
+													<div class="col-sm-12">
+														<input type="text" name="parentId" placeholder="Parent Id"
+															class="form-control" />
+													</div>
+
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="form-group mt10px">
+										<div class="row">
+											<div class="col-sm-3 col-sm-offset-1"></div>
+											<div class="row">
+									<div class="col-sm-3">
+										<input class="btn btn-primary" type="submit" value="Save"/>
+									</div>
+								</div>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+
+			</div>
+			<!-- /body part -->
+
+			<!-- footer area -->
+			<!--<div class="footer">
+				
+					<div class="ac">
+						<strong>Copyright</strong> Example Company &copy; 2014-2015
+					</div>
+				</div>-->
+		</div>
+		<!-- / page wrapper -->
+		<!-- footer -->
+		<div th:include="fragments/component :: footer"></div>
+	</div>
+	<!-- /wrapper -->
+
+	</body>
+</html>

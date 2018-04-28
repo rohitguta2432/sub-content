@@ -1,0 +1,270 @@
+{
+
+ "authToken" :  {"token_id":"dcea80d3d45fca29de1d99c850b4f60c","code":200}
+
+ ,
+ 
+ "categories" : {
+  "list_data": {
+    "app_id": "vpmt",
+    "resource": [
+      {
+        "category_product_id": "1413603666970",
+        "thumbnail": "https://eic-web-uat.se.scb.co.th/stocks/category_product/o0x0/tj/24/dyn2tj24bc/04_INDUSTRY-LANDSCAPE.png",
+        "category_name_eng": "Industry Landscape",
+        "category_name_tha": "Industry Landscape",
+        "category_name_jap": "Industry Landscape",
+        "category_name_chn": "Industry Landscape",
+        "category_color": "#19171a",
+        "description_eng": "Economic and business intelligence for effective decision making",
+        "access_type": "int",
+        "description_tha": "ความรู้พื้นฐานสำคัญของอุตสาหกรรม"
+      },
+      {
+        "category_product_id": "1413601949513",
+        "thumbnail": "https://eic-web-uat.se.scb.co.th/stocks/category_product/o0x0/u7/yc/dyn2u7ycda/08_INFOGRAPHIC.png",
+        "category_name_eng": "Infographic",
+        "category_name_tha": "Infographic",
+        "category_name_jap": "Infographic",
+        "category_name_chn": "Infographic",
+        "category_color": "#e75095",
+        "description_eng": "Economic and business intelligence for effective decision making",
+        "access_type": "all",
+        "description_tha": ""
+      },
+      {
+        "category_product_id": "1458218403578",
+        "thumbnail": "https://eic-web-uat.se.scb.co.th/stocks/category_product/o0x0/a4/wh/ecw8a4wh6x/thumbnail.jpg",
+        "category_name_eng": "testproduct",
+        "category_name_tha": "ทดสอบ",
+        "category_name_jap": "testproduct",
+        "category_name_chn": "testproduct",
+        "category_color": "#d543dd",
+        "description_eng": "test",
+        "access_type": "all",
+        "description_tha": "ทดสอบ"
+      },
+      {
+        "category_product_id": "1413603720091",
+        "thumbnail": "https://eic-web-uat.se.scb.co.th/stocks/category_product/o0x0/v3/e6/dyn2v3e6jq/05_INDUSTRY-OUTLOOK.png",
+        "category_name_eng": "Industry Outlook",
+        "category_name_tha": "Industry Outlook",
+        "category_name_jap": "Industry Outlook",
+        "category_name_chn": "Industry Outlook",
+        "category_color": "#0d6eb2",
+        "description_eng": "Economic and business intelligence for effective decision making",
+        "access_type": "int",
+        "description_tha": null
+      },
+      {
+        "category_product_id": "1413603767224",
+        "thumbnail": "https://eic-web-uat.se.scb.co.th/stocks/category_product/o0x0/vq/d3/dyn2vqd3ep/06_INDUSTRY-FOCUS.png",
+        "category_name_eng": "Industry Focus",
+        "category_name_tha": "Industry Focus",
+        "category_name_jap": "Industry Focus",
+        "category_name_chn": "Industry Focus",
+        "category_color": "#f4794d",
+        "description_eng": "Economic and business intelligence for effective decision making",
+        "access_type": "int",
+        "description_tha": null
+      },
+      {
+        "category_product_id": "1423221905015",
+        "thumbnail": "https://eic-web-uat.se.scb.co.th/stocks/category_product/o0x0/40/sb/e0hn40sbaz/Winter.jpg",
+        "category_name_eng": "Macroeconomics",
+        "category_name_tha": "Macroeconomics",
+        "category_name_jap": "Macroeconomics",
+        "category_name_chn": "Macroeconomics",
+        "category_color": "",
+        "description_eng": "",
+        "access_type": "all",
+        "description_tha": ""
+      },
+      {
+        "category_product_id": "1413602906700",
+        "thumbnail": "https://eic-web-uat.se.scb.co.th/stocks/category_product/o0x0/us/t8/dyn2ust8ct/03_NOTE-.png",
+        "category_name_eng": "Note",
+        "category_name_tha": "Note",
+        "category_name_jap": "Note",
+        "category_name_chn": "Note",
+        "category_color": "#a0713d",
+        "description_eng": "Short articles on topical events",
+        "access_type": "all",
+        "description_tha": ""
+      },
+      {
+        "category_product_id": "1413603313069",
+        "thumbnail": "https://eic-web-uat.se.scb.co.th/stocks/category_product/o0x0/tx/cd/dyn2txcdhp/02_FLASH.png",
+        "category_name_eng": "Flash",
+        "category_name_tha": "Flash",
+        "category_name_jap": "Flash",
+        "category_name_chn": "Flash",
+        "category_color": "#898989",
+        "description_eng": "Update and analysis of current issues affecting the Thai economy and business sectors",
+        "access_type": "all",
+        "description_tha": ""
+      },
+      {
+        "category_product_id": "1413601609526",
+        "thumbnail": "https://eic-web-uat.se.scb.co.th/stocks/category_product/o0x0/t8/9r/dyn2t89rky/01_OUTLOOK.png",
+        "category_name_eng": "Outlook",
+        "category_name_tha": "Outlook",
+        "category_name_jap": "Outlook",
+        "category_name_chn": "Outlook",
+        "category_color": "#4a2886",
+        "description_eng": "Outlook analysis of key macroeconomic indicators and business drivers",
+        "access_type": "all",
+        "description_tha": "รวมงานวิเคราะห์แนวโน้มตัวชี้วัดหลักหรือสถานการณ์สำคัญที่มีผลต่อเศรษฐกิจและธุรกิจ"
+      },
+      {
+        "category_product_id": "1413276531043",
+        "thumbnail": "https://eic-web-uat.se.scb.co.th/stocks/category_product/o0x0/sx/ay/dyn2sxaymn/07_INSIGHT.png",
+        "category_name_eng": "Insight",
+        "category_name_tha": "Insight",
+        "category_name_jap": "Insight",
+        "category_name_chn": "Insight",
+        "category_color": "#fdb735",
+        "description_eng": "In depth analysis on business issues and implications, with medium to long-term perspectives",
+        "access_type": "all",
+        "description_tha": "บทวิเคราะห์เชิงลึกด้านอุตสาหกรรม"
+      },
+      {
+        "category_product_id": "1413603143080",
+        "thumbnail": "https://eic-web-uat.se.scb.co.th/stocks/category_product/o0x0/ul/i7/dyn2uli78s/09_INTERESTING-TOPICS.png",
+        "category_name_eng": "Interesting Topics",
+        "category_name_tha": "Interesting Topics",
+        "category_name_jap": "Interesting Topics",
+        "category_name_chn": "Interesting Topics",
+        "category_color": "#d54344",
+        "description_eng": "EIC articles on newspapers/magazines",
+        "access_type": "all",
+        "description_tha": ""
+      },
+      {
+        "category_product_id": "1470978027254",
+        "thumbnail": "https://eic-web-uat.se.scb.co.th/stocks/category_product/o0x0/z2/n1/ehf1z2n10m/ThinkstockPhotos-474075248.jpg",
+        "category_name_eng": "Sherlock",
+        "category_name_tha": "Sherlock",
+        "category_name_jap": "Sherlock",
+        "category_name_chn": "Sherlock",
+        "category_color": "",
+        "description_eng": "",
+        "access_type": "int",
+        "description_tha": ""
+      }
+    ]
+  },
+  "code": 200
+},
+
+ "products" : {
+  "resource": [
+    {
+      "ref_id": "1854",
+      "title": "วัฏจักรอสังหาฯ และการเปลี่ยนผ่านสู่ภาวะล้นตลาด - ENG",
+      "tag": ",Test,Thailand,",
+      "category_product_id": "1413276531043",
+      "product_url": "https://eic-web-uat.se.scb.co.th/en/detail/product/1854",
+      "lastupdate": "25/04/2016"
+    },
+    {
+      "ref_id": "1847",
+      "title": "วัฏจักรอสังหาฯ และการเปลี่ยนผ่านสู่ภาวะล้นตลาด - ENG",
+      "tag": ",Real Estate,Thailand,",
+      "category_product_id": "1413601609526",
+      "product_url": "https://eic-web-uat.se.scb.co.th/en/detail/product/1847",
+      "thumbnail": "https://eic-web-uat.se.scb.co.th/stocks/product/o0x0/08/wr/edzv08wr4k/ThinkstockPhotos-185439770-s.jpg",
+      "lastupdate": "23/04/2016"
+    },
+    {
+      "ref_id": "1850",
+      "title": "วัฏจักรอสังหาฯ และการเปลี่ยนผ่านสู่ภาวะล้นตลาด - Eng #2",
+      "tag": ",Real Estate,Thailand,",
+      "category_product_id": "1413602906700",
+      "product_url": "https://eic-web-uat.se.scb.co.th/en/detail/product/1850",
+      "thumbnail": "https://eic-web-uat.se.scb.co.th/stocks/product/o0x0/3f/04/edzv3f04e8/ThinkstockPhotos-185439770-s.jpg",
+      "lastupdate": "23/04/2016"
+    },
+    {
+      "ref_id": "1840",
+      "title": "IMF เตือนเศรษฐกิจโลกโตต่ำ เสี่ยงสูง ยืดเยื้อ - ENGLISH",
+      "tag": ",IMF,Thailand,",
+      "category_product_id": "1413603313069",
+      "product_url": "https://eic-web-uat.se.scb.co.th/en/detail/product/1840",
+      "thumbnail": "https://eic-web-uat.se.scb.co.th/stocks/product/o0x0/e0/d9/edyye0d9wk/ThinkstockPhotos-509850430-s.jpg",
+      "lastupdate": "18/04/2016"
+    },
+    {
+      "ref_id": "1835",
+      "title": "ทดสอบ image#1458233421",
+      "tag": ",Thai Airways,Thailand,",
+      "category_product_id": "1413601609526",
+      "product_url": "https://eic-web-uat.se.scb.co.th/en/detail/product/1835",
+      "thumbnail": "https://eic-web-uat.se.scb.co.th/stocks/product/o0x0/6p/7q/ecwf6p7q4d/natural-resoures.jpg",
+      "lastupdate": "17/03/2016"
+    },
+    {
+      "ref_id": "1836",
+      "title": "ทดสอบ image#1458233478",
+      "tag": ",Thai Airways,Thailand,",
+      "category_product_id": "1413601609526",
+      "product_url": "https://eic-web-uat.se.scb.co.th/en/detail/product/1836",
+      "thumbnail": "https://eic-web-uat.se.scb.co.th/stocks/product/o0x0/7n/51/ecwf7n51oh/natural-resoures.jpg",
+      "lastupdate": "17/03/2016"
+    },
+    {
+      "ref_id": "1831",
+      "title": "A Hopeful Tale of China’s Two Economies",
+      "tag": ",Chinese,China,Shanghai,",
+      "category_product_id": "1413603143080",
+      "product_url": "https://eic-web-uat.se.scb.co.th/en/detail/product/1831",
+      "thumbnail": "https://eic-web-uat.se.scb.co.th/stocks/product/o0x0/2w/at/ecv12wat52/ThinkstockPhotos-464540443.jpg",
+      "lastupdate": "16/03/2016"
+    },
+    {
+      "ref_id": "1791",
+      "title": "ทดสอบ Approve notificate 1",
+      "tag": ",Thailand,Thailand,",
+      "category_product_id": "1413601609526",
+      "product_url": "https://eic-web-uat.se.scb.co.th/en/detail/product/1791",
+      "lastupdate": "19/02/2016"
+    },
+    {
+      "ref_id": "1770",
+      "title": "Note Test 20160209 1812#1455103989",
+      "tag": ",Rice,Thailand,",
+      "category_product_id": "1413602906700",
+      "product_url": "https://eic-web-uat.se.scb.co.th/en/detail/product/1770",
+      "thumbnail": "https://eic-web-uat.se.scb.co.th/stocks/product/o0x0/jl/tc/ebshjltcd8/ThinkstockPhotos-458133931.jpg",
+      "lastupdate": "10/02/2016"
+    },
+    {
+      "ref_id": "1771",
+      "title": "ทดสอบ 1 picture#1455109421",
+      "tag": ",Thailand,",
+      "category_product_id": "1413601609526",
+      "product_url": "https://eic-web-uat.se.scb.co.th/en/detail/product/1771",
+      "lastupdate": "10/02/2016"
+    },
+    {
+      "ref_id": "1749",
+      "title": "Market in focus: Residential market along city rail lines",
+      "tag": ",Real estate,Thailand,",
+      "category_product_id": "1413602906700",
+      "product_url": "https://eic-web-uat.se.scb.co.th/en/detail/product/1749",
+      "thumbnail": "https://eic-web-uat.se.scb.co.th/stocks/product/o0x0/j5/dj/e90yj5djt1/real_estate.jpg",
+      "lastupdate": "12/11/2015"
+    },
+    {
+      "ref_id": "1741",
+      "title": "Thai transport mega-projects pave way for countless business opportunities",
+      "tag": ",Transport and Logistics,Thailand,",
+      "category_product_id": "1413276531043",
+      "product_url": "https://eic-web-uat.se.scb.co.th/en/detail/product/1741",
+      "thumbnail": "https://eic-web-uat.se.scb.co.th/stocks/product/o0x0/ne/qi/e8zsneqin4/170x170.png",
+      "lastupdate": "11/11/2015"
+    }
+  ],
+  "code": 200
+}
+}

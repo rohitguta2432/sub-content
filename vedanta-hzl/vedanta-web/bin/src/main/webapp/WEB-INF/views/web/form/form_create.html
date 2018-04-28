@@ -1,0 +1,479 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Vedanta</title>
+<object th:include="fragments/header :: head" th:remove="tag"></object>
+<!-- Favicon -->
+<link rel="shortcut icon" type="image/icon"
+	th:href="@{/resources/images/favicon.ico}" />
+</head>
+<body>
+	<div id="wrapper"
+		th:with="adminFormActive=${'active'},adminFormListActive=${'active'}">
+		<i th:replace="/fragments/component :: sidebar"></i>
+
+		<div class="white-bg page-wrapper header-wrapper">
+			<!-- top header -->
+			<div th:replace="/fragments/component :: topheader"></div>
+			<!-- Body Part -->
+			<div class="wrapper wrapper-content">
+
+				<div class="container-fluid">
+					<div class="row btm-brd">
+						<div class="col-sm-12">
+							<div class="page-title">
+								<h3>Add/Update Form information</h3>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-sm-10">
+							<div class="setting-content">
+								<form class="client-form" action="#"
+									th:action="@{/admin/form/save}" th:object="${form}"
+									method="POST">
+									<div class="row form-group">
+										<div class="col-sm-4 col-md-3 col-md-offset-1">
+											<label class="mtb5px pull-right">BusinessUnit :</label>
+										</div>
+										<div class="col-sm-8 col-md-6">
+											<select class="form-control " id="businessUnitId"
+												name="businessUnitId" onchange="checkBusinessUnit();">
+												<option value="0">Select bussinessId</option>
+												<option th:if="${bussinessId!= null }"
+													th:each="buId : ${bussinessId}" th:value="${buId.id}"
+													th:selected="${buId.id==form.businessUnitId}">
+												<span th:text="${buId.unitName}"></span>
+											
+											</select>
+                                     	<span class='errormsg text-left' style="display:none;" id="buSpan">Select anyone business unit</span>  
+                                    </div>                                     
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col-sm-4 col-md-3 col-md-offset-1">
+                                        <label class="mtb5px pull-right">Category :</label>
+                                    </div>
+                                    <div class="col-sm-8 col-md-6">
+                                        <select class="form-control " id="categoryId"
+                                                name="categoryId" onchange="checkCategory();">
+                                        </select>
+                                        <span class='errormsg text-left' style="display:none;" id="catSpan">Select anyone category</span>
+                                    </div>
+                                      
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col-sm-4 col-md-3 col-md-offset-1">
+                                        <label class="mtb5px pull-right">Sub-category :</label>
+                                    </div>
+                                    <div class="col-sm-8 col-md-6">
+                                        <select class="form-control " id="subCategories" name="subCategoryId">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col-sm-4 col-md-3 col-md-offset-1">
+                                        <label class="mtb5px pull-right">Form Name :</label>
+                                    </div>
+                                    <div class="col-sm-8 col-md-6">
+                                        <input type="hidden" name="id" th:value="${form.id}">
+                                        <input class="form-control" type="text" id="name" name="name"
+                                               th:value="${form.name}" onkeypress="checkFormName();"/>
+                                        <span class='errormsg text-left' style="display:none;" id="formSpan">Please enter form name</span>
+                                    </div>
+                                    
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col-sm-4 col-md-3 col-md-offset-1">
+                                        <label class="mtb5px pull-right">Description :</label>
+                                    </div>
+                                    <div class="col-sm-8 col-md-6">
+                                        <input class="form-control" type="text" id="name2"
+                                               name="description" th:value="${form.description}"/>
+                                    </div>
+                                </div>
+
+                                <input class="form-control" type="hidden" id="name-slug"
+                                       name="slug" th:value="${form.slug}"/>
+
+                                <div class="row form-group">
+                                    <div class="col-sm-4 col-md-3 col-md-offset-1">
+                                        <label class="mtb5px pull-right">Title :</label>
+                                    </div>
+                                    <div class="col-sm-8 col-md-6">
+                                        <input class="form-control" type="text" id="name3"
+                                               name="title" th:value="${form.title}"/>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col-sm-4 col-md-3 col-md-offset-1">
+                                        <label class="mtb5px pull-right">Frequency :</label>
+                                    </div>
+                                    <div class="col-sm-8 col-md-6">
+                                        <select class="form-control" name="frequency" id="frequency">
+                                            <option value="NA">Select Type</option>
+												<!--        <option value="DAILY" th:selected="${form.frequency} == DAILY">
+                                                DAILY
+                                            </option>-->
+												<option value="MONTHLY"
+													th:selected="${form.frequency} == MONTHLY">
+                                                MONTHLY
+                                            </option>
+												<option value="WEEKLY"
+													th:selected="${form.frequency} == WEEKLY">
+                                                WEEKLY
+                                            </option>
+												<option value="QUARTERLY"
+													th:selected="${form.frequency} == QUARTERLY">
+                                                QUARTERLY
+                                            </option>
+												<option value="YEARLY"
+													th:selected="${form.frequency} == YEARLY">
+                                                YEARLY
+                                            </option>
+											</select>
+										</div>
+									</div>
+									<div class="row form-group">
+										<div class="col-sm-4 col-md-3 col-md-offset-1">
+											<label class="mtb5px pull-right">Day of frequency :</label>
+										</div>
+										<div class="col-sm-8 col-md-6">
+											<select class="form-control " id="dayOfFrequency"
+												name="dayOfFrequency" th:value="${form.dayOfFrequency}">
+
+											</select>
+											<!-- <input class="form-control" type="text" maxlength="4" id="dayOfFrequency"
+                                              name="dayOfFrequency" th:value="${form.dayOfFrequency}"/> -->
+											<!-- <span class='errormsg text-left' style="display:none;" id="daySpan">Please enter number only</span> -->
+										</div>
+
+									</div>
+
+									<div class="row form-group">
+										<div class="col-sm-4 col-md-3 col-md-offset-1">
+											<label class="mtb5px pull-right">Due Day of frequency
+												:</label>
+										</div>
+										<div class="col-sm-8 col-md-6">
+											<select class="form-control " id="dueDayOfFrequency"
+												name="dueDayOfFrequency"
+												th:value="${form.dueDayOfFrequency}">
+											</select>
+											<!--  <input class="form-control" type="text" maxlength="4" id="dueDayOfFrequency"
+                                                name="dueDayOfFrequency" th:value="${form.dueDayOfFrequency}"/> -->
+											<!-- <span class='errormsg text-left' style="display:none;" id="dueSpan">Please enter number only</span> -->
+										</div>
+
+									</div>
+
+									<br /> <br />
+
+									<div class="row">
+										<div class="col-sm-12 col-md-10 text-right">
+											<button class="btn btn-success" type="submit">Save</button>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- / page wrapper -->
+	</div>
+	<!-- /wrapper -->
+	<script th:inline="javascript">
+$(document).ready(function() {
+   // console.log("ready!");
+  /*   
+    /*<![CDATA[*/
+
+    var myForm = [[${myForm}]];
+    var categories = [[${categories}]];
+    var form = [[${form}]];
+    
+  
+/*]]>*/
+          if(form!= null){
+        	  var formBusinessUnitId = form.businessUnitId;
+        	  var formCategoryId = form.categoryId;
+			  var formSubCategoryId = form.subCategoryId;
+
+			  if(formCategoryId != void(0) ){
+				     $.ajax({
+		                  url : "/vedanta-web/category/"+formCategoryId,
+		                  type : "GET",
+		                  success : function(data) {
+		                	  showSubCategoriesData(data);
+		                  },
+		                  error : function(xhr, status, error) {
+		                      
+		                      console.log("token has been expired."+xhr.responseText);
+		                  }
+		              });  
+		              
+			  }
+			  
+			  if(formBusinessUnitId != 0){
+				   $.ajax({
+		                  url : "/vedanta-web/category/business-unit-id/"+formBusinessUnitId,
+		                  type : "GET",
+		                  success : function(data) {
+		                	  showCategoriesData(data);
+		                  },
+		                  error : function(xhr, status, error) {
+		                      
+		                      console.log("token has been expired."+xhr.responseText);
+		                  }
+		              });
+			  }
+         
+           
+          }
+
+          function showSubCategoriesData(data) {
+		  			$('#subCategories').html("");
+		  			/* $('#subCategories').append("<option value='0'>Select Sub-category </option>"); */
+		  			//console.log(data);
+		  			for ( var i = 0, len = data.subCategories.length; i < len; ++i) {
+		  			    var category = data.subCategories[i];
+		  			  //  console.log(category)
+		  			    if(category.id == form.subCategoryId ){
+		  			    	$('#subCategories').append("<option selected=\"selected\" value=\"" + category.id + "\">" + category.categoryName+ "</option>");	
+		  			    }else{ 
+		  			    $('#subCategories').append("<option value=\"" + category.id + "\">" + category.categoryName+ "</option>");
+		  			    }
+		  			}
+		  			$('#subCategories').selectpicker({
+		  				      liveSearch: true,
+		  				      maxOptions: 1
+		  				    });
+		  			//$('#subCategories').selectpicker('render');
+		  			//$("#subCategories").val('').selectpicker('refresh');
+		  	}
+          
+          function showCategoriesData(data) {
+	  			$('#categoryId').html("");
+	  			/* $('#subCategories').append("<option value='0'>Select Sub-category </option>"); */
+	  			//console.log(data);
+	  			for ( var i = 0, len = data.length; i < len; ++i) {
+	  			    var category = data[i];
+	  			  //  console.log(category)
+	  			    if(category.id == form.categoryId ){
+	  			    	$('#categoryId').append("<option selected=\"selected\" value=\"" + category.id + "\">" + category.categoryName+ "</option>");	
+	  			    }else{
+	  			    	$('#categoryId').append("<option value=\"" + category.id + "\">" + category.categoryName+ "</option>");
+	  			    }
+	  			}
+	  			$('#categoryId').selectpicker({
+	  				      liveSearch: true,
+	  				      maxOptions: 1
+	  				    });
+	  			//$('#categoryId').selectpicker('render');
+	  			//$("#categoryId").val('').selectpicker('refresh');
+	  	}
+
+          
+/*$('#subCategories').html("");
+
+for ( var i = 0, len = categories[form.categoryId].length; i < len; ++i) {
+	var category = categories[form.categoryId].subCategories[i];
+	
+	if(form.categoryId == category.id)
+    	alert("T-ID"+form.categoryId+" :C-ID"+category.id+"TRUE");
+    else
+    	alert("T-ID"+form.categoryId+" :C-ID"+category.id+"False");
+}
+
+*/    
+//$('#subCategories').append("<option selected value=\"" + category.id + "\">" + category.categoryName+ "</option>");
+        
+        $('#categoryId').on('change', function() {
+                    var value = this.value;
+
+                    $.ajax({
+                        url : "/vedanta-web/category/"+value,
+                        type : "GET",
+                        success : function(data) {
+                            showSubCategories(data);
+                        },
+                        error : function(xhr, status, error) {
+                            
+                            console.log("token has been expired."+xhr.responseText);
+                        }
+                    });
+                })
+                
+          $('#businessUnitId').on('change', function() {
+                    var value = this.value;
+			if(value !=0){
+				  $.ajax({
+                      url : "/vedanta-web/category/business-unit-id/"+value,
+                      type : "GET",
+                      success : function(data) {
+                      	showCategories(data);
+                      },
+                      error : function(xhr, status, error) {
+                          
+                          console.log("token has been expired."+xhr.responseText);
+                      }
+                  });
+				}
+                  
+                })      
+       
+        var dayFrequency = '';
+        for (i=0;i<=31;i++){
+        	if(form.dayOfFrequency == i){
+        		dayFrequency += '<option selected value=' + i + '>' + i + '</option>';
+        	}else{
+        		dayFrequency += '<option value=' + i + '>' + i + '</option>';
+        	}
+            
+        }
+        $('#dayOfFrequency').append(dayFrequency);
+        var dueFrequency = '';
+        for (i=0;i<=31;i++){
+        	if(form.dueDayOfFrequency == i){
+        		dueFrequency += '<option selected value=' + i + '>' + i + '</option>';
+        	}else{
+        		dueFrequency += '<option value=' + i + '>' + i + '</option>';
+        	}
+            
+        }
+        $('#dueDayOfFrequency').append(dueFrequency);    
+                
+                
+                
+    });
+
+	function showCategories(data) {
+		$('#categoryId').html("");
+		$('#categoryId').append("<option value='0'>Select Sub-category </option>");
+		for ( var i = 0, len = data.length; i < len; ++i) {
+		    var category = data[i];
+		    $('#categoryId').append("<option value=\"" + category.id + "\">" + category.categoryName+ "</option>");
+		}
+		 $('#categoryId').selectpicker({
+			      liveSearch: true,
+			      maxOptions: 1
+			    });
+		 $('#categoryId').selectpicker('render');
+		 $("#categoryId").val('').selectpicker('refresh');
+	}
+
+	function showSubCategories(data) {
+			$('#subCategories').html("");
+			/* $('#subCategories').append("<option value='0'>Select Sub-category </option>"); */
+			//console.log(data);
+			for ( var i = 0, len = data.subCategories.length; i < len; ++i) {
+			    var category = data.subCategories[i];
+			   // console.log(category)
+			    $('#subCategories').append("<option value=\"" + category.id + "\">" + category.categoryName+ "</option>");
+			}
+			 $('#subCategories').selectpicker({
+				      liveSearch: true,
+				      maxOptions: 1
+				    });
+			 $('#subCategories').selectpicker('render');
+			 $("#subCategories").val('').selectpicker('refresh');
+	}
+	
+	 $('form').submit(function () {
+		 
+		 buChecked = $("#businessUnitId").val();
+
+         if(buChecked == 0) {
+	          $("#buSpan").show();
+    	       return false;
+         }
+		 
+		 checked = $("#categoryId").val();
+		 if(checked == 0) {
+        	$("#catSpan").show();
+        	$("#categoryId").focus();
+            return false;
+         }         
+         var name = jQuery.trim($("#name").val());
+         if (name.length == 0){
+        	 $("#formSpan").show();
+        	 $("#name").focus();
+        	 return false;
+         }
+    /*      var day = jQuery.trim($("#dayOfFrequency").val());
+	     if (day.length == 0){
+        	$("#daySpan").show();
+        	$("#dayOfFrequency").focus();
+        	return false;
+        }
+	    var due = jQuery.trim($("#dueDayOfFrequency").val());
+	    if (due.length == 0){
+	    	$( "#dueSpan" ).show();
+	    	$("#dueDayOfFrequency").focus();
+        	return false;
+        } */
+          
+
+        }); 
+	 
+	 function checkCategory(){
+		 checked = $("#categoryId").val();
+
+	          if (checked > 0)
+	          {
+	        	     $( "#catSpan" ).hide();
+	          }
+		 
+	 }
+	 
+	 function checkBusinessUnit(){
+		 checked = $("#businessUnitId").val();
+	          if (checked > 0)
+	          {
+	        	     $( "#buSpan" ).hide();
+	          } 
+	 }
+	 
+	 
+	 function checkFormName(){
+		    var name = jQuery.trim($("#name").val());
+
+	          if (name.length > 0)
+	          {
+	        	     $( "#formSpan" ).hide();
+	          }
+		 
+	 }
+	 
+/* 	  $(document).ready(function () {
+			 
+		  $("#dayOfFrequency").keypress(function (e) {
+		     if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+		        $("#daySpan").show();
+		               return false;
+		    }else{
+		    	$("#daySpan").hide();
+		    }
+		   });
+		  
+		  $("#dueDayOfFrequency").keypress(function (e) {
+			     if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+			        $("#dueSpan").show();
+			               return false;
+			    }else{
+			    	$("#dueSpan").hide();
+			    }
+			   });
+		  
+		});
+	  */
+	
+</script>
+</body>
+</html>

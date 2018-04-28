@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Error page</title>
+<meta charset="utf-8" />
+<object th:include="fragments/header :: head" th:remove="tag" />
+</head>
+<body>
+	<div class="auth login-bg">
+		<div class="auth-container">
+			<div class="card">
+				<header class="auth-header">
+					<h1 class="auth-title">
+						<img th:src="@{/resources/assets/logo_vedanta.png}" alt="Vedanta" />
+					</h1>
+				</header>
+				<div class="auth-content">
+
+					<h1>FORBIDDEN</h1>
+					<p>The access to Vedanta Portal is granted to Authorized
+						users only.</p>
+					<a th:href="@{/}" class="btn">Back to Home Page</a>  
+				</div>
+
+
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

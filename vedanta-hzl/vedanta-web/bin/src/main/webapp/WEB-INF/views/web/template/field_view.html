@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- RITESH SINGH -->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Vedanta</title>
+<object th:include="fragments/header :: head" th:remove="tag" ></object>
+<!-- Favicon -->
+<link rel="shortcut icon" type="image/icon" th:href="@{/resources/images/favicon.ico}"/>
+</head>
+<body>
+	<div id="wrapper" th:with="templateActive=${'active'}">
+		<i th:replace="/fragments/component :: sidebar"></i>
+		<div class="white-bg page-wrapper header-wrapper">
+			<!-- top header -->
+			<div th:replace="/fragments/component :: topheader" ></div>
+			<!-- Body Part -->
+			<div class="wrapper wrapper-content">
+
+				<div class="container-fluid">
+					<div class="row btm-brd">
+						<div class="col-sm-6">
+							<div class="page-title">
+								<h3>View Form Group</h3>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-sm-10">
+								<div class="add-client">
+
+									<div class="setting-content">
+										<div class="socio-table table-responsive">
+											<form class="client-form" >
+												<div class="row">
+													<div class="col-sm-6">
+														<div class="row">
+															<div class="col-sm-4">
+																<label>Form Id</label>
+															</div>
+															<div class="col-sm-8">
+																<input type="hidden" name="id" th:value="${formgroup.id}">
+																<input class="form-control" readonly th:value="${formgroup.formId}" type="text"  id="name1" name="formId"  />
+															</div>
+														</div>
+														<br/>
+														<div class="row">
+															<div class="col-sm-4">
+																<label>Group Id</label>
+															</div>
+															<div class="col-sm-8">
+																<input class="form-control" readonly type="text"  id="name2" name="groupId" th:value="${formgroup.groupId}" />
+															</div>
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="row">
+															<div class="col-sm-4">
+																<label>Sort Order</label>
+															</div>
+															<div class="col-sm-8">
+																<input class="form-control" readonly type="text"  id="name3" name="sortOrder" th:value="${formgroup.sortOrder}" />
+															</div>
+														</div>
+														<br/>
+													</div>
+												</div>
+											</form>	
+										</div>
+									</div>
+								</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- / page wrapper -->
+	</div>
+	<!-- /wrapper -->
+</body>
+</html>

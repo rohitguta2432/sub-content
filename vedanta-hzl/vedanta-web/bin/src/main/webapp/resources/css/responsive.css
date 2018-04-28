@@ -1,0 +1,54 @@
+@media (max-width:1199px){
+	body,html{font-size:9px;}
+}
+@media (max-width:1024px){
+	body,html{font-size:8px;}
+	.navbar-header{float:left;} 
+}
+@media (max-width:1024px) and (min-width: 768px){
+	.dashboard .fix-width{width: 47px}
+}
+@media (max-width: 980px){
+	.table-responsive {width: 100%;margin-bottom: 15px;overflow-y: hidden;-ms-overflow-style: -ms-autohiding-scrollbar;border: 0;}
+	.table-responsive>.table-bordered{border: 1px solid #ddd;margin-bottom:10px}
+	.search-result .col-sm-9.p0px{padding-left: 5px !important;}
+	.col-sm-4.col-md-3.col-md-offset-1, .col-sm-3.col-md-3.col-md-offset-1 {padding-right:7px}
+	.col-sm-8.col-md-6{padding-left:7px;}
+	.scoredetail .col-sm-6,.dynamic-field .col-sm-12.mtb10px  {padding: 0;}
+	.templates .setting-content {padding:10px 0;}
+	.client-form .form-control.sm-control{width:95%;}
+	.sm-control + .pos-ab{top:20px;width:100%;text-align:right}
+	span.tool-tips{font-size:11px;padding:3px 5px;right:-5px;top:53px;}
+	.dynamic-field textarea.form-control {height: 100%;padding: 4px;}
+	.dynamic-field .col-sm-3.ml4per {padding-right: 0;}
+	label.ml10px{margin-right: 5px !important;}
+	.formEdit .col-sm-2 {padding-left: 0;}
+}
+@media (max-width: 767px){
+	.page-wrapper,.xs-p0, label.pt10px.pull-right{padding:0}
+	.table-responsive{border-bottom:0;border-top:0}
+	.xsClass .pr0px {padding-right:15px}
+	label.pull-right {float: none !important;margin-top:0}
+	.create .row.mb10px.dis-flex.xsblock{display: block}
+	.client-form .form-control {padding: 6px;font-size:12px;}
+	.search-result.check-box span{margin:0}
+	.search-result .col-sm-9.p0px {width: 100%}
+	ul.action-listing li{margin:0 3px 0 0}
+	ul.action-listing, .xsClass .p0px.dis-flex{display: block;}
+	th.small-width.text-center, th.sm-width.sorting_disabled {width: 45px !important;}
+	a.btn.btn-info.circle.plus {position: absolute;right: 15px;top: -30px}
+	.login-form .form-control{height:30px}
+	.xsClass .col-sm-4.text-right.pr15px{clear:both}
+	.legend li{margin-bottom:5px}
+	.col-sm-8.col-md-6{padding-left: 15px;}
+	body.fixed-sidebar.mini-navbar .navbar-default .nav>li>a{padding: 10px;}
+	.login-form .input-group-addon{width:30px;padding: 2px 12px;}
+	span.input-group-addon i.fa-user, span.input-group-addon i.fa-lock{font-size:16px}
+	.user-img{width:75px;}
+	.user{top: -5rem;}
+	.login-form{margin-top: 8rem}
+	.btn.btn-login{margin: 1rem 0 4rem;}
+	.vedanta .modal-dialog{width: auto;margin: 10rem 1rem;}
+	.formfields.col-sm-3{min-height:inherit;}
+	.delete-modal .modal-dialog.modal-sm {width: 290px;margin: 15rem auto;}
+}

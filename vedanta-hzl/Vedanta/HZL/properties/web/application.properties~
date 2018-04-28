@@ -1,0 +1,39 @@
+app.version=1.0.0.SNAPSHOT
+redis.port=6397
+scb.rest.user=miN2ogRB5iv0f0zuumjq5Q==
+password= cJ6vBKPM3syC/16DxgasaU3zdPBVC322
+
+scb.rest.base.url=http://localhost:8989/vedanta-rest/
+
+delimiter=::
+file.extension=xlsx,csv,xls
+image.extension=jpg,jpeg,png,JPG,JPEG,PNG
+resource.location=/Users/manishsanger/Vedanta/HZL/data/
+
+image.location=images/
+on.boarding=on-boarding/
+pdf.location=pdfs/
+pitch.book=pitchbook/
+
+file.location=/Users/manishsanger/Vedanta/HZL/data/admin
+
+folder.processing=processing
+folder.uploaded=uploaded
+
+# support file path
+file.location.support=/home/orange/Documents/vedanta/
+
+#memcache server address
+#cache.server.address=192.168.99.100:32768
+#cache.server.address=10.21.17.198:11212
+cache.server.address=127.0.0.1:11211
+
+
+#for generic url for user email notification(scorecard && survey Invitation)
+survey.email.user.url=http://192.168.1.35:8080/vedanta-web/form-save/user/
+
+scorecard.email.user.url=http://192.168.1.35:8080/vedanta-web/scorecard/user/
+
+#for compliance-form url
+form.email.user.url=http://192.168.1.35:8080/vedanta-web/form-saved/user/
+
